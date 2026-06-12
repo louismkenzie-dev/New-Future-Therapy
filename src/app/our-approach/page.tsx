@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import PageHeader from "@/components/PageHeader";
+import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
+import FloatingLeaves from "@/components/FloatingLeaves";
 import { ArrowRight, Heart, Lightbulb, Users } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -29,31 +32,22 @@ const principles = [
 export default function OurApproachPage() {
   return (
     <>
-      {/* Page header */}
-      <section className="bg-sage-pale pt-16 pb-12 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-4">
-            How We Work
-          </p>
-          <h1 className="font-heading text-5xl md:text-6xl font-light text-charcoal leading-tight">
-            The NewFuture Therapy Ethos
-          </h1>
-        </div>
-      </section>
+      <PageHeader eyebrow="How We Work" title="The NewFuture Therapy Ethos" />
 
       {/* Opening statement */}
-      <section className="bg-sage-dark py-20 px-6">
-        <div className="max-w-3xl mx-auto text-center">
+      <section className="bg-sage-dark py-20 px-6 relative overflow-hidden">
+        <FloatingLeaves className="opacity-50" />
+        <Reveal className="max-w-3xl mx-auto text-center relative z-10">
           <p className="font-heading text-3xl md:text-4xl lg:text-5xl font-light italic text-cream leading-relaxed">
             &ldquo;At NewFuture Therapy, we believe that growth begins with
             understanding.&rdquo;
           </p>
-        </div>
+        </Reveal>
       </section>
 
       {/* Main ethos content */}
       <section className="py-20 px-6 bg-cream">
-        <div className="max-w-3xl mx-auto">
+        <Reveal className="max-w-3xl mx-auto">
           <div className="space-y-6 font-body text-base md:text-lg text-muted leading-loose">
             <p>
               Every person has a unique story shaped by their experiences,
@@ -84,43 +78,47 @@ export default function OurApproachPage() {
               towards a healthier and more connected future.
             </p>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* Three principles */}
       <section className="py-20 px-6 bg-sage-pale">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
+          <Reveal className="text-center mb-14">
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">
               Our Core Principles
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {principles.map(({ icon: Icon, title, body }) => (
-              <div key={title} className="bg-white rounded-2xl p-8 border border-grey-light shadow-sm text-center">
-                <div className="w-12 h-12 rounded-full bg-sage-pale flex items-center justify-center mx-auto mb-6">
-                  <Icon size={22} className="text-sage" />
+              <StaggerItem key={title}>
+                <div className="bg-white rounded-2xl p-8 border border-grey-light shadow-sm text-center h-full transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-sage-light group">
+                  <div className="w-12 h-12 rounded-full bg-sage-pale flex items-center justify-center mx-auto mb-6 transition-all duration-500 group-hover:bg-sage group-hover:scale-110">
+                    <Icon size={22} className="text-sage transition-colors duration-500 group-hover:text-cream" />
+                  </div>
+                  <h3 className="font-heading text-3xl font-medium text-charcoal mb-4">
+                    {title}
+                  </h3>
+                  <p className="font-body text-sm text-muted leading-relaxed">
+                    {body}
+                  </p>
                 </div>
-                <h3 className="font-heading text-3xl font-medium text-charcoal mb-4">
-                  {title}
-                </h3>
-                <p className="font-body text-sm text-muted leading-relaxed">
-                  {body}
-                </p>
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGroup>
         </div>
       </section>
 
       {/* What this means in practice */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-3xl mx-auto">
-          <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal mb-8">
-            What This Means in Practice
-          </h2>
-          <div className="space-y-5">
+          <Reveal>
+            <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal mb-8">
+              What This Means in Practice
+            </h2>
+          </Reveal>
+          <StaggerGroup className="space-y-5">
             {[
               "Sessions are tailored entirely to you — there is no one-size-fits-all approach.",
               "You set the pace. We will never push you further or faster than feels right for you.",
@@ -128,18 +126,20 @@ export default function OurApproachPage() {
               "We work collaboratively with you — therapy is something we do together, not something done to you.",
               "We welcome and affirm people of all backgrounds, identities, relationship structures and lived experiences.",
             ].map((point, i) => (
-              <div key={i} className="flex gap-4">
-                <div className="w-2 h-2 rounded-full bg-sage mt-2.5 shrink-0" />
-                <p className="font-body text-base text-muted leading-relaxed">{point}</p>
-              </div>
+              <StaggerItem key={i}>
+                <div className="flex gap-4">
+                  <div className="w-2 h-2 rounded-full bg-sage mt-2.5 shrink-0" />
+                  <p className="font-body text-base text-muted leading-relaxed">{point}</p>
+                </div>
+              </StaggerItem>
             ))}
-          </div>
+          </StaggerGroup>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-16 px-6 bg-sage-pale border-t border-grey-light">
-        <div className="max-w-2xl mx-auto text-center">
+        <Reveal className="max-w-2xl mx-auto text-center">
           <h2 className="font-heading text-3xl font-light text-charcoal mb-4">
             Ready to explore how we can support you?
           </h2>
@@ -162,7 +162,7 @@ export default function OurApproachPage() {
               Get in Touch
             </Link>
           </div>
-        </div>
+        </Reveal>
       </section>
     </>
   );

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PhotoPlaceholder from "@/components/PhotoPlaceholder";
+import PageHeader from "@/components/PageHeader";
+import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
+import Parallax from "@/components/motion/Parallax";
 import { ArrowRight, Quote } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -12,23 +15,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      {/* Page header */}
-      <section className="bg-sage-pale pt-16 pb-12 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-4">
-            Our Story
-          </p>
-          <h1 className="font-heading text-5xl md:text-6xl font-light text-charcoal leading-tight">
-            Our Journey So Far
-          </h1>
-        </div>
-      </section>
+      <PageHeader eyebrow="Our Story" title="Our Journey So Far" />
 
       {/* Main story */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-            <div>
+            <Reveal>
               <Quote size={36} className="text-sage mb-6 opacity-50" />
               <p className="font-heading text-2xl md:text-3xl font-light italic text-charcoal leading-relaxed mb-8">
                 &ldquo;One thing that has remained constant throughout our lives
@@ -82,23 +75,29 @@ export default function AboutPage() {
                   self-understanding and meaningful change.
                 </p>
               </div>
-            </div>
+            </Reveal>
 
             <div className="space-y-6">
-              <PhotoPlaceholder
-                className="w-full aspect-[3/4] rounded-2xl shadow-sm"
-                src="/photos/therapist-green-session.jpg"
-                alt="A therapy session in progress"
-                position="60% 30%"
-              />
-              <div className="bg-sage-pale rounded-xl p-6 border border-sage-light/50">
-                <p className="font-body text-sm text-muted leading-relaxed">
-                  <span className="font-semibold text-sage-dark">
-                    Registered with BACP
-                  </span>{" "}
-                  &bull; Based in Wakefield &bull; Available online
-                </p>
-              </div>
+              <Parallax speed={0.08}>
+                <Reveal delay={0.15}>
+                  <PhotoPlaceholder
+                    className="w-full aspect-[3/4] rounded-2xl shadow-sm"
+                    src="/photos/therapist-green-session.jpg"
+                    alt="A therapy session in progress"
+                    position="60% 30%"
+                  />
+                </Reveal>
+              </Parallax>
+              <Reveal delay={0.3}>
+                <div className="bg-sage-pale rounded-xl p-6 border border-sage-light/50">
+                  <p className="font-body text-sm text-muted leading-relaxed">
+                    <span className="font-semibold text-sage-dark">
+                      Registered with BACP
+                    </span>{" "}
+                    &bull; Based in Wakefield &bull; Available online
+                  </p>
+                </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -107,15 +106,16 @@ export default function AboutPage() {
       {/* Individual bios */}
       <section className="py-20 px-6 bg-sage-pale">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-14">
+          <Reveal className="text-center mb-14">
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">
               Meet Us Individually
             </h2>
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Esther */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-grey-light shadow-sm">
+            <StaggerItem>
+            <div className="bg-white rounded-2xl overflow-hidden border border-grey-light shadow-sm h-full transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-sage-light">
               <PhotoPlaceholder
                 className="w-full h-72"
                 src="/photos/therapist-green-portrait.jpg"
@@ -162,9 +162,11 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
+            </StaggerItem>
 
             {/* Laura */}
-            <div className="bg-white rounded-2xl overflow-hidden border border-grey-light shadow-sm">
+            <StaggerItem>
+            <div className="bg-white rounded-2xl overflow-hidden border border-grey-light shadow-sm h-full transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-sage-light">
               <PhotoPlaceholder
                 className="w-full h-72"
                 src="/photos/therapist-white-armchair.jpg"
@@ -213,13 +215,14 @@ export default function AboutPage() {
                 </div>
               </div>
             </div>
-          </div>
+            </StaggerItem>
+          </StaggerGroup>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-16 px-6 bg-cream border-t border-grey-light">
-        <div className="max-w-2xl mx-auto text-center">
+        <Reveal className="max-w-2xl mx-auto text-center">
           <p className="font-body text-base text-muted leading-relaxed mb-8">
             Whether you come to Esther or Laura, you will find a warm,
             compassionate and non-judgemental space to begin your journey.
@@ -231,7 +234,7 @@ export default function AboutPage() {
             Get in Touch
             <ArrowRight size={16} />
           </Link>
-        </div>
+        </Reveal>
       </section>
     </>
   );

@@ -1,7 +1,10 @@
 "use client";
 
 import { useActionState } from "react";
+import { motion } from "motion/react";
 import { submitContactForm, type ContactFormState } from "@/app/actions/contact";
+import PageHeader from "@/components/PageHeader";
+import Reveal from "@/components/motion/Reveal";
 import { CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 
 const initialState: ContactFormState = { status: "idle" };
@@ -11,28 +14,17 @@ export default function ContactPage() {
 
   return (
     <>
-      {/* Page header */}
-      <section className="bg-sage-pale pt-16 pb-12 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-4">
-            Reach Out
-          </p>
-          <h1 className="font-heading text-5xl md:text-6xl font-light text-charcoal leading-tight mb-6">
-            Get in Touch
-          </h1>
-          <p className="font-body text-base text-muted leading-relaxed max-w-xl mx-auto">
-            We offer a free 15-minute initial consultation so you can find out
-            more about how we work and whether we might be a good fit for you.
-            There is no pressure and no commitment.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        eyebrow="Reach Out"
+        title="Get in Touch"
+        lede="We offer a free 15-minute initial consultation so you can find out more about how we work and whether we might be a good fit for you. There is no pressure and no commitment."
+      />
 
       {/* Form + info */}
       <section className="py-20 px-6 bg-cream">
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-5 gap-16">
           {/* Info column */}
-          <div className="lg:col-span-2">
+          <Reveal className="lg:col-span-2">
             <h2 className="font-heading text-3xl font-light text-charcoal mb-6">
               What to Expect
             </h2>
@@ -78,12 +70,17 @@ export default function ContactPage() {
                 geography is never a barrier to getting support.
               </p>
             </div>
-          </div>
+          </Reveal>
 
           {/* Form column */}
-          <div className="lg:col-span-3">
+          <Reveal delay={0.15} className="lg:col-span-3">
             {state.status === "success" ? (
-              <div className="flex flex-col items-start gap-4 p-10 bg-sage-pale rounded-2xl border border-sage-light">
+              <motion.div
+                className="flex flex-col items-start gap-4 p-10 bg-sage-pale rounded-2xl border border-sage-light"
+                initial={{ opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
                 <CheckCircle size={40} className="text-sage" />
                 <h3 className="font-heading text-3xl font-light text-charcoal">
                   Message received
@@ -91,7 +88,7 @@ export default function ContactPage() {
                 <p className="font-body text-base text-muted leading-relaxed">
                   {state.message}
                 </p>
-              </div>
+              </motion.div>
             ) : (
               <form action={formAction} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -191,7 +188,7 @@ export default function ContactPage() {
                 </p>
               </form>
             )}
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

@@ -30,8 +30,9 @@ These rules come from the official NewFuture Therapy design system (Claude Desig
 - Corners: cards 16px, panels 12px, inputs 8px, buttons/tags pill. **Nothing square.**
 - Borders: 1px grey-light `#E4E0DB` does most separation; hover shifts to sage-light. Shadows barely-there (`shadow-sm`; `shadow-lg` only on hero photo). No inner shadows.
 - Cards: white on cream/pale, 16px radius, 1px border, `shadow-sm`, 24–32px padding. Tinted variant: sage-pale with 50%-alpha sage-light border. Area cards open with a 32×2px sage dash.
-- Hover: color shifts only, 200ms ease. **No press/scale effects.** Motion: 200ms color, 300–400ms accordion/header. No entrance animations, no parallax.
-- Blur/transparency: only the sticky header after scroll (cream 95% + blur).
+- Hover: color shifts, gentle lift (`hover:-translate-y-2 hover:shadow-xl`, 500ms) on cards. No press/scale-down effects.
+- Motion (UPDATED June 2026 — client requested immersive Apple-like experience, superseding the original "no animations" rule): the motion language is **"slow exhale"** — nothing bounces, everything breathes. Lenis smooth scrolling site-wide; scroll-triggered reveals (fade + 32px rise, 0.9s, ease `[0.22,1,0.36,1]`) via `Reveal`/`StaggerGroup` in `src/components/motion/`; scroll-linked parallax and word-by-word quote illumination on Home; intro screen (leaf draw, once per session); R3F 3D sage orbs behind the hero (desktop only); floating leaf ambience. ALL motion must respect `prefers-reduced-motion` (globals.css kills everything; SmoothScroll/Hero3D/IntroScreen self-disable). Never use spring bounce, elastic easing, spin, or entrance zooms.
+- Blur/transparency: the sticky header after scroll (cream 95% + blur); soft blurred sage blobs as parallax decoration.
 - Forms: uppercase 12px tracked labels, white fields, grey-light border → sage on focus, sage asterisks for required.
 
 ## Imagery
