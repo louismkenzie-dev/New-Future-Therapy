@@ -7,6 +7,9 @@ import { supabaseAnon, supabaseAdmin } from "./supabase";
    access yields no readable PII. SUBMISSIONS_SECRET is the 32-byte hex key. */
 
 export interface Submission {
+  /** Supabase row UUID — use this for server actions */
+  dbId: string;
+  /** Encrypted-payload id (legacy, kept for back-compat) */
   id: string;
   name: string;
   email: string;
@@ -15,6 +18,7 @@ export interface Submission {
   referral: string;
   message: string;
   submittedAt: string;
+  contacted: boolean;
 }
 
 function encryptionKey(): Buffer {
@@ -42,16 +46,16 @@ function decrypt(payload: Buffer): string {
 }
 
 export async function saveSubmission(
-  data: Omit<Submission, "id" | "submittedAt">
+  data: Omit<Submission, "dbId" | "id" | "submittedAt" | "contacted">
 ): Promise<void> {
-  const submission: Submission = {
+  const submission = {
     ...data,
     id: randomBytes(8).toString("hex"),
     submittedAt: new Date().toISOString(),
   };
   const payload = encrypt(JSON.stringify(submission));
 
-  // PostgREST expects bytea as \x{hex} — never Array.from() which loses binary structure
+  // PostgREST expects bytea as \x{hex}
   const { error } = await supabaseAnon()
     .from("contact_submissions")
     .insert({ payload: `\\x${payload.toString("hex")}` });
@@ -62,7 +66,7 @@ export async function saveSubmission(
 export async function listSubmissions(): Promise<Submission[]> {
   const { data, error } = await supabaseAdmin()
     .from("contact_submissions")
-    .select("payload, submitted_at")
+    .select("id, payload, submitted_at, contacted")
     .order("submitted_at", { ascending: false })
     .limit(500);
 
@@ -71,13 +75,26 @@ export async function listSubmissions(): Promise<Submission[]> {
   const submissions: Submission[] = [];
   for (const row of data ?? []) {
     try {
-      // Supabase returns bytea as \x{hex} — strip prefix and decode
       const hex = (row.payload as string).replace(/^\\x/, "");
       const buf = Buffer.from(hex, "hex");
-      submissions.push(JSON.parse(decrypt(buf)) as Submission);
+      const parsed = JSON.parse(decrypt(buf));
+      submissions.push({
+        ...parsed,
+        dbId: row.id,
+        contacted: row.contacted ?? false,
+      } as Submission);
     } catch {
-      // skip any row that fails to decrypt rather than crashing the dashboard
+      // skip corrupt/unreadable rows
     }
   }
   return submissions;
+}
+
+export async function setContacted(dbId: string, contacted: boolean): Promise<void> {
+  const { error } = await supabaseAdmin()
+    .from("contact_submissions")
+    .update({ contacted })
+    .eq("id", dbId);
+
+  if (error) throw new Error(error.message);
 }

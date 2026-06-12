@@ -1,7 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { verifyPassword, createSession, destroySession } from "@/lib/adminAuth";
+import { setContacted } from "@/lib/submissions";
+import { isAdmin } from "@/lib/adminAuth";
 
 export interface LoginState {
   error?: string;
@@ -24,4 +27,12 @@ export async function login(
 export async function logout(): Promise<void> {
   await destroySession();
   redirect("/admin/login");
+}
+
+export async function toggleContacted(formData: FormData): Promise<void> {
+  if (!(await isAdmin())) redirect("/admin/login");
+  const dbId = formData.get("dbId")?.toString() ?? "";
+  const contacted = formData.get("contacted") === "true";
+  await setContacted(dbId, contacted);
+  revalidatePath("/admin");
 }

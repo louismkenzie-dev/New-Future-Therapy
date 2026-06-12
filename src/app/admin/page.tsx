@@ -7,10 +7,12 @@ import {
   Phone,
   MessageSquareQuote,
   LogOut,
+  CheckCircle2,
+  Circle,
 } from "lucide-react";
 import { isAdmin } from "@/lib/adminAuth";
 import { listSubmissions, type Submission } from "@/lib/submissions";
-import { logout } from "@/app/actions/admin";
+import { logout, toggleContacted } from "@/app/actions/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -34,8 +36,15 @@ const REFERRAL_LABELS: Record<string, string> = {
 };
 
 function SubmissionCard({ submission }: { submission: Submission }) {
+  const contacted = submission.contacted;
+
   return (
-    <article className="bg-white rounded-2xl border border-grey-light shadow-sm p-8 transition-all duration-300 hover:border-sage-light">
+    <article
+      className={`bg-white rounded-2xl border shadow-sm p-8 transition-all duration-300 ${
+        contacted ? "border-sage-light/60" : "border-grey-light hover:border-sage-light"
+      }`}
+    >
+      {/* Header row */}
       <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
         <div>
           <h3 className="font-heading text-2xl font-medium text-charcoal">
@@ -50,13 +59,50 @@ function SubmissionCard({ submission }: { submission: Submission }) {
             {formatDate(submission.submittedAt)}
           </p>
         </div>
-        {submission.referral && (
-          <span className="font-body text-xs text-muted bg-cream px-3 py-1.5 rounded-full border border-grey-light">
-            via {REFERRAL_LABELS[submission.referral] ?? submission.referral}
+
+        {/* Status + action */}
+        <div className="flex items-center gap-3">
+          {submission.referral && (
+            <span className="font-body text-xs text-muted bg-cream px-3 py-1.5 rounded-full border border-grey-light">
+              via {REFERRAL_LABELS[submission.referral] ?? submission.referral}
+            </span>
+          )}
+
+          {/* Status badge */}
+          <span
+            className={`inline-flex items-center gap-1.5 font-body text-xs px-3 py-1.5 rounded-full border ${
+              contacted
+                ? "bg-sage-pale text-sage-dark border-sage-light"
+                : "bg-cream text-muted border-grey-light"
+            }`}
+          >
+            {contacted ? (
+              <CheckCircle2 size={13} strokeWidth={2} />
+            ) : (
+              <Circle size={13} strokeWidth={2} />
+            )}
+            {contacted ? "Contacted" : "Awaiting Contact"}
           </span>
-        )}
+
+          {/* Toggle button */}
+          <form action={toggleContacted}>
+            <input type="hidden" name="dbId" value={submission.dbId} />
+            <input type="hidden" name="contacted" value={String(!contacted)} />
+            <button
+              type="submit"
+              className={`inline-flex items-center gap-2 min-h-[36px] font-body text-xs px-4 py-2 rounded-full border transition-colors duration-200 ${
+                contacted
+                  ? "border-grey-light text-muted hover:border-sage hover:text-sage-dark"
+                  : "bg-sage-dark text-cream border-sage-dark hover:bg-charcoal"
+              }`}
+            >
+              {contacted ? "Undo" : "Mark as Contacted"}
+            </button>
+          </form>
+        </div>
       </div>
 
+      {/* Contact links */}
       <div className="flex flex-wrap gap-x-8 gap-y-2 mb-6">
         <a
           href={`mailto:${submission.email}`}
@@ -76,6 +122,7 @@ function SubmissionCard({ submission }: { submission: Submission }) {
         )}
       </div>
 
+      {/* Message */}
       <div className="bg-sage-pale/60 rounded-xl border border-sage-light/40 p-5">
         <MessageSquareQuote size={18} className="text-sage mb-2" aria-hidden="true" />
         <p className="font-body text-sm text-charcoal leading-relaxed whitespace-pre-wrap">
