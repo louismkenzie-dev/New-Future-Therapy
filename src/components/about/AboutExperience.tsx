@@ -175,7 +175,7 @@ export default function AboutExperience() {
     target: photoBandRef,
     offset: ["start end", "end start"],
   });
-  const bandY = useTransform(bandProgress, [0, 1], ["-12%", "12%"]);
+  const bandY = useTransform(bandProgress, [0, 1], ["-6%", "6%"]);
 
   return (
     <>
@@ -262,30 +262,113 @@ export default function AboutExperience() {
         eyebrow="Esther & Laura"
       />
 
-      {/* ── Cinematic parallax photo band ── */}
+      {/* ── In-session photo, held in a soft card ── */}
       <section
         ref={photoBandRef}
-        className="relative h-[55vh] md:h-[70vh] overflow-hidden"
+        className="relative py-24 md:py-32 px-6 bg-cream overflow-hidden"
       >
-        <motion.div className="absolute inset-x-0 -top-[15%] h-[130%]" style={{ y: bandY }}>
-          <Image
-            src="/photos/therapist-green-session.jpg"
-            alt="A therapy session in progress at NewFuture Therapy"
-            fill
-            sizes="100vw"
-            className="object-cover"
-            style={{ objectPosition: "60% 30%" }}
-          />
-        </motion.div>
-        <div
-          className="absolute inset-0 bg-gradient-to-t from-charcoal/50 via-transparent to-transparent"
-          aria-hidden="true"
-        />
-        <Reveal className="absolute bottom-10 inset-x-0 text-center px-6">
-          <p className="font-heading italic text-2xl md:text-3xl font-light text-cream">
-            Growth happens when we stay curious.
-          </p>
-        </Reveal>
+        {/* Soft decorative ellipses behind the card */}
+        <div className="absolute inset-0 opacity-30 pointer-events-none" aria-hidden="true">
+          <svg viewBox="0 0 1200 700" fill="none" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <ellipse cx="1080" cy="140" rx="320" ry="280" fill="#C4D9C6" />
+            <ellipse cx="100" cy="600" rx="260" ry="240" fill="#6B8C6F" opacity="0.25" />
+          </svg>
+        </div>
+
+        <div className="relative z-10 max-w-5xl mx-auto">
+          <Reveal className="text-center mb-12">
+            <p className="font-body text-xs text-sage-dark uppercase tracking-[0.3em] mb-4">
+              Inside The Room
+            </p>
+            <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">
+              Where the Work Happens
+            </h2>
+          </Reveal>
+
+          <Reveal delay={0.15}>
+            <div className="relative">
+              {/* The photo card: rounded, lifted, breathing parallax inside */}
+              <div className="relative overflow-hidden rounded-2xl shadow-lg aspect-[3/2] sm:aspect-[16/9]">
+                <motion.div
+                  className="absolute inset-x-0 -top-[12%] h-[124%]"
+                  style={{ y: bandY }}
+                >
+                  <Image
+                    src="/photos/therapist-green-session.jpg"
+                    alt="A therapy session in progress at NewFuture Therapy"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 1024px"
+                    className="object-cover"
+                    style={{ objectPosition: "60% 30%" }}
+                  />
+                </motion.div>
+                {/* Gentle protective gradient for the caption */}
+                <div
+                  className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-charcoal/45 to-transparent pointer-events-none"
+                  aria-hidden="true"
+                />
+
+                {/* Caption panel — glass card inside the photo */}
+                <motion.div
+                  className="absolute bottom-5 left-5 right-5 sm:bottom-7 sm:left-7 sm:right-auto sm:max-w-md"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                  transition={{ duration: 0.9, delay: 0.4, ease: EASE_OUT }}
+                >
+                  <div className="flex items-start gap-4 bg-white/90 backdrop-blur-sm rounded-2xl border border-sage-light p-5 sm:p-6 shadow-sm">
+                    <span className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-sage-pale border border-sage-light shrink-0">
+                      <Leaf size={20} strokeWidth={1.5} className="text-sage-dark" />
+                    </span>
+                    <span>
+                      <span className="block font-heading italic text-xl sm:text-2xl font-light text-charcoal leading-snug">
+                        Growth happens when we stay curious.
+                      </span>
+                      <span className="block font-body text-xs text-muted uppercase tracking-[0.2em] mt-2">
+                        The NewFuture belief
+                      </span>
+                    </span>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Floating info chips on the card edges, like the home hero */}
+              <motion.div
+                className="absolute left-6 sm:left-10 -top-4 z-10"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                transition={{ duration: 0.8, delay: 0.6, ease: EASE_OUT }}
+              >
+                <motion.span
+                  className="inline-flex items-center gap-2 font-body text-xs sm:text-sm bg-white/95 backdrop-blur-sm text-sage-dark px-4 py-2.5 rounded-full border border-sage-light shadow-sm"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <Users size={15} strokeWidth={1.75} />
+                  Individuals &amp; Couples
+                </motion.span>
+              </motion.div>
+
+              <motion.div
+                className="absolute right-6 sm:right-10 -bottom-4 z-10"
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "0px 0px -60px 0px" }}
+                transition={{ duration: 0.8, delay: 0.8, ease: EASE_OUT }}
+              >
+                <motion.span
+                  className="inline-flex items-center gap-2 font-body text-xs sm:text-sm bg-white/95 backdrop-blur-sm text-sage-dark px-4 py-2.5 rounded-full border border-sage-light shadow-sm"
+                  animate={{ y: [0, 6, 0] }}
+                  transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+                >
+                  <HeartPulse size={15} strokeWidth={1.75} />
+                  Wakefield &amp; Online
+                </motion.span>
+              </motion.div>
+            </div>
+          </Reveal>
+        </div>
       </section>
 
       {/* ── Meet the twins, one at a time ── */}
