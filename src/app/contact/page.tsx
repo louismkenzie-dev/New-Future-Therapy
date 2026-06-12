@@ -51,6 +51,14 @@ export default function ContactPage() {
                 </p>
               </div>
               <div>
+                <p className="font-semibold text-charcoal mb-1">Everyone is welcome</p>
+                <p>
+                  Our clients range from 18 to 70 and beyond, across all
+                  identities, orientations and backgrounds. No concern is too
+                  small to bring to us.
+                </p>
+              </div>
+              <div>
                 <p className="font-semibold text-charcoal mb-1">Response time</p>
                 <p>
                   We aim to respond to all enquiries within two working days.
@@ -59,7 +67,7 @@ export default function ContactPage() {
             </div>
 
             <div className="mt-10 p-6 bg-sage-pale rounded-xl border border-sage-light/50">
-              <p className="font-body text-xs text-sage uppercase tracking-widest mb-2">
+              <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-2">
                 Based in
               </p>
               <p className="font-heading text-xl text-charcoal">
@@ -120,17 +128,31 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="phone" className="block font-body text-xs text-muted uppercase tracking-widest mb-2">
-                    Phone <span className="text-grey-mid">(optional)</span>
-                  </label>
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    className="w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage transition-colors duration-200"
-                    placeholder="+44 7700 000000"
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="phone" className="block font-body text-xs text-muted uppercase tracking-widest mb-2">
+                      Phone <span className="text-grey-mid">(optional)</span>
+                    </label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      className="w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage transition-colors duration-200"
+                      placeholder="+44 7700 000000"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="pronouns" className="block font-body text-xs text-muted uppercase tracking-widest mb-2">
+                      Pronouns <span className="text-grey-mid">(optional)</span>
+                    </label>
+                    <input
+                      id="pronouns"
+                      name="pronouns"
+                      type="text"
+                      className="w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage transition-colors duration-200"
+                      placeholder="e.g. she/her, he/him, they/them"
+                    />
+                  </div>
                 </div>
 
                 <div>

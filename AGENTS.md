@@ -15,7 +15,7 @@ These rules come from the official NewFuture Therapy design system (Claude Desig
 
 ## Color (tokens in src/app/globals.css @theme)
 - Pages are warm cream `#F5F3EF` — **never pure white or black** page backgrounds.
-- One green family only: sage-pale `#EBF2EC` (tinted bands), sage-light `#C4D9C6` (accents on dark), sage `#6B8C6F` (eyebrows, secondary CTAs), sage-dark `#3A5A40` (primary buttons, quote bands).
+- One green family only: sage-pale `#EBF2EC` (tinted bands), sage-light `#C4D9C6` (accents on dark), sage `#6B8C6F` (decorative accents, secondary CTAs), sage-dark `#3A5A40` (primary buttons, quote bands, **all eyebrow/label text on light backgrounds** — plain sage fails WCAG AA contrast for small text; sage-light stays for eyebrows on dark bands).
 - Text: charcoal `#2D2926` headings, muted `#5C5651` body. Footer background is charcoal.
 - Error red only in form validation.
 
@@ -42,6 +42,15 @@ These rules come from the official NewFuture Therapy design system (Claude Desig
 
 ## Iconography
 - **lucide only** (lucide-react) — 24×24, 2px stroke, `currentColor`. Used sparingly. **No icon fonts, no emoji ever, no unicode-as-icon.**
+
+## Inclusivity (HARD RULES — founder priority)
+- The practice serves adults of **all ages, 18 to 70 and beyond** — copy must never skew young or old; life-stage examples should span the full range (early adulthood through retirement).
+- **LGBTQIA+** is the standard terminology (never the shorter "LGBTQ+"). The site offers affirming therapy — copy frames this as active affirmation, never tolerance or accommodation.
+- Never make gendered assumptions in any copy: no "husband/wife" defaults, no gendered pronouns for hypothetical clients, all relationship structures (monogamous, non-monogamous, polyamorous) named equally.
+- The contact form has an optional free-text Pronouns field — never replace it with a dropdown, and never make it required.
+- Accessibility is age inclusivity: all text must meet WCAG AA contrast (≥4.5:1 small text); interactive targets ≥44px; body copy ≥16px; reduced-motion always honoured.
+- Inclusion is expressed through words and structure, not flags or rainbow colours (single green family is a hard visual rule).
+- Key inclusion surfaces: "Everyone Is Welcome Here" band on Home; "Our Commitment to Inclusivity" on Our Approach; "Everyone is welcome" item on Contact.
 
 ## Copy
 - First-person plural "we" to "you". Warm, professional, British English ("specialising", "non-judgemental").

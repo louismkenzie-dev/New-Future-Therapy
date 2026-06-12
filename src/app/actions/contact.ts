@@ -12,6 +12,7 @@ export async function submitContactForm(
   const name = formData.get("name")?.toString().trim() ?? "";
   const email = formData.get("email")?.toString().trim() ?? "";
   const message = formData.get("message")?.toString().trim() ?? "";
+  const pronouns = formData.get("pronouns")?.toString().trim() ?? "";
 
   if (!name || !email || !message) {
     return { status: "error", message: "Please fill in all required fields." };
@@ -24,7 +25,7 @@ export async function submitContactForm(
 
   // TODO: wire to an email service (Resend, SendGrid, Nodemailer, etc.)
   // For now, log and return success to verify the form works end-to-end.
-  console.log("Contact form submission:", { name, email, message });
+  console.log("Contact form submission:", { name, email, pronouns, message });
 
   return {
     status: "success",

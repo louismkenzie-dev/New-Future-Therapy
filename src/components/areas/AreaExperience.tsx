@@ -144,7 +144,7 @@ export default function AreaExperience({
         <FloatingLeaves className="opacity-60" />
         <div className="max-w-4xl mx-auto relative z-10">
           <Reveal className="text-center mb-14">
-            <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-3">
+            <p className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-3">
               Together We Can Explore
             </p>
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">

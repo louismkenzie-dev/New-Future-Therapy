@@ -20,7 +20,7 @@ export default function PageHeader({
     <section className="bg-sage-pale pt-16 pb-12 px-6 overflow-hidden">
       <div className="max-w-3xl mx-auto text-center">
         <motion.p
-          className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-4"
+          className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-4"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE_OUT }}

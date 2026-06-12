@@ -30,12 +30,12 @@ export default function Footer() {
             <h3 className="font-heading text-lg font-semibold text-cream mb-5 tracking-wide">
               Navigation
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-1">
               {footerLinks.map(({ href, label }) => (
                 <li key={href}>
                   <Link
                     href={href}
-                    className="font-body text-sm text-cream/60 hover:text-sage-light transition-colors duration-200"
+                    className="inline-flex items-center min-h-[44px] font-body text-sm text-cream/60 hover:text-sage-light transition-colors duration-200"
                   >
                     {label}
                   </Link>

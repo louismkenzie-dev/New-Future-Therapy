@@ -19,7 +19,7 @@ export const helpAreas: HelpArea[] = [
 
 We work with a wide range of relationship concerns including communication difficulties, conflict, emotional disconnection, trust issues, intimacy concerns, affair recovery, separation, life transitions, family dynamics, and differing needs within relationships. We also support individuals who wish to explore patterns in relationships, attachment styles, boundaries, self-worth and the impact of past experiences on current relationships.
 
-We welcome and affirm people of all sexual orientations, gender identities, relationship structures and cultural backgrounds. This includes LGBTQ+ individuals and couples, people who are questioning aspects of their identity, those exploring sexuality or intimacy concerns, and people in monogamous, non-monogamous, polyamorous or other relationship arrangements.
+We welcome and affirm people of all sexual orientations, gender identities, relationship structures and cultural backgrounds. This includes LGBTQIA+ individuals and couples, people who are questioning aspects of their identity, those exploring sexuality or intimacy concerns, and people in monogamous, non-monogamous, polyamorous or other relationship arrangements.
 
 Our aim is not to decide who is right or wrong but to create a space where experiences can be explored with curiosity, compassion, and respect. Through greater understanding of yourself, your relationships, and the patterns that shape them, meaningful and lasting change becomes possible.`,
     essence: "Connection is where we hurt — and where we heal.",
@@ -31,7 +31,7 @@ Our aim is not to decide who is right or wrong but to create a space where exper
       "Affair recovery",
       "Attachment",
       "Couples",
-      "LGBTQ+ affirming",
+      "LGBTQIA+ affirming",
     ],
   },
   {
@@ -134,6 +134,7 @@ We support you in building emotional awareness — learning to recognise, name a
 Therapy provides a space to process change, explore identity and meaning, and find a way through uncertainty. We help you make sense of where you are, connect with your own values and strengths, and move forward with greater clarity and confidence — even in the midst of change.`,
     essence: "When life changes shape, you can too.",
     keywords: [
+      "Early adulthood",
       "Separation & divorce",
       "Parenting",
       "Bereavement",

@@ -51,7 +51,7 @@ export default function HomeHero() {
       <div className="relative z-10 max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center w-full">
         <motion.div style={{ y: textY, opacity: textOpacity }}>
           <motion.p
-            className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-6"
+            className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-6"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1, ease: EASE_OUT }}

@@ -42,7 +42,7 @@ export default function HomePage() {
         <FloatingLeaves />
         <div className="max-w-6xl mx-auto relative z-10">
           <Reveal className="text-center mb-16">
-            <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-3">
+            <p className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-3">
               About Us
             </p>
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">
@@ -70,7 +70,7 @@ export default function HomePage() {
                     <h3 className="font-heading text-3xl font-medium text-charcoal mb-1">
                       {name}
                     </h3>
-                    <p className="font-body text-xs text-sage uppercase tracking-widest mb-4">
+                    <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-4">
                       Therapist &amp; Co-founder
                     </p>
                     <p className="font-body text-sm text-muted leading-relaxed">
@@ -107,7 +107,7 @@ export default function HomePage() {
 
         <div className="max-w-6xl mx-auto relative z-10">
           <Reveal className="text-center mb-16">
-            <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-3">
+            <p className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-3">
               What We Offer
             </p>
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal mb-4">
@@ -144,7 +144,7 @@ export default function HomePage() {
                     <p className="font-body text-xs text-muted leading-relaxed mb-4">
                       {area.keywords.slice(0, 3).join(" · ")}
                     </p>
-                    <span className="mt-auto inline-flex items-center gap-1.5 font-body text-xs text-sage uppercase tracking-[0.2em] opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                    <span className="mt-auto inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-[0.2em] opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                       Explore
                       <ArrowRight size={12} />
                     </span>
@@ -170,7 +170,7 @@ export default function HomePage() {
       <section className="py-24 px-6 bg-cream">
         <div className="max-w-6xl mx-auto">
           <Reveal className="text-center mb-16">
-            <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-3">
+            <p className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-3">
               Client Experiences
             </p>
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">
@@ -190,6 +190,44 @@ export default function HomePage() {
                     {t.author}
                   </p>
                 </div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
+      {/* Everyone Is Welcome */}
+      <section className="py-24 px-6 bg-sage-pale relative overflow-hidden">
+        <FloatingLeaves className="opacity-50" />
+        <div className="max-w-4xl mx-auto relative z-10">
+          <Reveal className="text-center mb-12">
+            <p className="font-body text-sm text-sage-dark uppercase tracking-[0.25em] mb-3">
+              Our Promise
+            </p>
+            <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal mb-6">
+              Everyone Is Welcome Here
+            </h2>
+            <p className="font-body text-base text-muted leading-relaxed max-w-2xl mx-auto">
+              Therapy only works when you can bring your whole self into the
+              room. Whoever you are, however you identify, and whatever stage
+              of life you are at, you will find a space here that affirms you
+              — without assumptions, without judgement, and without exception.
+            </p>
+          </Reveal>
+
+          <StaggerGroup className="flex flex-wrap justify-center gap-4">
+            {[
+              "All sexual orientations",
+              "All gender identities",
+              "All relationship structures",
+              "All ages — 18 to 70 and beyond",
+              "All cultural backgrounds and faiths",
+              "Neurodivergent-affirming",
+            ].map((affirmation) => (
+              <StaggerItem key={affirmation}>
+                <span className="inline-flex items-center min-h-[44px] font-body text-sm md:text-base bg-white text-sage-dark px-6 py-3 rounded-full border border-sage-light shadow-sm">
+                  {affirmation}
+                </span>
               </StaggerItem>
             ))}
           </StaggerGroup>

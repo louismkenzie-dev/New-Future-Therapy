@@ -137,8 +137,42 @@ export default function OurApproachPage() {
         </div>
       </section>
 
+      {/* Our Commitment to Inclusivity */}
+      <section className="py-20 px-6 bg-sage-pale">
+        <div className="max-w-3xl mx-auto">
+          <Reveal className="text-center mb-12">
+            <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal mb-4">
+              Our Commitment to Inclusivity
+            </h2>
+            <p className="font-body text-base text-muted leading-relaxed max-w-xl mx-auto">
+              Inclusion is not a line in our policy — it is the foundation of
+              how we practise. These commitments hold in every session, with
+              every client.
+            </p>
+          </Reveal>
+          <StaggerGroup className="space-y-5">
+            {[
+              "We offer LGBTQIA+ affirming therapy — not tolerance, but active affirmation of who you are.",
+              "We respect your pronouns, your identity and your own language for yourself, and we never make assumptions.",
+              "We affirm monogamous, non-monogamous, polyamorous and other relationship structures equally.",
+              "We work with adults at every stage of life, from 18 to 70 and beyond — no concern is too small and no chapter of life is the wrong one.",
+              "We will never pathologise who you are. Who you love, how you identify and how your mind works are not problems to be fixed.",
+            ].map((commitment, i) => (
+              <StaggerItem key={i}>
+                <div className="flex gap-4 bg-white rounded-xl border border-sage-light/60 p-5">
+                  <div className="w-2 h-2 rounded-full bg-sage mt-2.5 shrink-0" />
+                  <p className="font-body text-base text-muted leading-relaxed">
+                    {commitment}
+                  </p>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section className="py-16 px-6 bg-sage-pale border-t border-grey-light">
+      <section className="py-16 px-6 bg-cream border-t border-grey-light">
         <Reveal className="max-w-2xl mx-auto text-center">
           <h2 className="font-heading text-3xl font-light text-charcoal mb-4">
             Ready to explore how we can support you?

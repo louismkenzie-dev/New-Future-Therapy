@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s | NewFuture Therapy",
   },
   description:
-    "Compassionate therapy for individuals and couples. Esther and Laura are BACP-registered therapists specialising in relationships, anxiety, trauma, and more.",
+    "Compassionate, inclusive therapy for individuals and couples — adults of all ages (18+). Esther and Laura are BACP-registered therapists specialising in relationships, anxiety, trauma, and more. LGBTQIA+ affirming. Wakefield & Online.",
 };
 
 export default function RootLayout({

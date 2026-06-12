@@ -54,7 +54,7 @@ export default function AreaGrid() {
                   {area.keywords.slice(0, 3).join(" · ")}
                 </span>
 
-                <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage uppercase tracking-[0.2em] opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-[0.2em] opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
                   Explore
                   <ArrowRight size={12} />
                 </span>

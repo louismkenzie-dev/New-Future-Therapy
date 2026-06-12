@@ -126,7 +126,7 @@ export default function AboutPage() {
                 <h3 className="font-heading text-4xl font-medium text-charcoal mb-1">
                   Esther
                 </h3>
-                <p className="font-body text-xs text-sage uppercase tracking-widest mb-5">
+                <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-5">
                   Therapist &amp; Co-founder
                 </p>
                 <div className="space-y-3 font-body text-sm text-muted leading-relaxed">
@@ -177,7 +177,7 @@ export default function AboutPage() {
                 <h3 className="font-heading text-4xl font-medium text-charcoal mb-1">
                   Laura
                 </h3>
-                <p className="font-body text-xs text-sage uppercase tracking-widest mb-5">
+                <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-5">
                   Therapist &amp; Co-founder
                 </p>
                 <div className="space-y-3 font-body text-sm text-muted leading-relaxed">
