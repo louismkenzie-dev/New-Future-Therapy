@@ -1,25 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 
 /* Brand intro: the leaf glyph draws itself stroke by stroke, the wordmark
    rises beneath it, then the cream curtain lifts to reveal the page.
-   Shown once per browser session; skipped for reduced-motion users. */
+   Replays on every page load and on every navigation to a new route;
+   skipped for reduced-motion users. */
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export default function IntroScreen() {
+  const pathname = usePathname();
   const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  /* Bump on each play so the curtain (and the leaf draw inside it) fully
+     remounts and re-runs its animation, even when the route stays mounted. */
+  const [runId, setRunId] = useState(0);
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const seen = sessionStorage.getItem("nf-intro-seen");
-    if (reduced || seen) return;
+    if (reduced) return;
 
-    sessionStorage.setItem("nf-intro-seen", "1");
+    setLeaving(false);
     setShow(true);
+    setRunId((n) => n + 1);
     document.documentElement.style.overflow = "hidden";
 
     const exitTimer = setTimeout(() => setLeaving(true), 2600);
@@ -33,12 +39,13 @@ export default function IntroScreen() {
       clearTimeout(doneTimer);
       document.documentElement.style.overflow = "";
     };
-  }, []);
+  }, [pathname]);
 
   return (
     <AnimatePresence>
       {show && (
         <motion.div
+          key={runId}
           className="fixed inset-0 z-[100] bg-cream flex items-center justify-center"
           initial={false}
           animate={leaving ? { y: "-100%" } : { y: 0 }}
