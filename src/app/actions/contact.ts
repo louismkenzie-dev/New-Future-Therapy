@@ -1,5 +1,7 @@
 "use server";
 
+import { saveSubmission } from "@/lib/submissions";
+
 export interface ContactFormState {
   status: "idle" | "success" | "error";
   message?: string;
@@ -13,6 +15,8 @@ export async function submitContactForm(
   const email = formData.get("email")?.toString().trim() ?? "";
   const message = formData.get("message")?.toString().trim() ?? "";
   const pronouns = formData.get("pronouns")?.toString().trim() ?? "";
+  const phone = formData.get("phone")?.toString().trim() ?? "";
+  const referral = formData.get("referral")?.toString().trim() ?? "";
 
   if (!name || !email || !message) {
     return { status: "error", message: "Please fill in all required fields." };
@@ -23,9 +27,16 @@ export async function submitContactForm(
     return { status: "error", message: "Please enter a valid email address." };
   }
 
-  // TODO: wire to an email service (Resend, SendGrid, Nodemailer, etc.)
-  // For now, log and return success to verify the form works end-to-end.
-  console.log("Contact form submission:", { name, email, pronouns, message });
+  try {
+    await saveSubmission({ name, email, phone, pronouns, referral, message });
+  } catch (error) {
+    console.error("Failed to store contact submission:", error);
+    return {
+      status: "error",
+      message:
+        "Something went wrong sending your message. Please try again, or email us directly.",
+    };
+  }
 
   return {
     status: "success",
