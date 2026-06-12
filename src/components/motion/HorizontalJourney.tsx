@@ -36,19 +36,23 @@ function ChapterPanel({
   progress: MotionValue<number>;
 }) {
   const Icon = chapter.icon;
-  /* Each chapter breathes in as it crosses the centre of the journey */
+  /* Each chapter breathes in as it crosses the centre of the journey.
+     Input ranges MUST stay within [0,1] — motion can bind these as WAAPI
+     keyframe offsets, and out-of-range offsets throw at mount. */
   const centre = count <= 1 ? 0 : index / (count - 1);
   const window = 0.5 / Math.max(count - 1, 1);
-  const opacity = useTransform(
-    progress,
-    [centre - window, centre, centre + window],
-    [0.35, 1, 0.35]
-  );
-  const scale = useTransform(
-    progress,
-    [centre - window, centre, centre + window],
-    [0.94, 1, 0.94]
-  );
+  const range =
+    index === 0
+      ? [0, window]
+      : index === count - 1
+        ? [1 - window, 1]
+        : [centre - window, centre, centre + window];
+  const opacityOut =
+    index === 0 ? [1, 0.35] : index === count - 1 ? [0.35, 1] : [0.35, 1, 0.35];
+  const scaleOut =
+    index === 0 ? [1, 0.94] : index === count - 1 ? [0.94, 1] : [0.94, 1, 0.94];
+  const opacity = useTransform(progress, range, opacityOut);
+  const scale = useTransform(progress, range, scaleOut);
 
   return (
     <div className="w-screen h-full shrink-0 flex items-center justify-center px-6">
@@ -189,13 +193,18 @@ function ChapterDot({
   count: number;
   progress: MotionValue<number>;
 }) {
+  /* Same clamping rule as ChapterPanel: ranges must stay within [0,1] */
   const centre = count <= 1 ? 0 : index / (count - 1);
   const window = 0.5 / Math.max(count - 1, 1);
-  const opacity = useTransform(
-    progress,
-    [centre - window, centre, centre + window],
-    [0.3, 1, 0.3]
-  );
+  const range =
+    index === 0
+      ? [0, window]
+      : index === count - 1
+        ? [1 - window, 1]
+        : [centre - window, centre, centre + window];
+  const opacityOut =
+    index === 0 ? [1, 0.3] : index === count - 1 ? [0.3, 1] : [0.3, 1, 0.3];
+  const opacity = useTransform(progress, range, opacityOut);
   return (
     <motion.span
       className="w-1.5 h-1.5 rounded-full bg-sage-dark"

@@ -24,8 +24,10 @@ function Card({
   progress: ReturnType<typeof useScroll>["scrollYProgress"];
   reduced: boolean;
 }) {
-  /* As the cards after this one arrive, this card settles back */
-  const start = (index + 1) / count;
+  /* As the cards after this one arrive, this card settles back.
+     Keep the range strictly increasing and within [0,1] — the last card's
+     range would otherwise degenerate to [1,1]. */
+  const start = Math.min((index + 1) / count, 0.999);
   const scale = useTransform(progress, [start, 1], [1, 1 - (count - index - 1) * 0.05]);
   const targetOpacity = 1 - (count - index - 1) * 0.25;
   const opacity = useTransform(progress, [start, 1], [1, Math.max(targetOpacity, 0.45)]);
