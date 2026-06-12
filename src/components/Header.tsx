@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import Logo from "@/components/Logo";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -37,13 +38,8 @@ export default function Header() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="flex flex-col leading-none">
-          <span className="font-heading text-2xl font-semibold text-sage-dark tracking-wide">
-            NewFuture
-          </span>
-          <span className="font-body text-xs text-muted uppercase tracking-[0.2em] -mt-0.5">
-            Therapy
-          </span>
+        <Link href="/" className="shrink-0 mr-8">
+          <Logo />
         </Link>
 
         {/* Desktop nav */}

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Logo from "@/components/Logo";
 
 const footerLinks = [
   { href: "/", label: "Home" },
@@ -16,12 +17,7 @@ export default function Footer() {
           {/* Brand */}
           <div>
             <div className="mb-4">
-              <span className="font-heading text-2xl font-semibold text-cream tracking-wide block">
-                NewFuture
-              </span>
-              <span className="font-body text-xs text-sage-light uppercase tracking-[0.2em]">
-                Therapy
-              </span>
+              <Logo onDark />
             </div>
             <p className="font-body text-sm leading-relaxed text-cream/60 max-w-xs">
               A compassionate, non-judgemental space for individuals and couples
@@ -71,7 +67,7 @@ export default function Footer() {
             © {new Date().getFullYear()} NewFuture Therapy. All rights reserved.
           </p>
           <p className="font-body text-xs text-cream/40">
-            Registered with BACP &bull; Leicester &amp; Online
+            Registered with BACP &bull; Wakefield &amp; Online
           </p>
         </div>
       </div>

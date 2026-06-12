@@ -71,7 +71,7 @@ export default function ContactPage() {
                 Based in
               </p>
               <p className="font-heading text-xl text-charcoal">
-                Leicester &amp; Online
+                Wakefield &amp; Online
               </p>
               <p className="font-body text-sm text-muted mt-2">
                 We offer sessions in person and via secure video call, so

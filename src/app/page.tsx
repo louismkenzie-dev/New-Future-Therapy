@@ -46,7 +46,7 @@ export default function HomePage() {
         <div className="relative z-10 max-w-6xl mx-auto px-6 py-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <p className="font-body text-sm text-sage uppercase tracking-[0.25em] mb-6">
-              Leicester &amp; Online
+              Wakefield &amp; Online
             </p>
             <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-light text-charcoal leading-tight mb-8">
               A compassionate space for growth and healing
@@ -77,7 +77,9 @@ export default function HomePage() {
           <div className="hidden md:block">
             <PhotoPlaceholder
               className="w-full aspect-[4/5] rounded-2xl shadow-lg"
-              label="Photo coming soon"
+              src="/photos/twins-laptop.jpg"
+              alt="Esther and Laura working together"
+              position="center 30%"
             />
           </div>
         </div>
@@ -122,7 +124,16 @@ export default function HomePage() {
                 key={name}
                 className="bg-white rounded-2xl overflow-hidden shadow-sm border border-grey-light"
               >
-                <PhotoPlaceholder className="w-full h-64" label={`Photo of ${name}`} />
+                <PhotoPlaceholder
+                  className="w-full h-64"
+                  src={
+                    name === "Esther"
+                      ? "/photos/therapist-green-portrait.jpg"
+                      : "/photos/therapist-white-armchair.jpg"
+                  }
+                  alt={`Photo of ${name}`}
+                  position={name === "Esther" ? "35% 25%" : "center 25%"}
+                />
                 <div className="p-8">
                   <h3 className="font-heading text-3xl font-medium text-charcoal mb-1">
                     {name}

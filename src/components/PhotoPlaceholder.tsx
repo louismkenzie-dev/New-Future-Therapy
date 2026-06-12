@@ -1,9 +1,36 @@
+import Image from "next/image";
+
 interface PhotoPlaceholderProps {
   className?: string;
   label?: string;
+  src?: string;
+  alt?: string;
+  /* CSS object-position, e.g. "center 30%" — faces sit in the upper third */
+  position?: string;
 }
 
-export default function PhotoPlaceholder({ className = "", label }: PhotoPlaceholderProps) {
+export default function PhotoPlaceholder({
+  className = "",
+  label,
+  src,
+  alt = "",
+  position = "center",
+}: PhotoPlaceholderProps) {
+  if (src) {
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        <Image
+          src={src}
+          alt={alt || label || ""}
+          fill
+          sizes="(max-width: 768px) 100vw, 50vw"
+          className="object-cover"
+          style={{ objectPosition: position }}
+        />
+      </div>
+    );
+  }
+
   return (
     <div
       className={`relative overflow-hidden bg-gradient-to-br from-sage-light via-sage/30 to-sage-pale flex items-end justify-start ${className}`}

@@ -87,14 +87,16 @@ export default function AboutPage() {
             <div className="space-y-6">
               <PhotoPlaceholder
                 className="w-full aspect-[3/4] rounded-2xl shadow-sm"
-                label="Esther & Laura"
+                src="/photos/therapist-green-session.jpg"
+                alt="A therapy session in progress"
+                position="60% 30%"
               />
               <div className="bg-sage-pale rounded-xl p-6 border border-sage-light/50">
                 <p className="font-body text-sm text-muted leading-relaxed">
                   <span className="font-semibold text-sage-dark">
                     Registered with BACP
                   </span>{" "}
-                  &bull; Based in Leicester &bull; Available online
+                  &bull; Based in Wakefield &bull; Available online
                 </p>
               </div>
             </div>
@@ -114,7 +116,12 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Esther */}
             <div className="bg-white rounded-2xl overflow-hidden border border-grey-light shadow-sm">
-              <PhotoPlaceholder className="w-full h-72" label="Photo of Esther" />
+              <PhotoPlaceholder
+                className="w-full h-72"
+                src="/photos/therapist-green-portrait.jpg"
+                alt="Photo of Esther"
+                position="35% 25%"
+              />
               <div className="p-8">
                 <h3 className="font-heading text-4xl font-medium text-charcoal mb-1">
                   Esther
@@ -158,7 +165,12 @@ export default function AboutPage() {
 
             {/* Laura */}
             <div className="bg-white rounded-2xl overflow-hidden border border-grey-light shadow-sm">
-              <PhotoPlaceholder className="w-full h-72" label="Photo of Laura" />
+              <PhotoPlaceholder
+                className="w-full h-72"
+                src="/photos/therapist-white-armchair.jpg"
+                alt="Photo of Laura"
+                position="center 25%"
+              />
               <div className="p-8">
                 <h3 className="font-heading text-4xl font-medium text-charcoal mb-1">
                   Laura
