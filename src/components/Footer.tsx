@@ -66,9 +66,17 @@ export default function Footer() {
           <p className="font-body text-xs text-cream/40">
             © {new Date().getFullYear()} NewFuture Therapy. All rights reserved.
           </p>
-          <p className="font-body text-xs text-cream/40">
-            Registered with BACP &bull; Wakefield &amp; Online
-          </p>
+          <div className="flex items-center gap-6">
+            <p className="font-body text-xs text-cream/40">
+              Registered with BACP &bull; Wakefield &amp; Online
+            </p>
+            <Link
+              href="/admin"
+              className="font-body text-xs text-cream/20 hover:text-cream/50 transition-colors duration-200"
+            >
+              Team Login
+            </Link>
+          </div>
         </div>
       </div>
     </footer>

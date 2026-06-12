@@ -1,11 +1,10 @@
 import "server-only";
-import { put, list } from "@vercel/blob";
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
+import { supabaseAnon, supabaseAdmin } from "./supabase";
 
-/* Contact-form submissions, stored as AES-256-GCM-encrypted JSON blobs.
-   Blob URLs are public-by-URL, so nothing readable ever leaves the server:
-   a leaked URL yields only ciphertext. SUBMISSIONS_SECRET (32-byte hex) is
-   the encryption key and must match between local and Vercel environments. */
+/* Contact-form submissions stored in Supabase as AES-256-GCM ciphertext.
+   The payload column holds binary (iv + auth_tag + ciphertext) so raw DB
+   access yields no readable PII. SUBMISSIONS_SECRET is the 32-byte hex key. */
 
 export interface Submission {
   id: string;
@@ -18,9 +17,7 @@ export interface Submission {
   submittedAt: string;
 }
 
-const PREFIX = "submissions/";
-
-function key(): Buffer {
+function encryptionKey(): Buffer {
   const hex = process.env.SUBMISSIONS_SECRET;
   if (!hex || hex.length !== 64) {
     throw new Error("SUBMISSIONS_SECRET must be a 32-byte hex string");
@@ -30,7 +27,7 @@ function key(): Buffer {
 
 function encrypt(plain: string): Buffer {
   const iv = randomBytes(12);
-  const cipher = createCipheriv("aes-256-gcm", key(), iv);
+  const cipher = createCipheriv("aes-256-gcm", encryptionKey(), iv);
   const enc = Buffer.concat([cipher.update(plain, "utf8"), cipher.final()]);
   return Buffer.concat([iv, cipher.getAuthTag(), enc]);
 }
@@ -39,7 +36,7 @@ function decrypt(payload: Buffer): string {
   const iv = payload.subarray(0, 12);
   const tag = payload.subarray(12, 28);
   const enc = payload.subarray(28);
-  const decipher = createDecipheriv("aes-256-gcm", key(), iv);
+  const decipher = createDecipheriv("aes-256-gcm", encryptionKey(), iv);
   decipher.setAuthTag(tag);
   return Buffer.concat([decipher.update(enc), decipher.final()]).toString("utf8");
 }
@@ -52,27 +49,32 @@ export async function saveSubmission(
     id: randomBytes(8).toString("hex"),
     submittedAt: new Date().toISOString(),
   };
-  await put(
-    `${PREFIX}${Date.now()}-${submission.id}.bin`,
-    encrypt(JSON.stringify(submission)),
-    { access: "public", contentType: "application/octet-stream" }
-  );
+  const payload = encrypt(JSON.stringify(submission));
+
+  const { error } = await supabaseAnon()
+    .from("contact_submissions")
+    .insert({ payload: Array.from(payload) });
+
+  if (error) throw new Error(error.message);
 }
 
 export async function listSubmissions(): Promise<Submission[]> {
-  const { blobs } = await list({ prefix: PREFIX, limit: 1000 });
-  const submissions = await Promise.all(
-    blobs.map(async (blob) => {
-      try {
-        const res = await fetch(blob.url, { cache: "no-store" });
-        const buf = Buffer.from(await res.arrayBuffer());
-        return JSON.parse(decrypt(buf)) as Submission;
-      } catch {
-        return null; // skip unreadable/corrupt blobs rather than failing the page
-      }
-    })
-  );
-  return submissions
-    .filter((s): s is Submission => s !== null)
-    .sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
+  const { data, error } = await supabaseAdmin()
+    .from("contact_submissions")
+    .select("payload, submitted_at")
+    .order("submitted_at", { ascending: false })
+    .limit(500);
+
+  if (error) throw new Error(error.message);
+
+  const submissions: Submission[] = [];
+  for (const row of data ?? []) {
+    try {
+      const buf = Buffer.from(row.payload);
+      submissions.push(JSON.parse(decrypt(buf)) as Submission);
+    } catch {
+      // skip any row that fails to decrypt rather than crashing the dashboard
+    }
+  }
+  return submissions;
 }
