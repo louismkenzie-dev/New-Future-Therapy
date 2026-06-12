@@ -130,10 +130,19 @@ export default function IntroScreen() {
         <motion.div
           key={runId}
           className="fixed inset-0 z-[100] bg-cream flex items-center justify-center"
-          initial={false}
-          animate={leaving ? { y: "-100%" } : { y: 0 }}
-          exit={{ y: "-100%" }}
-          transition={{ duration: TIMING[variant].curtain, ease: EASE_OUT }}
+          /* Quick (navigation) variant breathes in and out — a soft fade,
+             like an exhale — while the full intro keeps its curtain lift. */
+          initial={variant === "quick" ? { opacity: 0 } : false}
+          animate={
+            variant === "quick"
+              ? { opacity: leaving ? 0 : 1 }
+              : { y: leaving ? "-100%" : 0 }
+          }
+          exit={variant === "quick" ? { opacity: 0 } : { y: "-100%" }}
+          transition={{
+            duration: variant === "quick" ? 0.45 : TIMING.full.curtain,
+            ease: variant === "quick" ? "easeInOut" : EASE_OUT,
+          }}
         >
           <div className="flex flex-col items-center">
             <LeafDraw variant={variant} />
