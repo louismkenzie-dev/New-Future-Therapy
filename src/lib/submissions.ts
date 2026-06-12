@@ -51,9 +51,10 @@ export async function saveSubmission(
   };
   const payload = encrypt(JSON.stringify(submission));
 
+  // PostgREST expects bytea as \x{hex} — never Array.from() which loses binary structure
   const { error } = await supabaseAnon()
     .from("contact_submissions")
-    .insert({ payload: Array.from(payload) });
+    .insert({ payload: `\\x${payload.toString("hex")}` });
 
   if (error) throw new Error(error.message);
 }
@@ -70,7 +71,9 @@ export async function listSubmissions(): Promise<Submission[]> {
   const submissions: Submission[] = [];
   for (const row of data ?? []) {
     try {
-      const buf = Buffer.from(row.payload);
+      // Supabase returns bytea as \x{hex} — strip prefix and decode
+      const hex = (row.payload as string).replace(/^\\x/, "");
+      const buf = Buffer.from(hex, "hex");
       submissions.push(JSON.parse(decrypt(buf)) as Submission);
     } catch {
       // skip any row that fails to decrypt rather than crashing the dashboard
