@@ -65,7 +65,13 @@ export default function LessonVideoPlayer({
         audio={audioOnly}
         startTime={startTime && startTime > 5 ? startTime : undefined}
         accentColor="#6B8C6F"
-        metadata={{ video_title: title }}
+        envKey={process.env.NEXT_PUBLIC_MUX_DATA_ENV_KEY}
+        metadata={{
+          video_id: `${courseId}/${lessonId}`,
+          video_title: title,
+          video_series: courseId,
+          player_name: "NewFuture Course Player",
+        }}
         onTimeUpdate={(event) => {
           if (!canTrack) return;
           const player = event.currentTarget as HTMLVideoElement | null;
