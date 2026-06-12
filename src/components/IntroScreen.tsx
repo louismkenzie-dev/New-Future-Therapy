@@ -162,7 +162,10 @@ export default function IntroScreen() {
       )
         return;
 
+      /* Stop Next.js <Link> from navigating instantly — we navigate
+         ourselves once the leaf screen is fully opaque. */
       e.preventDefault();
+      e.stopPropagation();
       clearTimers();
 
       const t = TIMING.quick;
@@ -183,8 +186,10 @@ export default function IntroScreen() {
       );
     };
 
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
+    /* Capture phase: run before Next.js <Link>'s own click handler,
+       which would otherwise preventDefault and navigate immediately. */
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
   }, [pathname, router]);
 
   return (
