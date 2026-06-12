@@ -7,6 +7,7 @@ import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 import FloatingLeaves from "@/components/FloatingLeaves";
 import { helpAreas } from "@/lib/content/helpAreas";
+import { areaIcons } from "@/lib/areaIcons";
 import { ArrowRight, Quote } from "lucide-react";
 
 const testimonials = [
@@ -120,19 +121,37 @@ export default function HomePage() {
           </Reveal>
 
           <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-12">
-            {helpAreas.slice(0, 4).map((area) => (
-              <StaggerItem key={area.id}>
-                <div className="bg-white rounded-xl p-6 border border-grey-light h-full transition-all duration-500 hover:border-sage-light hover:shadow-lg hover:-translate-y-1.5">
-                  <div className="w-8 h-0.5 bg-sage mb-4" />
-                  <h3 className="font-heading text-xl font-medium text-charcoal mb-2 leading-snug">
-                    {area.title}
-                  </h3>
-                  <p className="font-body text-xs text-muted leading-relaxed">
-                    {area.summary}
-                  </p>
-                </div>
-              </StaggerItem>
-            ))}
+            {helpAreas.slice(0, 4).map((area) => {
+              const Icon = areaIcons[area.id];
+              return (
+                <StaggerItem key={area.id}>
+                  <Link
+                    href={`/how-we-can-help/${area.id}`}
+                    className="group flex flex-col bg-white rounded-xl p-6 border border-grey-light h-full transition-all duration-500 hover:border-sage-light hover:shadow-lg hover:-translate-y-1.5"
+                  >
+                    <span className="w-14 h-14 rounded-full bg-sage-pale border border-sage-light flex items-center justify-center mb-5 transition-all duration-500 group-hover:bg-sage group-hover:scale-110">
+                      {Icon && (
+                        <Icon
+                          size={26}
+                          strokeWidth={1.5}
+                          className="text-sage-dark transition-colors duration-500 group-hover:text-cream"
+                        />
+                      )}
+                    </span>
+                    <h3 className="font-heading text-xl font-medium text-charcoal mb-2 leading-snug group-hover:text-sage-dark transition-colors duration-300">
+                      {area.title}
+                    </h3>
+                    <p className="font-body text-xs text-muted leading-relaxed mb-4">
+                      {area.keywords.slice(0, 3).join(" · ")}
+                    </p>
+                    <span className="mt-auto inline-flex items-center gap-1.5 font-body text-xs text-sage uppercase tracking-[0.2em] opacity-0 translate-y-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      Explore
+                      <ArrowRight size={12} />
+                    </span>
+                  </Link>
+                </StaggerItem>
+              );
+            })}
           </StaggerGroup>
 
           <Reveal className="text-center">

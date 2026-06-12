@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Accordion from "@/components/Accordion";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
-import { helpAreas } from "@/lib/content/helpAreas";
+import AreaGrid from "@/components/areas/AreaGrid";
+import FloatingLeaves from "@/components/FloatingLeaves";
 import { ArrowRight } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -18,13 +18,14 @@ export default function HowWeCanHelpPage() {
       <PageHeader
         eyebrow="What We Offer"
         title="Areas We Can Support You With"
-        lede="You do not need a diagnosis or a clear sense of what is wrong — simply a wish to feel better and a willingness to explore. Click any area below to find out more."
+        lede="You do not need a diagnosis or a clear sense of what is wrong — simply a wish to feel better. Choose an area to explore it."
       />
 
-      {/* Accordion */}
-      <section className="py-20 px-6 bg-cream">
-        <div className="max-w-3xl mx-auto">
-          <Accordion items={helpAreas} />
+      {/* Icon grid launcher */}
+      <section className="py-20 px-6 bg-cream relative overflow-hidden">
+        <FloatingLeaves className="opacity-50" />
+        <div className="max-w-6xl mx-auto relative z-10">
+          <AreaGrid />
         </div>
       </section>
 
@@ -35,8 +36,8 @@ export default function HowWeCanHelpPage() {
             Not sure if we can help?
           </h2>
           <p className="font-body text-base text-muted leading-relaxed mb-8">
-            If you are unsure whether what you are experiencing fits any of the
-            areas above, please do get in touch. We are happy to have a brief
+            If what you are experiencing does not seem to fit any of these
+            areas, please do get in touch. We are happy to have a brief
             conversation to help you decide whether therapy with us might be
             right for you.
           </p>
