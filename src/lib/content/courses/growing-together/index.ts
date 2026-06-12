@@ -19,7 +19,7 @@ export const growingTogether: Course = {
     "A ten-module course in building healthier, closer relationships — created by Esther and Laura, BACP-registered therapists. Video lessons, guided reflections, gentle self-assessments and printable practices, for individuals and for partners learning side by side. Whatever shape your relationship takes, and whatever season of life you are in, this course meets you there.",
   audience:
     "For adults of all ages, 18 to 70 and beyond — single, partnered, monogamous, non-monogamous or polyamorous, LGBTQIA+ and questioning. Take it on your own, or alongside a partner with linked accounts and optional sharing.",
-  trailerPlaybackId: "",
+  trailerPlaybackId: "7jguOU5tUIEvyjKTrScNomWIq00d00Xw6M9SMgwpcbGoY",
   modules: [
     module01,
     module02,

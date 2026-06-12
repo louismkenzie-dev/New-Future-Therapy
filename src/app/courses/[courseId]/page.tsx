@@ -20,6 +20,7 @@ import CourseModulesAccordion, {
   type ModuleSummary,
 } from "@/components/course/CourseModulesAccordion";
 import PricingCards from "@/components/course/PricingCards";
+import TrailerPlayer from "@/components/course/TrailerPlayer";
 import { courses, getCourse, countLessons } from "@/lib/content/courses";
 import { PLAN_INFO } from "@/lib/billing/plans";
 
@@ -126,10 +127,17 @@ export default async function CourseSalesPage({
             </div>
           </Reveal>
           <Reveal delay={0.15}>
-            <div className="rounded-2xl border border-grey-light shadow-sm bg-sage-pale aspect-video flex flex-col items-center justify-center gap-3 text-sage-dark">
-              <PlayCircle size={48} strokeWidth={1.5} />
-              <p className="font-body text-sm">Course trailer coming soon</p>
-            </div>
+            {course.trailerPlaybackId ? (
+              <TrailerPlayer
+                playbackId={course.trailerPlaybackId}
+                title={`${course.title} — Course Trailer`}
+              />
+            ) : (
+              <div className="rounded-2xl border border-grey-light shadow-sm bg-sage-pale aspect-video flex flex-col items-center justify-center gap-3 text-sage-dark">
+                <PlayCircle size={48} strokeWidth={1.5} />
+                <p className="font-body text-sm">Course trailer coming soon</p>
+              </div>
+            )}
             {previewLesson && (
               <p className="font-body text-sm text-muted text-center mt-4">
                 Or begin with the free preview lesson —{" "}
