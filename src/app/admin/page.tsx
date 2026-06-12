@@ -13,6 +13,7 @@ import {
 import { isAdmin } from "@/lib/adminAuth";
 import { listSubmissions, type Submission } from "@/lib/submissions";
 import { logout, toggleContacted } from "@/app/actions/admin";
+import AdminTabs from "@/components/admin/AdminTabs";
 
 export const dynamic = "force-dynamic";
 
@@ -177,6 +178,8 @@ export default async function AdminDashboardPage() {
             </button>
           </form>
         </div>
+
+        <AdminTabs />
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">

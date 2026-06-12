@@ -5,19 +5,26 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 import Logo from "@/components/Logo";
+import { useAuthStatus } from "@/components/auth/useAuthStatus";
 
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/our-approach", label: "Our Approach" },
   { href: "/how-we-can-help", label: "How We Can Help" },
+  { href: "/courses", label: "Course" },
   { href: "/contact", label: "Contact" },
 ];
+
+function isActive(pathname: string, href: string): boolean {
+  return pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
+}
 
 export default function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const signedIn = useAuthStatus();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -45,7 +52,7 @@ export default function Header() {
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
           {navLinks.map(({ href, label }) => {
-            const active = pathname === href;
+            const active = isActive(pathname, href);
             return (
               <Link
                 key={href}
@@ -60,6 +67,18 @@ export default function Header() {
               </Link>
             );
           })}
+          <Link
+            href={signedIn ? "/learn" : "/login"}
+            className={`font-body text-sm tracking-wide transition-all duration-300 ${
+              signedIn === null ? "opacity-0 pointer-events-none" : "opacity-100"
+            } ${
+              isActive(pathname, signedIn ? "/learn" : "/login")
+                ? "text-sage-dark border-b border-sage"
+                : "text-muted hover:text-charcoal"
+            }`}
+          >
+            {signedIn ? "My Course" : "Sign In"}
+          </Link>
           <Link
             href="/contact"
             className="font-body text-sm bg-sage text-cream px-5 py-2 rounded-full hover:bg-sage-dark transition-colors duration-200"
@@ -83,7 +102,7 @@ export default function Header() {
       {menuOpen && (
         <div className="md:hidden bg-cream/98 backdrop-blur-sm border-t border-grey-light px-6 py-6 flex flex-col gap-5">
           {navLinks.map(({ href, label }) => {
-            const active = pathname === href;
+            const active = isActive(pathname, href);
             return (
               <Link
                 key={href}
@@ -96,6 +115,16 @@ export default function Header() {
               </Link>
             );
           })}
+          <Link
+            href={signedIn ? "/learn" : "/login"}
+            className={`font-body text-base transition-colors duration-200 ${
+              isActive(pathname, signedIn ? "/learn" : "/login")
+                ? "text-sage-dark font-medium"
+                : "text-muted hover:text-charcoal"
+            }`}
+          >
+            {signedIn ? "My Course" : "Sign In"}
+          </Link>
           <Link
             href="/contact"
             className="font-body text-sm bg-sage text-cream px-5 py-3 rounded-full text-center hover:bg-sage-dark transition-colors duration-200 mt-2"
