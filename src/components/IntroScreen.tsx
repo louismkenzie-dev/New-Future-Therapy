@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 
 /* Brand intro in two weights:
@@ -86,43 +86,106 @@ function LeafDraw({ variant }: { variant: Variant }) {
   );
 }
 
+/* How long the quick fade-in takes — the route only changes after this,
+   so the leaf screen is fully opaque before the page swaps underneath. */
+const QUICK_FADE_MS = 450;
+
 export default function IntroScreen() {
   const pathname = usePathname();
+  const router = useRouter();
   const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [variant, setVariant] = useState<Variant>("full");
   /* Bump on each play so the curtain (and the leaf draw inside it) fully
      remounts and re-runs its animation, even when the route stays mounted. */
   const [runId, setRunId] = useState(0);
-  const isFirstLoad = useRef(true);
+  const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
 
+  const clearTimers = () => {
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+  };
+
+  /* Full intro once, on initial load / refresh */
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
-    /* Full intro on the initial load/refresh; quick leaf-only on navigation */
-    const v: Variant = isFirstLoad.current ? "full" : "quick";
-    isFirstLoad.current = false;
-    const t = TIMING[v];
-
-    setVariant(v);
+    const t = TIMING.full;
+    setVariant("full");
     setLeaving(false);
     setShow(true);
     setRunId((n) => n + 1);
     document.documentElement.style.overflow = "hidden";
 
-    const exitTimer = setTimeout(() => setLeaving(true), t.exitAt);
-    const doneTimer = setTimeout(() => {
-      setShow(false);
-      document.documentElement.style.overflow = "";
-    }, t.doneAt);
+    timersRef.current.push(
+      setTimeout(() => setLeaving(true), t.exitAt),
+      setTimeout(() => {
+        setShow(false);
+        document.documentElement.style.overflow = "";
+      }, t.doneAt)
+    );
 
     return () => {
-      clearTimeout(exitTimer);
-      clearTimeout(doneTimer);
+      clearTimers();
       document.documentElement.style.overflow = "";
     };
-  }, [pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /* Quick intro on navigation: intercept internal link clicks, cover the
+     screen with the leaf first, then push the route once fully opaque. */
+  useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return;
+
+    const onClick = (e: MouseEvent) => {
+      if (
+        e.defaultPrevented ||
+        e.button !== 0 ||
+        e.metaKey ||
+        e.ctrlKey ||
+        e.shiftKey ||
+        e.altKey
+      )
+        return;
+
+      const anchor = (e.target as HTMLElement).closest("a");
+      if (!anchor) return;
+      const href = anchor.getAttribute("href");
+      if (
+        !href ||
+        !href.startsWith("/") ||
+        anchor.target === "_blank" ||
+        anchor.hasAttribute("download") ||
+        href === pathname
+      )
+        return;
+
+      e.preventDefault();
+      clearTimers();
+
+      const t = TIMING.quick;
+      setVariant("quick");
+      setLeaving(false);
+      setShow(true);
+      setRunId((n) => n + 1);
+      document.documentElement.style.overflow = "hidden";
+
+      timersRef.current.push(
+        /* Navigate only once the leaf screen fully covers the old page */
+        setTimeout(() => router.push(href), QUICK_FADE_MS),
+        setTimeout(() => setLeaving(true), t.exitAt),
+        setTimeout(() => {
+          setShow(false);
+          document.documentElement.style.overflow = "";
+        }, t.doneAt)
+      );
+    };
+
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [pathname, router]);
 
   return (
     <AnimatePresence>
