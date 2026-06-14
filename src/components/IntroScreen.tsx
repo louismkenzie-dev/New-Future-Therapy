@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
+import { ArrowRight } from "lucide-react";
 
 /* Brand intro in two weights:
    — "full": leaf draws stroke by stroke, wordmark rises, tagline fades —
@@ -40,6 +41,12 @@ const TIMING = {
     veinDur: 0.25,
   },
 } as const;
+
+/* Explore-button chime: quiet, and cut to ~4s total with a quick fade-out
+   (the raw singing-bowl recording rings on for far longer). */
+const CHIME_VOLUME = 0.09;
+const CHIME_TOTAL = 4.0; // seconds the chime is audible
+const CHIME_FADE_AT = 3.2; // start the quick fade-out
 
 const VEINS = [
   { x1: 90, y1: 200, x2: 90, y2: 20, w: 3 },
@@ -96,14 +103,69 @@ export default function IntroScreen() {
   const [show, setShow] = useState(false);
   const [leaving, setLeaving] = useState(false);
   const [variant, setVariant] = useState<Variant>("full");
+  /* On first entry the full intro waits on screen; the Explore button appears
+     once it has settled and dismisses the intro on click. */
+  const [ready, setReady] = useState(false);
   /* Bump on each play so the curtain (and the leaf draw inside it) fully
      remounts and re-runs its animation, even when the route stays mounted. */
   const [runId, setRunId] = useState(0);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const fadeRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const clearTimers = () => {
     timersRef.current.forEach(clearTimeout);
     timersRef.current = [];
+  };
+
+  /* Preload the quiet singing-bowl chime played when Explore is pressed. */
+  useEffect(() => {
+    const a = new Audio("/audio/singing-bowl.mp3");
+    a.preload = "auto";
+    a.volume = CHIME_VOLUME;
+    audioRef.current = a;
+    return () => {
+      if (fadeRef.current) clearInterval(fadeRef.current);
+    };
+  }, []);
+
+  /* Dismiss the first-entry intro: play the chime, then lift the curtain. */
+  const handleExplore = () => {
+    if (leaving) return;
+
+    const a = audioRef.current;
+    if (a) {
+      if (fadeRef.current) clearInterval(fadeRef.current);
+      a.pause();
+      a.currentTime = 0;
+      a.volume = CHIME_VOLUME;
+      void a.play().catch(() => {});
+      const start = performance.now();
+      fadeRef.current = setInterval(() => {
+        const el = audioRef.current;
+        if (!el) return;
+        const elapsed = (performance.now() - start) / 1000;
+        if (elapsed >= CHIME_TOTAL) {
+          el.pause();
+          el.currentTime = 0;
+          el.volume = CHIME_VOLUME;
+          if (fadeRef.current) clearInterval(fadeRef.current);
+          fadeRef.current = null;
+        } else if (elapsed >= CHIME_FADE_AT) {
+          const k = 1 - (elapsed - CHIME_FADE_AT) / (CHIME_TOTAL - CHIME_FADE_AT);
+          el.volume = Math.max(0, CHIME_VOLUME * k);
+        }
+      }, 50);
+    }
+
+    clearTimers();
+    setLeaving(true);
+    timersRef.current.push(
+      setTimeout(() => {
+        setShow(false);
+        document.documentElement.style.overflow = "";
+      }, TIMING.full.curtain * 1000 + 80)
+    );
   };
 
   /* Full intro once, on initial load / refresh */
@@ -111,20 +173,16 @@ export default function IntroScreen() {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
 
-    const t = TIMING.full;
     setVariant("full");
     setLeaving(false);
+    setReady(false);
     setShow(true);
     setRunId((n) => n + 1);
     document.documentElement.style.overflow = "hidden";
 
-    timersRef.current.push(
-      setTimeout(() => setLeaving(true), t.exitAt),
-      setTimeout(() => {
-        setShow(false);
-        document.documentElement.style.overflow = "";
-      }, t.doneAt)
-    );
+    /* Reveal the Explore button once the leaf, wordmark and tagline have
+       settled. The intro then waits on screen until it is pressed. */
+    timersRef.current.push(setTimeout(() => setReady(true), 2900));
 
     return () => {
       clearTimers();
@@ -241,6 +299,25 @@ export default function IntroScreen() {
                 >
                   growth begins with understanding
                 </motion.p>
+
+                {/* Always rendered so it reserves its space from the first
+                    frame — the leaf, wordmark and tagline never shift. It only
+                    fades in (no pop) and becomes interactive once ready. */}
+                <motion.button
+                  type="button"
+                  onClick={handleExplore}
+                  aria-label="Explore the site"
+                  aria-hidden={!ready}
+                  tabIndex={ready ? 0 : -1}
+                  style={{ pointerEvents: ready ? "auto" : "none" }}
+                  className="mt-12 inline-flex items-center gap-2 rounded-full bg-sage-dark text-cream font-body text-sm tracking-wide px-9 py-4 shadow-[0_14px_34px_-10px_rgba(58,90,64,0.55)] transition-colors duration-300 hover:bg-charcoal"
+                  initial={false}
+                  animate={{ opacity: ready ? 1 : 0 }}
+                  transition={{ duration: 0.7, ease: EASE_OUT }}
+                >
+                  Explore
+                  <ArrowRight size={16} />
+                </motion.button>
               </>
             )}
           </div>
