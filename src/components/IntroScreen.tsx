@@ -42,8 +42,8 @@ const TIMING = {
   },
 } as const;
 
-/* Explore-button chime: quiet, and cut to ~4s total with a quick fade-out
-   (the raw singing-bowl recording rings on for far longer). */
+/* Explore-button chime: quiet, capped to ~4s total with a quick fade-out
+   (a safety net should the clip ever ring on longer). */
 const CHIME_VOLUME = 0.09;
 const CHIME_TOTAL = 4.0; // seconds the chime is audible
 const CHIME_FADE_AT = 3.2; // start the quick fade-out
@@ -120,7 +120,7 @@ export default function IntroScreen() {
 
   /* Preload the quiet singing-bowl chime played when Explore is pressed. */
   useEffect(() => {
-    const a = new Audio("/audio/singing-bowl.mp3");
+    const a = new Audio("/audio/uichime.mp3");
     a.preload = "auto";
     a.volume = CHIME_VOLUME;
     audioRef.current = a;
