@@ -23,6 +23,16 @@ export default function Footer() {
               A compassionate, non-judgemental space for individuals and couples
               to explore their experiences and move towards a healthier future.
             </p>
+
+            <h3 className="font-body text-xs uppercase tracking-[0.18em] text-sage-light mt-8 mb-3">
+              Our Brand
+            </h3>
+            <Link
+              href="/brand"
+              className="inline-flex items-center min-h-[44px] font-body text-sm text-cream/60 hover:text-sage-light transition-colors duration-200"
+            >
+              Brand Guidelines
+            </Link>
           </div>
 
           {/* Navigation */}
