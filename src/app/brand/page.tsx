@@ -3,6 +3,7 @@ import { Check, Heart, Lightbulb, Users, X } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
 import LogoSuite from "@/components/brand/LogoSuite";
+import IntroVideoCard from "@/components/brand/IntroVideoCard";
 import LogoDiagrams from "@/components/brand/LogoDiagrams";
 import LogoMisuse from "@/components/brand/LogoMisuse";
 import ColourPalette from "@/components/brand/ColourPalette";
@@ -129,6 +130,13 @@ export default function BrandGuidelinesPage() {
             lede="The logo is the sage leaf glyph beside the stacked “NewFuture / Therapy” wordmark. Choose the lockup that fits the space, pick a colourway, and download a crisp vector (SVG) or a high-resolution transparent PNG. Leaf veins are knocked out, so every mark sits cleanly on any background."
           />
           <LogoSuite />
+
+          <Reveal className="mt-12">
+            <p className="mb-6 text-center font-body text-sm uppercase tracking-[0.25em] text-sage-dark">
+              The Logo in Motion
+            </p>
+            <IntroVideoCard />
+          </Reveal>
         </div>
       </section>
 
