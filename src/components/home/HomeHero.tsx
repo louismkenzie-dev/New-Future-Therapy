@@ -12,7 +12,7 @@ const Hero3D = dynamic(() => import("@/components/Hero3D"), { ssr: false });
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const HEADLINE = "A compassionate space for growth and healing".split(" ");
+const HEADLINE = "Growth begins with understanding, curiosity and compassion.".split(" ");
 
 export default function HomeHero() {
   const ref = useRef<HTMLElement>(null);
@@ -60,7 +60,7 @@ export default function HomeHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: EASE_OUT }}
         >
-          Wakefield &amp; Online
+          Face-to-Face Counselling in Wakefield &amp; Online
         </motion.p>
 
         <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-charcoal leading-tight mb-6 sm:mb-8">
@@ -149,7 +149,7 @@ export default function HomeHero() {
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           >
             <ShieldCheck size={15} strokeWidth={1.75} />
-            Registered with BACP
+            Accredited members of BACP
           </motion.span>
         </motion.div>
 

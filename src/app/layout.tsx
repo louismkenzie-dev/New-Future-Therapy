@@ -20,20 +20,68 @@ const dmSans = DM_Sans({
   weight: ["300", "400", "500", "600"],
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://newfuturetherapy.co.uk";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "NewFuture Therapy",
+    default: "NewFuture Therapy | Counselling & Couples Therapy in Wakefield & Online",
     template: "%s | NewFuture Therapy",
   },
   description:
-    "Compassionate, inclusive therapy for individuals and couples — adults of all ages (18+). Esther and Laura are BACP-registered therapists specialising in relationships, anxiety, trauma, and more. LGBTQIA+ affirming. Wakefield & Online.",
+    "Compassionate, inclusive counselling and couples therapy for adults of all ages (18+). Esther and Laura are BACP-accredited therapists specialising in relationships, anxiety, trauma, self-esteem and more. LGBTQIA+ affirming. Wakefield & Online.",
+  applicationName: "NewFuture Therapy",
+  authors: [{ name: "NewFuture Therapy" }],
+  creator: "NewFuture Therapy",
+  publisher: "NewFuture Therapy",
+  keywords: [
+    "therapy Wakefield",
+    "counselling Wakefield",
+    "couples therapy",
+    "online therapy",
+    "relationship counselling",
+    "anxiety therapy",
+    "trauma therapy",
+    "BACP therapist",
+    "LGBTQIA+ affirming therapy",
+    "psychotherapy",
+  ],
+  category: "Health",
+  openGraph: {
+    type: "website",
+    siteName: "NewFuture Therapy",
+    title: "NewFuture Therapy | Counselling & Couples Therapy in Wakefield & Online",
+    description:
+      "Compassionate, inclusive counselling and couples therapy for adults of all ages. BACP-accredited, LGBTQIA+ affirming. Wakefield & Online.",
+    locale: "en_GB",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NewFuture Therapy | Counselling & Couples Therapy in Wakefield & Online",
+    description:
+      "Compassionate, inclusive counselling and couples therapy. BACP-accredited, LGBTQIA+ affirming. Wakefield & Online.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${dmSans.variable} h-full`}>
+    <html lang="en-GB" className={`${cormorant.variable} ${dmSans.variable} h-full`}>
       <body className="min-h-full flex flex-col">
         <SmoothScroll>
           <IntroScreen />

@@ -78,7 +78,7 @@ export default function Footer() {
           </p>
           <div className="flex items-center gap-6">
             <p className="font-body text-xs text-cream/40">
-              Registered with BACP &bull; Wakefield &amp; Online
+              Accredited members of BACP &bull; Wakefield &amp; Online
             </p>
             <Link
               href="/admin"

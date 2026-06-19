@@ -31,12 +31,12 @@ const SCENES: Scene[] = [
   {
     icon: HandHeart,
     eyebrow: "No Blame",
-    line: "We do not look for blame, judgement or fault. We look for understanding.",
+    line: "We do not look for blame, judgement, or fault. We look for curiosity, understanding, and compassion. We believe that greater awareness creates greater choice and opens the door to meaningful change.",
   },
   {
     icon: Sunrise,
     eyebrow: "Safety First",
-    line: "Meaningful change happens when you feel safe enough to be honest.",
+    line: "Meaningful change happens when people feel safe enough to explore their experiences with curiosity, compassion and openness.",
   },
 ];
 
@@ -45,28 +45,28 @@ const PRINCIPLES = [
     icon: Heart,
     number: "01",
     title: "Compassion",
-    body: "People do the best they can with the knowledge, resources and experiences available to them at the time. We meet every person with warmth and genuine care — never blame.",
+    body: "People do the best they can with the knowledge, resources and experiences available to them at the time. We meet every person with warmth and genuine care — never blame or judgement.",
   },
   {
     icon: Lightbulb,
     number: "02",
     title: "Curiosity",
-    body: "We encourage a deeper understanding of ourselves, our experiences and our patterns of thinking, feeling and behaving. Open minds — never assuming, always asking.",
+    body: "We encourage a deeper understanding of self, your experiences and your patterns of thinking, feeling and behaving. Open minds — never assuming, always asking.",
   },
   {
     icon: Users,
     number: "03",
     title: "Connection",
-    body: "Change grows from a genuinely non-judgemental, inclusive and connected therapeutic relationship. We create the conditions for that safety, together.",
+    body: "Change grows from a genuinely non-judgemental, inclusive and connected therapeutic relationship. We create the conditions for that safety — for all, together.",
   },
 ];
 
 const PRACTICE_POINTS = [
   "Sessions are tailored entirely to you — there is no one-size-fits-all approach.",
   "You set the pace. We will never push you further or faster than feels right.",
-  "We draw on evidence-informed approaches: person-centred therapy, attachment theory, CBT and trauma-informed practice.",
+  "Our work is grounded in Person-Centred Therapy and draws upon a range of evidence-based approaches including Cognitive Behavioural Therapy (CBT), Internal Family Systems (IFS), Emotionally Focused Therapy (EFT), The Gottman Method, Imago Relationship Therapy, Solution-Focused Therapy, Inner Child Work, Attachment Theory, Polyvagal Theory, Transactional Analysis, mindfulness and trauma-informed practice. This integrative approach allows us to tailor counselling to the unique needs of each individual and couple we work with.",
   "Therapy is something we do together — never something done to you.",
-  "We welcome and affirm people of all backgrounds, identities, relationship structures and lived experiences.",
+  "We welcome and affirm people of all backgrounds, identities, sexualities, gender identities, relationship structures, cultures and lived experiences. We are committed to creating a safe, respectful and inclusive space where everyone feels valued, heard and accepted.",
 ];
 
 const COMMITMENTS = [
@@ -283,7 +283,7 @@ export default function ApproachExperience() {
 
       {/* ── Finale: the promise, illuminated word by word ── */}
       <ScrollIlluminate
-        text="At NewFuture Therapy, we believe that growth begins with understanding."
+        text="At NewFuture Therapy, we believe that growth begins with understanding, curiosity and compassion."
         eyebrow="Our Promise"
       >
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

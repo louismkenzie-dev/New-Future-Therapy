@@ -8,10 +8,18 @@ import LogoDiagrams from "@/components/brand/LogoDiagrams";
 import LogoMisuse from "@/components/brand/LogoMisuse";
 import ColourPalette from "@/components/brand/ColourPalette";
 
+const description =
+  "The NewFuture Therapy brand at a glance — our logo suite (with high-resolution SVG and PNG downloads), colour palette, typography and voice, in one place.";
+
 export const metadata: Metadata = {
   title: "Brand Guidelines",
-  description:
-    "The NewFuture Therapy brand at a glance — our logo suite (with high-resolution SVG and PNG downloads), colour palette, typography and voice, in one place.",
+  description,
+  alternates: { canonical: "/brand" },
+  openGraph: {
+    title: "Brand Guidelines | NewFuture Therapy",
+    description,
+    url: "/brand",
+  },
 };
 
 function SectionHead({

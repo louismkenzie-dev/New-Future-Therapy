@@ -7,6 +7,8 @@ export interface HelpArea {
   essence: string;
   /* Short themes shown as floating chips instead of paragraphs */
   keywords: string[];
+  /* Optional interactive tabs: each theme reveals a "We can help you…" blurb */
+  explore?: { label: string; body: string }[];
 }
 
 export const helpAreas: HelpArea[] = [
@@ -14,14 +16,14 @@ export const helpAreas: HelpArea[] = [
     id: "relationships",
     title: "Relationships, Couples, Sexuality & Identity",
     summary:
-      "Communication difficulties, conflict, emotional disconnection, intimacy concerns, trust issues, affair recovery, life transitions and strengthening relationships.",
-    body: `Relationships can be one of the greatest sources of connection, fulfilment and support in our lives, but they can also bring challenges, uncertainty, and emotional pain. We provide a safe, inclusive and non-judgemental space for individuals and couples to explore relationship difficulties, strengthen connections, and develop greater understanding of themselves and others.
+      "Communication difficulties, recurring conflict, emotional disconnection, trust issues, affair recovery, attachment patterns, family dynamics, life transitions, separation, divorce and strengthening relationships.",
+    body: `Relationships can be one of the greatest sources of connection, fulfilment and support in our lives, but they can also bring challenges, uncertainty, and emotional pain.
 
-We work with a wide range of relationship concerns including communication difficulties, conflict, emotional disconnection, trust issues, intimacy concerns, affair recovery, separation, life transitions, family dynamics, and differing needs within relationships. We also support individuals who wish to explore patterns in relationships, attachment styles, boundaries, self-worth and the impact of past experiences on current relationships.
+Communication difficulties, recurring conflict, emotional disconnection, trust issues, affair recovery, attachment patterns, family dynamics, life transitions, separation, divorce and strengthening relationships. We also support individuals and couples who are considering the future of their relationship, navigating uncertainty, deciding on next steps, rebuilding after challenges or exploring whether they wish to stay together and work towards change.
 
-We welcome and affirm people of all sexual orientations, gender identities, relationship structures and cultural backgrounds. This includes LGBTQIA+ individuals and couples, people who are questioning aspects of their identity, those exploring sexuality or intimacy concerns, and people in monogamous, non-monogamous, polyamorous or other relationship arrangements.
+We work with a wide range of sexuality and intimacy concerns including differences in desire, loss of intimacy, mismatched libidos, sexual confidence, erectile difficulties, painful sex, sexual anxiety, the impact of trauma on intimacy, menopause-related changes and body image concerns.
 
-Our aim is not to decide who is right or wrong but to create a space where experiences can be explored with curiosity, compassion, and respect. Through greater understanding of yourself, your relationships, and the patterns that shape them, meaningful and lasting change becomes possible.`,
+We support individuals who are exploring, questioning or seeking greater understanding of their gender identity and or sexuality and how this fits within their personal journey and relationships.`,
     essence: "Connection is where we hurt — and where we heal.",
     keywords: [
       "Communication",
@@ -32,6 +34,36 @@ Our aim is not to decide who is right or wrong but to create a space where exper
       "Attachment",
       "Couples",
       "LGBTQIA+ affirming",
+    ],
+    explore: [
+      {
+        label: "Communication",
+        body: "We can help you improve communication, navigate recurring conflict, reconnect emotionally, rebuild trust, strengthen relationships, understand attachment patterns, manage family dynamics, navigate life transitions and work through separation or divorce.",
+      },
+      {
+        label: "Conflict",
+        body: "We can help you understand recurring arguments, break free from unhelpful relationship patterns, manage anger and resentment, communicate more effectively, navigate differing needs and expectations, repair after disagreements and develop healthier ways of resolving conflict.",
+      },
+      {
+        label: "Trust",
+        body: "We can help you rebuild trust following betrayal, affair recovery, or relationship difficulties, explore fears of abandonment, manage jealousy and insecurity, strengthen emotional safety, develop healthier boundaries and build more secure relationships with yourself and others.",
+      },
+      {
+        label: "Affair Recovery",
+        body: "We can help you process the impact of infidelity and betrayal, rebuild trust, navigate uncertainty about the future of your relationship, improve communication, understand underlying relationship dynamics, establish healthy boundaries and decide how you wish to move forward.",
+      },
+      {
+        label: "Attachment",
+        body: "We can help you understand your attachment style, recognise relationship patterns, explore fears of rejection or abandonment, improve emotional connection, build self-awareness and self-worth, develop healthier boundaries and create more secure relationships with yourself and others.",
+      },
+      {
+        label: "Couples",
+        body: "We can help you strengthen communication, rebuild trust, deepen emotional connection, navigate conflict, improve intimacy, recover from betrayal, understand relationship patterns, manage life transitions, strengthen your friendship and partnership and create a healthier and more fulfilling relationship together.",
+      },
+      {
+        label: "LGBTQIA+",
+        body: "We can help you explore sexuality, gender identity, and gender expression in a safe, affirming, and non-judgemental space, whether you are questioning, exploring, navigating change, or seeking support with the impact these experiences may have on your life and relationship.",
+      },
     ],
   },
   {

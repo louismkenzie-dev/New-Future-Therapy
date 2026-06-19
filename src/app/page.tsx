@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import PhotoPlaceholder from "@/components/PhotoPlaceholder";
 import HomeHero from "@/components/home/HomeHero";
@@ -6,9 +7,72 @@ import StatsBand from "@/components/home/StatsBand";
 import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import Parallax from "@/components/motion/Parallax";
 import FloatingLeaves from "@/components/FloatingLeaves";
+import StoryVideo from "@/components/therapists/StoryVideo";
+import { therapistStories } from "@/lib/content/therapists";
 import { helpAreas } from "@/lib/content/helpAreas";
 import { areaIcons } from "@/lib/areaIcons";
 import { ArrowRight, Quote } from "lucide-react";
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://newfuturetherapy.co.uk";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+  openGraph: { url: "/" },
+};
+
+/* Structured data for local search — a counselling practice serving Wakefield
+   and clients online. Helps Google understand who we are, what we treat, and
+   where we work. */
+const practiceSchema = {
+  "@context": "https://schema.org",
+  "@type": ["MedicalBusiness", "ProfessionalService"],
+  "@id": `${SITE_URL}/#practice`,
+  name: "NewFuture Therapy",
+  description:
+    "Compassionate, inclusive counselling and couples therapy for adults of all ages (18+). BACP-accredited, LGBTQIA+ affirming. Wakefield & Online.",
+  url: SITE_URL,
+  image: `${SITE_URL}/opengraph-image`,
+  logo: `${SITE_URL}/icon.svg`,
+  areaServed: [
+    { "@type": "City", name: "Wakefield" },
+    { "@type": "AdministrativeArea", name: "West Yorkshire" },
+    "Online",
+  ],
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Wakefield",
+    addressRegion: "West Yorkshire",
+    addressCountry: "GB",
+  },
+  availableLanguage: "English",
+  priceRange: "££",
+  knowsAbout: [
+    "Relationship counselling",
+    "Couples therapy",
+    "Anxiety",
+    "Trauma",
+    "Self-esteem",
+    "Depression",
+    "Attachment",
+    "Neurodiversity",
+    "LGBTQIA+ affirming therapy",
+  ],
+  founder: [
+    { "@type": "Person", name: "Esther", jobTitle: "Therapist & Co-founder" },
+    { "@type": "Person", name: "Laura", jobTitle: "Therapist & Co-founder" },
+  ],
+  memberOf: {
+    "@type": "Organization",
+    name: "British Association for Counselling and Psychotherapy",
+    alternateName: "BACP",
+  },
+  makesOffer: {
+    "@type": "Offer",
+    name: "Free 15-minute initial consultation",
+    price: "0",
+    priceCurrency: "GBP",
+  },
+};
 
 const testimonials = [
   {
@@ -31,6 +95,11 @@ const testimonials = [
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(practiceSchema) }}
+      />
+
       <HomeHero />
 
       <EthosQuote />
@@ -51,37 +120,50 @@ export default function HomePage() {
           </Reveal>
 
           <StaggerGroup className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
-            {(["Esther", "Laura"] as const).map((name) => (
-              <StaggerItem key={name}>
-                <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-grey-light transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-sage-light group">
-                  <div className="overflow-hidden">
-                    <PhotoPlaceholder
-                      className="w-full h-64 transition-transform duration-700 group-hover:scale-105"
-                      src={
-                        name === "Esther"
-                          ? "/photos/therapist-green-portrait.jpg"
-                          : "/photos/therapist-white-armchair.jpg"
-                      }
-                      alt={`Photo of ${name}`}
-                      position={name === "Esther" ? "35% 25%" : "center 25%"}
-                    />
+            {(["Esther", "Laura"] as const).map((name) => {
+              const story = therapistStories[name];
+              return (
+                <StaggerItem key={name}>
+                  <div className="bg-white rounded-2xl overflow-hidden shadow-sm border border-grey-light transition-all duration-500 hover:shadow-xl hover:-translate-y-2 hover:border-sage-light group">
+                    <div className="relative overflow-hidden">
+                      <PhotoPlaceholder
+                        className="w-full h-64 transition-transform duration-700 group-hover:scale-105"
+                        src={
+                          name === "Esther"
+                            ? "/photos/therapist-green-portrait.jpg"
+                            : "/photos/therapist-white-armchair.jpg"
+                        }
+                        alt={`Photo of ${name}`}
+                        position={name === "Esther" ? "35% 25%" : "center 25%"}
+                      />
+                      {story && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-charcoal/15 transition-colors duration-300 group-hover:bg-charcoal/25">
+                          <StoryVideo name={name} story={story} variant="overlay" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-8">
+                      <h3 className="font-heading text-3xl font-medium text-charcoal mb-1">
+                        {name}
+                      </h3>
+                      <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-4">
+                        Therapist &amp; Co-founder
+                      </p>
+                      <p className="font-body text-sm text-muted leading-relaxed">
+                        {name === "Esther"
+                          ? "Specialising in trauma, anxiety, self-esteem and relationships. Currently taking tennis lessons when not in session."
+                          : "Specialising in couples therapy, depression, attachment and neurodiversity. Recently discovered an obsession with padel."}
+                      </p>
+                      {story && (
+                        <div className="mt-5">
+                          <StoryVideo name={name} story={story} variant="pill" />
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="p-8">
-                    <h3 className="font-heading text-3xl font-medium text-charcoal mb-1">
-                      {name}
-                    </h3>
-                    <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-4">
-                      Therapist &amp; Co-founder
-                    </p>
-                    <p className="font-body text-sm text-muted leading-relaxed">
-                      {name === "Esther"
-                        ? "Specialising in trauma, anxiety, self-esteem and relationships. Currently taking tennis lessons when not in session."
-                        : "Specialising in couples therapy, depression, attachment and neurodiversity. Recently discovered an obsession with padel."}
-                    </p>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
+                </StaggerItem>
+              );
+            })}
           </StaggerGroup>
 
           <Reveal className="text-center">
@@ -114,9 +196,9 @@ export default function HomePage() {
               Areas We Can Support You With
             </h2>
             <p className="font-body text-base text-muted max-w-xl mx-auto">
-              We offer compassionate support across a wide range of concerns.
-              You do not need a diagnosis or a clear sense of what is wrong —
-              simply a wish to feel better.
+              You do not need a diagnosis or all the answers before reaching
+              out. Sometimes simply recognising that something does not feel
+              quite right is enough to begin.
             </p>
           </Reveal>
 

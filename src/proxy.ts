@@ -10,12 +10,30 @@ function isPreviewLessonPath(pathname: string): boolean {
   return Boolean(entry?.lesson.preview);
 }
 
+/* The course platform is built but kept out of public view until launch.
+   While disabled, every course/auth/member route redirects to the home page
+   so nothing half-finished is reachable. Set NEXT_PUBLIC_COURSE_ENABLED=true
+   to restore them (Header shows the links under the same flag). */
+const COURSE_ENABLED = process.env.NEXT_PUBLIC_COURSE_ENABLED === "true";
+
+/* Routes that require an authenticated member when the platform is live. */
+function isProtectedPath(pathname: string): boolean {
+  return pathname.startsWith("/learn") || pathname.startsWith("/account");
+}
+
 /* Optimistic auth gate + Supabase session refresh for the member area.
    This is NOT the security boundary — server actions are POSTs that can
    bypass these matchers, so every page/action/handler re-checks auth via
    the DAL (src/lib/auth/session.ts). */
 
 export async function proxy(request: NextRequest) {
+  if (!COURSE_ENABLED) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    url.search = "";
+    return NextResponse.redirect(url);
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -46,7 +64,7 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) {
+  if (!user && isProtectedPath(request.nextUrl.pathname)) {
     if (isPreviewLessonPath(request.nextUrl.pathname)) return response;
     const url = request.nextUrl.clone();
     url.pathname = "/login";
@@ -59,5 +77,15 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/learn/:path*", "/account/:path*"],
+  matcher: [
+    "/learn/:path*",
+    "/account/:path*",
+    "/courses/:path*",
+    "/invite/:path*",
+    "/auth/:path*",
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/reset-password",
+  ],
 };

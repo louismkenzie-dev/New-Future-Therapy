@@ -6,10 +6,18 @@ import AreaGrid from "@/components/areas/AreaGrid";
 import FloatingLeaves from "@/components/FloatingLeaves";
 import { ArrowRight } from "lucide-react";
 
+const description =
+  "Explore the wide range of concerns we support at NewFuture Therapy, including relationships, anxiety, trauma, self-esteem, depression, and more.";
+
 export const metadata: Metadata = {
   title: "How We Can Help",
-  description:
-    "Explore the wide range of concerns we support at NewFuture Therapy, including relationships, anxiety, trauma, self-esteem, depression, and more.",
+  description,
+  alternates: { canonical: "/how-we-can-help" },
+  openGraph: {
+    title: "How We Can Help | NewFuture Therapy",
+    description,
+    url: "/how-we-can-help",
+  },
 };
 
 export default function HowWeCanHelpPage() {
@@ -18,7 +26,7 @@ export default function HowWeCanHelpPage() {
       <PageHeader
         eyebrow="What We Offer"
         title="Areas We Can Support You With"
-        lede="You do not need a diagnosis or a clear sense of what is wrong — simply a wish to feel better. Choose an area to explore it."
+        lede="You do not need a diagnosis or all the answers before reaching out. Sometimes simply recognising that something does not feel quite right is enough to begin."
       />
 
       {/* Icon grid launcher */}

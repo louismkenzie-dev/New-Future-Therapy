@@ -47,7 +47,7 @@ export default function ContactPage() {
                 <p className="font-semibold text-charcoal mb-1">Confidential &amp; secure</p>
                 <p>
                   Everything you share with us is confidential and handled in
-                  line with GDPR and BACP ethical guidelines.
+                  line with GDPR and the BACP Ethical Framework.
                 </p>
               </div>
               <div>

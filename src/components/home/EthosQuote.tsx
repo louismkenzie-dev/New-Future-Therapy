@@ -8,7 +8,7 @@ import ScrollIlluminate from "@/components/motion/ScrollIlluminate";
 export default function EthosQuote() {
   return (
     <ScrollIlluminate
-      text="At NewFuture Therapy, we believe that growth begins with understanding."
+      text="At NewFuture Therapy, we believe that growth begins with understanding, curiosity and compassion."
       eyebrow="Our Approach"
       height="220vh"
     >

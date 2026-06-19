@@ -18,6 +18,12 @@ export async function generateMetadata({
   return {
     title: area.title,
     description: area.summary,
+    alternates: { canonical: `/how-we-can-help/${area.id}` },
+    openGraph: {
+      title: `${area.title} | NewFuture Therapy`,
+      description: area.summary,
+      url: `/how-we-can-help/${area.id}`,
+    },
   };
 }
 

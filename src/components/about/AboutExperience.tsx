@@ -14,47 +14,57 @@ import {
   Leaf,
 } from "lucide-react";
 import FloatingLeaves from "@/components/FloatingLeaves";
-import HorizontalJourney, {
-  type JourneyChapter,
-} from "@/components/motion/HorizontalJourney";
 import ScrollIlluminate from "@/components/motion/ScrollIlluminate";
 import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
+import StoryVideo from "@/components/therapists/StoryVideo";
+import { therapistStories } from "@/lib/content/therapists";
 
 const Hero3D = dynamic(() => import("@/components/Hero3D"), { ssr: false });
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-/* ── The journey, told in five breaths ── */
-const CHAPTERS: JourneyChapter[] = [
+/* ── Our journey so far, in the founders' own words ── */
+const JOURNEY: { era: string; title: string; icon: typeof Users; body: string[] }[] = [
   {
     era: "The Beginning",
     title: "Two Sisters, One Path",
-    body: "We are Esther and Laura — identical twins, born and raised in Leicester. We have walked remarkably similar paths our whole lives, often without planning to.",
     icon: Users,
+    body: [
+      "We are Esther and Laura — identical twins, born in Bristol and raised in Leicester. We have walked remarkably similar paths our whole lives, often without planning to.",
+    ],
   },
   {
     era: "First Venture",
-    title: "Recruitment",
-    body: "Our first business together. Even then, the heart of the work was helping people reach their potential and create positive change.",
+    title: "Our First Business",
     icon: Briefcase,
+    body: [
+      "Our first business together saw us establishing a base in Yorkshire. Even then, the heart of the work was helping people reach their potential and create positive change.",
+    ],
   },
   {
     era: "A Turning Point",
     title: "Family & Wellbeing",
-    body: "Career breaks to raise our young families drew us towards health and wellbeing — building confidence and self-esteem, not just fitness.",
     icon: HeartPulse,
+    body: [
+      "Next, career breaks to raise our young families led us to running a business in the health, fitness and wellbeing sector. Once again, we found ourselves drawn to the human side of change. We became fascinated by what helps people grow, what holds them back. How support, understanding and encouragement can enable people to move forward through difficult periods in their lives. Our work focused on physical wellbeing, lifestyle change and personal development, and it was here that we saw first-hand the powerful connection between emotional wellbeing, self-belief, resilience and lasting change.",
+    ],
   },
   {
     era: "The Retraining",
-    title: "Five Years of Study",
-    body: "We qualified as therapists and went on to specialise in trauma, anxiety, depression, attachment, relationships and couples therapy.",
+    title: "Five Years of Learning, Training and Growth",
     icon: GraduationCap,
+    body: [
+      "Our curiosity about people and relationships led us back into education. Over five plus years, we trained and qualified as therapists while continuing to develop our knowledge in areas including trauma, anxiety, depression, attachment, relationships, intimacy and couples therapy. The more we learned, the more passionate we became about helping our clients understand themselves, strengthen their relationships and create meaningful change in their lives.",
+    ],
   },
   {
     era: "Today",
     title: "NewFuture Therapy",
-    body: "Wakefield & Online. We help individuals and couples build stronger, healthier and more fulfilling relationships — together, as ever.",
     icon: Leaf,
+    body: [
+      "Whether we are working with individuals or couples, online or in person, our goal is simple: to provide a safe, welcoming and professional space where meaningful conversations can take place. We work alongside our clients with warmth, respect and authenticity.",
+      "As accredited members of the BACP (British Association for Counselling and Psychotherapy), all of our work is grounded in the BACP Ethical Framework. This means we are committed to working safely, professionally and ethically, placing the wellbeing, autonomy and best interests of our clients at the heart of everything we do.",
+    ],
   },
 ];
 
@@ -64,24 +74,25 @@ const TWINS = [
     photo: "/photos/therapist-green-portrait.jpg",
     position: "35% 25%",
     intro:
-      "Esther works with individuals and couples, specialising in trauma, anxiety, self-esteem and relationship difficulties. She brings warmth, curiosity and a deep commitment to creating a space where you feel genuinely safe to explore.",
+      "I work with individuals and couples, with particular interests in trauma, anxiety, self-esteem, relationship difficulties, and issues relating to sex and intimacy. I believe that meaningful change begins with feeling safe, understood, and accepted, and I strive to create a warm and supportive space where you can explore your experiences with curiosity, compassion and support.",
     aside: "Currently learning tennis — proof that it is never too late to begin.",
-    specialisms: ["Trauma", "Anxiety", "Self-Esteem", "Relationships"],
+    specialisms: ["Trauma", "Anxiety", "Self-Esteem", "Sex & Intimacy"],
   },
   {
     name: "Laura",
     photo: "/photos/therapist-white-armchair.jpg",
     position: "center 25%",
     intro:
-      "Laura works with individuals and couples, with particular expertise in couples therapy, depression, attachment and neurodiversity. She is passionate about helping people understand themselves and one another more fully.",
+      "I work with individuals and couples, with particular interests in attachment, neurodiversity, depression, emotional wellbeing, trauma and complex relationships. I am passionate about helping people develop a deeper understanding of themselves, their experiences, and their relationships, creating opportunities for growth, connection and meaningful change.",
     aside: "Recently swept up in what she modestly calls a passion for padel.",
-    specialisms: ["Couples Therapy", "Depression", "Attachment", "Neurodiversity"],
+    specialisms: ["Attachment", "Neurodiversity", "Depression", "Complex Relationships"],
   },
 ];
 
 const HEADLINE = "Our Journey So Far".split(" ");
 
 function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean }) {
+  const story = therapistStories[twin.name as "Esther" | "Laura"];
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -119,6 +130,12 @@ function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean
             transition={{ duration: 1.1, ease: EASE_OUT }}
             aria-hidden="true"
           />
+          {/* Click-in story video */}
+          {story && (
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-charcoal/15 transition-colors duration-300 hover:bg-charcoal/25">
+              <StoryVideo name={twin.name} story={story} variant="overlay" />
+            </div>
+          )}
         </div>
       </div>
 
@@ -156,6 +173,11 @@ function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean
             </StaggerItem>
           ))}
         </StaggerGroup>
+        {story && (
+          <div className="mt-8">
+            <StoryVideo name={twin.name} story={story} variant="pill" />
+          </div>
+        )}
       </div>
     </div>
   );
@@ -253,8 +275,51 @@ export default function AboutExperience() {
         </motion.div>
       </section>
 
-      {/* ── The journey: pinned horizontal chapters ── */}
-      <HorizontalJourney chapters={CHAPTERS} eyebrow="The Journey" />
+      {/* ── Our journey so far: the founders' narrative, in full ── */}
+      <section className="py-24 md:py-32 px-6 bg-sage-pale relative overflow-hidden">
+        <FloatingLeaves className="opacity-40" />
+        <div className="max-w-3xl mx-auto relative z-10">
+          <Reveal className="text-center mb-16">
+            <p className="font-body text-xs text-sage-dark uppercase tracking-[0.3em] mb-4">
+              The Journey
+            </p>
+            <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal">
+              From Then to Now
+            </h2>
+          </Reveal>
+
+          <div className="space-y-16 md:space-y-20">
+            {JOURNEY.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <Reveal key={i}>
+                  <div className="flex flex-col items-center text-center">
+                    <span className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white border border-sage-light shadow-sm mb-6">
+                      <Icon size={26} strokeWidth={1.5} className="text-sage-dark" />
+                    </span>
+                    <p className="font-body text-xs text-sage-dark uppercase tracking-[0.3em] mb-3">
+                      {String(i + 1).padStart(2, "0")} &mdash; {step.era}
+                    </p>
+                    <h3 className="font-heading text-3xl md:text-4xl font-light text-charcoal mb-5">
+                      {step.title}
+                    </h3>
+                    <div className="space-y-4 max-w-2xl">
+                      {step.body.map((p, j) => (
+                        <p
+                          key={j}
+                          className="font-body text-base md:text-lg text-muted leading-relaxed"
+                        >
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ── Signature illumination ── */}
       <ScrollIlluminate
@@ -322,7 +387,8 @@ export default function AboutExperience() {
                     </span>
                     <span>
                       <span className="block font-heading italic text-xl sm:text-2xl font-light text-charcoal leading-snug">
-                        Growth happens when we stay curious.
+                        Growth begins with understanding, curiosity and
+                        compassion.
                       </span>
                       <span className="block font-body text-xs text-muted uppercase tracking-[0.2em] mt-2">
                         The NewFuture belief
@@ -405,8 +471,8 @@ export default function AboutExperience() {
           </h2>
           <p className="font-body text-base text-cream/85 leading-relaxed mb-10 max-w-lg mx-auto">
             Whether you come to Esther or Laura, you will find a warm,
-            compassionate and non-judgemental space to begin. Registered with
-            BACP &mdash; Wakefield &amp; Online.
+            compassionate and non-judgemental space to begin. Accredited
+            members of BACP &mdash; Wakefield &amp; Online.
           </p>
           <Link
             href="/contact"

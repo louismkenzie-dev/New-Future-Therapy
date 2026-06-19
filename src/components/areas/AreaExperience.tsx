@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ArrowLeft } from "lucide-react";
@@ -23,6 +23,7 @@ export default function AreaExperience({
 }) {
   const Icon = areaIcons[area.id];
   const heroRef = useRef<HTMLElement>(null);
+  const [activeTab, setActiveTab] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: heroRef,
@@ -32,8 +33,11 @@ export default function AreaExperience({
   const heroOpacity = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
 
   const titleWords = area.title.split(" ");
-  /* Keep only the opening paragraph — the experience replaces the rest */
-  const firstParagraph = area.body.split("\n\n")[0];
+  /* The opening paragraph becomes the serif statement; where an area carries
+     the interactive tabs, its remaining paragraphs are shown as prose. */
+  const paragraphs = area.body.split("\n\n");
+  const firstParagraph = paragraphs[0];
+  const restParagraphs = area.explore ? paragraphs.slice(1) : [];
 
   return (
     <>
@@ -152,24 +156,57 @@ export default function AreaExperience({
             </h2>
           </Reveal>
 
-          <StaggerGroup className="flex flex-wrap justify-center gap-4">
-            {area.keywords.map((keyword, i) => (
-              <StaggerItem key={keyword}>
-                <motion.span
-                  className="inline-block font-body text-sm md:text-base bg-white text-sage-dark px-6 py-3 rounded-full border border-sage-light shadow-sm"
-                  animate={{ y: [0, i % 2 === 0 ? -6 : 6, 0] }}
-                  transition={{
-                    duration: 5 + (i % 3),
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: i * 0.3,
-                  }}
+          {area.explore ? (
+            <div className="max-w-3xl mx-auto">
+              <div className="flex flex-wrap justify-center gap-2.5 mb-8">
+                {area.explore.map((item, i) => (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => setActiveTab(i)}
+                    aria-pressed={activeTab === i}
+                    className={`font-body text-sm px-5 py-2.5 rounded-full border transition-colors duration-200 ${
+                      activeTab === i
+                        ? "bg-sage-dark text-cream border-sage-dark"
+                        : "bg-white text-sage-dark border-sage-light hover:bg-sage-pale"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+              <div className="bg-white rounded-2xl border border-sage-light/60 shadow-sm p-8 md:p-10 min-h-[170px] flex items-center justify-center">
+                <motion.p
+                  key={activeTab}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: EASE_OUT }}
+                  className="font-body text-base md:text-lg text-muted leading-relaxed text-center"
                 >
-                  {keyword}
-                </motion.span>
-              </StaggerItem>
-            ))}
-          </StaggerGroup>
+                  {area.explore[activeTab].body}
+                </motion.p>
+              </div>
+            </div>
+          ) : (
+            <StaggerGroup className="flex flex-wrap justify-center gap-4">
+              {area.keywords.map((keyword, i) => (
+                <StaggerItem key={keyword}>
+                  <motion.span
+                    className="inline-block font-body text-sm md:text-base bg-white text-sage-dark px-6 py-3 rounded-full border border-sage-light shadow-sm"
+                    animate={{ y: [0, i % 2 === 0 ? -6 : 6, 0] }}
+                    transition={{
+                      duration: 5 + (i % 3),
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      delay: i * 0.3,
+                    }}
+                  >
+                    {keyword}
+                  </motion.span>
+                </StaggerItem>
+              ))}
+            </StaggerGroup>
+          )}
         </div>
       </section>
 
@@ -179,6 +216,18 @@ export default function AreaExperience({
           <p className="font-heading text-2xl md:text-3xl font-light text-charcoal leading-relaxed">
             {firstParagraph}
           </p>
+          {restParagraphs.length > 0 && (
+            <div className="mt-10 space-y-5">
+              {restParagraphs.map((p, i) => (
+                <p
+                  key={i}
+                  className="font-body text-base text-muted leading-relaxed"
+                >
+                  {p}
+                </p>
+              ))}
+            </div>
+          )}
         </Reveal>
       </section>
 
