@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { helpAreas } from "@/lib/content/helpAreas";
+import { sortedArticles } from "@/lib/content/articles";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://newfuturetherapy.co.uk";
 
@@ -13,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/our-approach`, lastModified: now, changeFrequency: "monthly", priority: 0.8 },
     { url: `${SITE_URL}/how-we-can-help`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE_URL}/counselling-wakefield`, lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE_URL}/articles`, lastModified: now, changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: "yearly", priority: 0.7 },
     { url: `${SITE_URL}/brand`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
   ];
@@ -24,5 +27,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...areaPages];
+  const articlePages: MetadataRoute.Sitemap = sortedArticles().map((a) => ({
+    url: `${SITE_URL}/articles/${a.slug}`,
+    lastModified: new Date(`${a.updated ?? a.published}T00:00:00`),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...areaPages, ...articlePages];
 }
