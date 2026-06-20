@@ -1,12 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import dynamic from "next/dynamic";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import {
   ArrowRight,
+  Plus,
   Users,
   Briefcase,
   HeartPulse,
@@ -76,7 +77,24 @@ const TWINS = [
     intro:
       "I work with individuals and couples, with particular interests in trauma, anxiety, self-esteem, relationship difficulties, and issues relating to sex and intimacy. I believe that meaningful change begins with feeling safe, understood, and accepted, and I strive to create a warm and supportive space where you can explore your experiences with curiosity, compassion and support.",
     aside: "Currently learning tennis — proof that it is never too late to begin.",
-    specialisms: ["Neurodiversity", "Relationships", "HIV", "Menopause"],
+    specialisms: [
+      {
+        label: "Neurodiversity",
+        body: "We can help you understand how your mind works, recognise your strengths and your needs, navigate diagnosis or self-identification, manage overwhelm and burnout, and build a life and relationships that work with your neurodivergence rather than against it.",
+      },
+      {
+        label: "Relationships",
+        body: "We can help you improve communication, navigate conflict, rebuild trust, reconnect emotionally, understand recurring patterns and strengthen the relationships that matter most to you — whether you come on your own or together.",
+      },
+      {
+        label: "HIV",
+        body: "We can help you process a diagnosis, manage anxiety, stigma and disclosure, navigate relationships, intimacy and dating, and find a supportive, non-judgemental space to talk openly about living well with HIV.",
+      },
+      {
+        label: "Menopause",
+        body: "We can help you navigate the emotional impact of menopause and perimenopause — including changes in mood, identity, confidence, intimacy and relationships — with understanding and without judgement.",
+      },
+    ],
   },
   {
     name: "Laura",
@@ -85,7 +103,32 @@ const TWINS = [
     intro:
       "I work with individuals and couples, with particular interests in attachment, neurodiversity, depression, emotional wellbeing, trauma and complex relationships. I am passionate about helping people develop a deeper understanding of themselves, their experiences, and their relationships, creating opportunities for growth, connection and meaningful change.",
     aside: "Recently swept up in what she modestly calls a passion for padel.",
-    specialisms: ["Loss", "Attachment", "Self-Esteem", "Depression", "Emotional Wellbeing", "Trauma"],
+    specialisms: [
+      {
+        label: "Loss",
+        body: "We can help you move through grief and bereavement at your own pace, make sense of difficult and conflicting emotions, adjust to life after a loss, and find a way to carry what matters while gently moving forward.",
+      },
+      {
+        label: "Attachment",
+        body: "We can help you understand your attachment style, recognise the patterns it creates in your relationships, explore fears of rejection or abandonment, and develop more secure and trusting connections with others and with yourself.",
+      },
+      {
+        label: "Self-Esteem",
+        body: "We can help you build a kinder relationship with yourself, quieten a harsh inner critic, understand where low self-worth began, and grow steadier, more lasting confidence in who you are.",
+      },
+      {
+        label: "Depression",
+        body: "We can help you understand and lift low mood, make sense of what you are feeling, rebuild energy, motivation and hope, and find small, sustainable steps back towards yourself.",
+      },
+      {
+        label: "Emotional Wellbeing",
+        body: "We can help you understand and regulate difficult emotions, manage stress and overwhelm, build resilience, and develop tools that continue to support your wellbeing long after therapy ends.",
+      },
+      {
+        label: "Trauma",
+        body: "We can help you process difficult or painful experiences safely and at your own pace, understand how trauma affects you, and gently move towards feeling more grounded, settled and in control.",
+      },
+    ],
   },
 ];
 
@@ -93,6 +136,7 @@ const HEADLINE = "Our Journey So Far".split(" ");
 
 function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean }) {
   const story = therapistStories[twin.name as "Esther" | "Laura"];
+  const [active, setActive] = useState<number | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -155,24 +199,72 @@ function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean
             {twin.aside}
           </p>
         </Reveal>
+        <p className="font-body text-xs text-sage-dark/70 uppercase tracking-[0.2em] mb-4">
+          Tap an area to see how {twin.name} can help
+        </p>
         <StaggerGroup className="flex flex-wrap gap-3">
-          {twin.specialisms.map((s, i) => (
-            <StaggerItem key={s}>
-              <motion.span
-                className="inline-block font-body text-sm bg-white text-sage-dark px-5 py-2.5 rounded-full border border-sage-light shadow-sm"
-                animate={{ y: [0, i % 2 === 0 ? -5 : 5, 0] }}
-                transition={{
-                  duration: 5 + (i % 3),
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: i * 0.35,
-                }}
-              >
-                {s}
-              </motion.span>
-            </StaggerItem>
-          ))}
+          {twin.specialisms.map((s, i) => {
+            const isOpen = active === i;
+            return (
+              <StaggerItem key={s.label}>
+                <motion.button
+                  type="button"
+                  onClick={() => setActive(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                  className={`inline-flex items-center gap-1.5 font-body text-sm px-5 py-2.5 rounded-full border shadow-sm transition-colors duration-300 ${
+                    isOpen
+                      ? "bg-sage-dark text-cream border-sage-dark"
+                      : "bg-white text-sage-dark border-sage-light hover:border-sage"
+                  }`}
+                  animate={{ y: [0, i % 2 === 0 ? -5 : 5, 0] }}
+                  transition={{
+                    duration: 5 + (i % 3),
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: i * 0.35,
+                  }}
+                >
+                  {s.label}
+                  <Plus
+                    size={14}
+                    className={`transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}
+                  />
+                </motion.button>
+              </StaggerItem>
+            );
+          })}
         </StaggerGroup>
+
+        {/* Expanding one-pager for the selected area */}
+        <AnimatePresence initial={false}>
+          {active !== null && (
+            <motion.div
+              key="spec-panel"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.5, ease: EASE_OUT }}
+              className="overflow-hidden"
+            >
+              <motion.div
+                key={active}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, ease: EASE_OUT }}
+                className="mt-5 bg-sage-pale rounded-2xl border border-sage-light/60 p-6"
+                role="region"
+                aria-label={`How ${twin.name} can help with ${twin.specialisms[active].label}`}
+              >
+                <p className="font-body text-xs text-sage-dark uppercase tracking-[0.2em] mb-2">
+                  {twin.name} &amp; {twin.specialisms[active].label}
+                </p>
+                <p className="font-body text-base text-charcoal/85 leading-relaxed">
+                  {twin.specialisms[active].body}
+                </p>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         {story && (
           <div className="mt-8">
             <StoryVideo name={twin.name} story={story} variant="pill" />
