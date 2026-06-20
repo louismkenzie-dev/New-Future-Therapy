@@ -31,7 +31,7 @@ const SCENES: Scene[] = [
   {
     icon: HandHeart,
     eyebrow: "No Blame",
-    line: "We do not look for blame, judgement, or fault. We look for curiosity, understanding, and compassion. We believe that greater awareness creates greater choice and opens the door to meaningful change.",
+    line: "We do not look for blame, judgement or fault. We look for curiosity, understanding and compassion. We believe that greater awareness creates greater choice and opens the door to meaningful change.",
   },
   {
     icon: Sunrise,
@@ -71,7 +71,7 @@ const PRACTICE_POINTS = [
 
 const COMMITMENTS = [
   "We offer LGBTQIA+ affirming therapy — not tolerance, but active affirmation of who you are.",
-  "We respect your pronouns, your identity and your own language for yourself, and we never make assumptions.",
+  "We respect your pronouns, your identity and your own language for yourself and we never make assumptions.",
   "We affirm monogamous, non-monogamous, polyamorous and other relationship structures equally.",
   "We work with adults at every stage of life, from 18 to 70 and beyond — no chapter of life is the wrong one.",
   "We will never pathologise who you are. Who you love, how you identify and how your mind works are not problems to be fixed.",
@@ -132,7 +132,12 @@ export default function ApproachExperience() {
 
           <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl font-light text-charcoal leading-tight mb-8">
             {HEADLINE.map((word, i) => (
-              <span key={i} className="inline-block overflow-hidden align-bottom">
+              <span
+                key={i}
+                className={`inline-block overflow-hidden align-bottom${
+                  i < HEADLINE.length - 1 ? " mr-[0.25em]" : ""
+                }`}
+              >
                 <motion.span
                   className="inline-block"
                   initial={{ y: "110%", filter: "blur(6px)" }}
@@ -140,7 +145,6 @@ export default function ApproachExperience() {
                   transition={{ duration: 0.9, delay: 0.2 + i * 0.08, ease: EASE_OUT }}
                 >
                   {word}
-                  {i < HEADLINE.length - 1 && " "}
                 </motion.span>
               </span>
             ))}

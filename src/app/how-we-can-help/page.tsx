@@ -45,7 +45,7 @@ export default function HowWeCanHelpPage() {
           </h2>
           <p className="font-body text-base text-muted leading-relaxed mb-8">
             If what you are experiencing does not seem to fit any of these
-            areas, please do get in touch. We are happy to have a brief
+            areas, please do get in touch. We are happy to have a
             conversation to help you decide whether therapy with us might be
             right for you.
           </p>

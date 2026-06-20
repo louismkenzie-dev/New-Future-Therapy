@@ -76,7 +76,7 @@ const TWINS = [
     intro:
       "I work with individuals and couples, with particular interests in trauma, anxiety, self-esteem, relationship difficulties, and issues relating to sex and intimacy. I believe that meaningful change begins with feeling safe, understood, and accepted, and I strive to create a warm and supportive space where you can explore your experiences with curiosity, compassion and support.",
     aside: "Currently learning tennis — proof that it is never too late to begin.",
-    specialisms: ["Trauma", "Anxiety", "Self-Esteem", "Sex & Intimacy"],
+    specialisms: ["Neurodiversity", "Relationships", "HIV", "Menopause"],
   },
   {
     name: "Laura",
@@ -85,7 +85,7 @@ const TWINS = [
     intro:
       "I work with individuals and couples, with particular interests in attachment, neurodiversity, depression, emotional wellbeing, trauma and complex relationships. I am passionate about helping people develop a deeper understanding of themselves, their experiences, and their relationships, creating opportunities for growth, connection and meaningful change.",
     aside: "Recently swept up in what she modestly calls a passion for padel.",
-    specialisms: ["Attachment", "Neurodiversity", "Depression", "Complex Relationships"],
+    specialisms: ["Loss", "Attachment", "Self-Esteem", "Depression", "Emotional Wellbeing", "Trauma"],
   },
 ];
 

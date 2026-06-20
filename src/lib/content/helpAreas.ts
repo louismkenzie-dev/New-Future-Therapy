@@ -17,11 +17,11 @@ export const helpAreas: HelpArea[] = [
     title: "Relationships, Couples, Sexuality & Identity",
     summary:
       "Communication difficulties, recurring conflict, emotional disconnection, trust issues, affair recovery, attachment patterns, family dynamics, life transitions, separation, divorce and strengthening relationships.",
-    body: `Relationships can be one of the greatest sources of connection, fulfilment and support in our lives, but they can also bring challenges, uncertainty, and emotional pain.
+    body: `Communication difficulties, recurring conflict, emotional disconnection, trust issues, affair recovery, attachment patterns, family dynamics, life transitions, separation, divorce and strengthening relationships.
 
-Communication difficulties, recurring conflict, emotional disconnection, trust issues, affair recovery, attachment patterns, family dynamics, life transitions, separation, divorce and strengthening relationships. We also support individuals and couples who are considering the future of their relationship, navigating uncertainty, deciding on next steps, rebuilding after challenges or exploring whether they wish to stay together and work towards change.
+We support individuals and couples who are considering the future of their relationship, navigating uncertainty, deciding on next steps, rebuilding after challenges or exploring whether they wish to stay together, work towards change or navigate an amicable separation.
 
-We work with a wide range of sexuality and intimacy concerns including differences in desire, loss of intimacy, mismatched libidos, sexual confidence, erectile difficulties, painful sex, sexual anxiety, the impact of trauma on intimacy, menopause-related changes and body image concerns.
+We work with a wide range of sexuality and intimacy concerns including differences in desire, loss of intimacy, sexual confidence, erectile difficulties, painful sex, sexual anxiety, the impact of trauma on intimacy, menopause-related changes and body image concerns.
 
 We support individuals who are exploring, questioning or seeking greater understanding of their gender identity and or sexuality and how this fits within their personal journey and relationships.`,
     essence: "Connection is where we hurt — and where we heal.",
