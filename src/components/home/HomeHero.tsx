@@ -85,7 +85,7 @@ export default function HomeHero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.8, ease: EASE_OUT }}
         >
-          We are Esther and Laura — twin sisters and qualified therapists
+          We are Esther and Laura — twin sisters and qualified counsellors
           offering professional, inclusive therapy for individuals and couples.
         </motion.p>
 
