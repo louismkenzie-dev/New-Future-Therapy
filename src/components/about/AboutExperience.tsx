@@ -31,7 +31,7 @@ const JOURNEY: { era: string; title: string; icon: typeof Users; body: string[] 
     title: "Two Sisters, One Path",
     icon: Users,
     body: [
-      "We are Esther and Laura — identical twins, born in Bristol and raised in Leicester. We have walked remarkably similar paths our whole lives, often without planning to.",
+      "We are Esther and Laura — identical twins, born in Bristol and raised in Leicestershire. We have walked remarkably similar paths our whole lives, often without planning to.",
     ],
   },
   {
@@ -39,7 +39,7 @@ const JOURNEY: { era: string; title: string; icon: typeof Users; body: string[] 
     title: "Our First Business",
     icon: Briefcase,
     body: [
-      "Our first business together saw us establishing a base in Yorkshire. Even then, the heart of the work was helping people reach their potential and create positive change.",
+      "Our first business together saw us establishing a base in Yorkshire and setting up a recruitment company. Even then, the heart of the work was helping people reach their potential and create positive change.",
     ],
   },
   {
@@ -47,15 +47,15 @@ const JOURNEY: { era: string; title: string; icon: typeof Users; body: string[] 
     title: "Family & Wellbeing",
     icon: HeartPulse,
     body: [
-      "Next, career breaks to raise our young families led us to running a business in the health, fitness and wellbeing sector. Once again, we found ourselves drawn to the human side of change. We became fascinated by what helps people grow, what holds them back. How support, understanding and encouragement can enable people to move forward through difficult periods in their lives. Our work focused on physical wellbeing, lifestyle change and personal development, and it was here that we saw first-hand the powerful connection between emotional wellbeing, self-belief, resilience and lasting change.",
+      "Next, career breaks to raise our young families led us to re-training and qualifying as personal trainers and setting up and running a business in the health, fitness and wellbeing sector. Once again, we found ourselves drawn to the human side of change. We became fascinated by what helps people grow, what holds them back. How support, understanding and encouragement can enable people to move forward through difficult periods in their lives. Our work focused on physical wellbeing, lifestyle change and personal development, and it was here that we saw first-hand the powerful connection between emotional wellbeing, self-belief, resilience and lasting change.",
     ],
   },
   {
     era: "The Retraining",
-    title: "Five Years of Learning, Training and Growth",
+    title: "Ten Plus Years of Learning, Training and Growth",
     icon: GraduationCap,
     body: [
-      "Our curiosity about people and relationships led us back into education. Over five plus years, we trained and qualified as therapists while continuing to develop our knowledge in areas including trauma, anxiety, depression, attachment, relationships, intimacy and couples therapy. The more we learned, the more passionate we became about helping our clients understand themselves, strengthen their relationships and create meaningful change in their lives.",
+      "Our curiosity about people and relationships led us back into education. Over ten plus years, we trained and qualified as counsellors while continuing to develop our knowledge in areas including trauma, anxiety, depression, attachment, relationships, intimacy and couples therapy. The more we learned, the more passionate we became about helping our clients understand themselves, strengthen their relationships and create meaningful change in their lives.",
     ],
   },
   {
@@ -75,12 +75,12 @@ const TWINS = [
     photo: "/photos/therapist-green-portrait.jpg",
     position: "35% 25%",
     intro:
-      "I work with individuals and couples, with particular interests in trauma, anxiety, self-esteem, relationship difficulties, and issues relating to sex and intimacy. I believe that meaningful change begins with feeling safe, understood, and accepted, and I strive to create a warm and supportive space where you can explore your experiences with curiosity, compassion and support.",
+      "I work with individuals and couples, with particular interests in trauma, anxiety, self-esteem, relationship difficulties and issues relating to sex and intimacy. I believe that meaningful change begins with feeling safe, understood and accepted. I strive to create a warm and supportive space where you can explore your experiences with curiosity, compassion and support.",
     aside: "Currently learning tennis — proof that it is never too late to begin.",
     specialisms: [
       {
         label: "Neurodiversity",
-        body: "We can help you understand how your mind works, recognise your strengths and your needs, navigate diagnosis or self-identification, manage overwhelm and burnout, and build a life and relationships that work with your neurodivergence rather than against it.",
+        body: "We can help you understand how your mind works, recognise your strengths and your needs, navigate diagnosis or self-identification, manage overwhelm and burnout and build a life and relationships that work with your neurodivergence rather than against it.",
       },
       {
         label: "Relationships",
@@ -88,11 +88,19 @@ const TWINS = [
       },
       {
         label: "HIV",
-        body: "We can help you process a diagnosis, manage anxiety, stigma and disclosure, navigate relationships, intimacy and dating, and find a supportive, non-judgemental space to talk openly about living well with HIV.",
+        body: "We can help you process a diagnosis, manage anxiety, stigma and disclosure, navigate relationships, intimacy and dating and find a supportive, non-judgemental space to talk openly about living well with HIV.",
       },
       {
         label: "Menopause",
         body: "We can help you navigate the emotional impact of menopause and perimenopause — including changes in mood, identity, confidence, intimacy and relationships — with understanding and without judgement.",
+      },
+      {
+        label: "Complex Family Dynamics",
+        body: "We can help you understand the impact of difficult family relationships, emotionally immature parenting, narcissistic behaviours, family conflict, boundaries, people-pleasing, guilt and feelings of responsibility for others. Together, we can explore how these experiences may have shaped your sense of self, relationships and emotional wellbeing, helping you develop healthier patterns, stronger boundaries and greater self-understanding.",
+      },
+      {
+        label: "Sex & Intimacy",
+        body: "We can help you explore difficulties relating to sex, intimacy and desire in a safe, non-judgemental space. This may include differences in desire, loss of intimacy, sexual confidence, the impact of trauma, relationship difficulties, body image concerns, menopause-related changes and reconnecting with yourself or your partner.",
       },
     ],
   },
@@ -106,27 +114,27 @@ const TWINS = [
     specialisms: [
       {
         label: "Loss",
-        body: "We can help you move through grief and bereavement at your own pace, make sense of difficult and conflicting emotions, adjust to life after a loss, and find a way to carry what matters while gently moving forward.",
+        body: "We can help you move through grief and bereavement at your own pace, make sense of difficult and conflicting emotions, adjust to life after a loss and find a way to carry what matters while gently moving forward.",
       },
       {
         label: "Attachment",
-        body: "We can help you understand your attachment style, recognise the patterns it creates in your relationships, explore fears of rejection or abandonment, and develop more secure and trusting connections with others and with yourself.",
+        body: "We can help you understand your attachment style, recognise the patterns it creates in your relationships, explore fears of rejection or abandonment and develop more secure and trusting connections with others and with yourself.",
       },
       {
         label: "Self-Esteem",
-        body: "We can help you build a kinder relationship with yourself, quieten a harsh inner critic, understand where low self-worth began, and grow steadier, more lasting confidence in who you are.",
+        body: "We can help you build a kinder relationship with yourself, quieten a harsh inner critic, understand where low self-worth began and grow steadier, more lasting confidence in who you are.",
       },
       {
         label: "Depression",
-        body: "We can help you understand and lift low mood, make sense of what you are feeling, rebuild energy, motivation and hope, and find small, sustainable steps back towards yourself.",
+        body: "We can help you understand and lift low-mood, make sense of what you are feeling, rebuild energy, motivation and hope and find small, sustainable steps back towards yourself.",
       },
       {
         label: "Emotional Wellbeing",
-        body: "We can help you understand and regulate difficult emotions, manage stress and overwhelm, build resilience, and develop tools that continue to support your wellbeing long after therapy ends.",
+        body: "We can help you understand and regulate difficult emotions, manage stress and overwhelm, build resilience and develop tools that continue to support your wellbeing long after therapy ends.",
       },
       {
         label: "Trauma",
-        body: "We can help you process difficult or painful experiences safely and at your own pace, understand how trauma affects you, and gently move towards feeling more grounded, settled and in control.",
+        body: "We can help you process difficult or painful experiences safely and at your own pace, understand how trauma affects you and gently move towards feeling more grounded, settled and in control.",
       },
     ],
   },

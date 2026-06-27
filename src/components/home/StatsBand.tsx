@@ -14,7 +14,7 @@ const STATS = [
     aria: "Meet Esther and Laura on our About page",
   },
   {
-    value: 5,
+    value: 10,
     suffix: "+",
     label: "Years of professional training",
     href: "/our-approach",

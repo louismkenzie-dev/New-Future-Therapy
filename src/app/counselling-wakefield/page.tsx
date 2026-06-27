@@ -3,7 +3,7 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import FloatingLeaves from "@/components/FloatingLeaves";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, Phone, Mail } from "lucide-react";
 import { helpAreas } from "@/lib/content/helpAreas";
 import { areaIcons } from "@/lib/areaIcons";
 
@@ -23,16 +23,23 @@ export const metadata: Metadata = {
   },
 };
 
-const faqs = [
+interface Faq {
+  question: string;
+  answer: string;
+  prices?: { label: string; price: string }[];
+  contacts?: { name: string; phone: string; tel: string; email: string }[];
+}
+
+const faqs: Faq[] = [
   {
     question: "Where are you based in Wakefield?",
     answer:
-      "We offer face-to-face counselling in Wakefield, and we will share the full location details with you when you book. If travelling is difficult, we also offer online sessions wherever you are.",
+      "We offer face-to-face counselling in Wakefield, West Yorkshire — five minutes from the city centre, easily accessible with free parking. We will share the full location details with you when you book. If travelling is difficult, we also offer online sessions wherever you are.",
   },
   {
     question: "Do you offer online counselling?",
     answer:
-      "Yes. We offer online therapy across the United Kingdom. For most people it is just as effective as meeting in person, and it can be much easier to fit around work, travel and caring responsibilities.",
+      "Yes. We offer online counselling across the United Kingdom. For most people it is just as effective as meeting in person, and it can be much easier to fit around work, travel and caring responsibilities.",
   },
   {
     question: "Do I need a GP referral or a diagnosis?",
@@ -48,26 +55,53 @@ const faqs = [
     question: "How much does counselling cost?",
     answer:
       "We are happy to talk through our fees during your free 15-minute initial consultation, so you have all the information you need before deciding whether to go ahead.",
+    prices: [
+      { label: "Individual sessions", price: "£65.00" },
+      { label: "Couples", price: "£85.00" },
+      {
+        label:
+          "Relationship counselling (trouples, polyamorous and other relationship structures)",
+        price: "£105.00",
+      },
+    ],
   },
   {
     question: "How do I book?",
     answer:
-      "Start with a free 15-minute initial consultation. Get in touch through our contact page and we will arrange a time that suits you, with no pressure and no commitment.",
+      "Start with a free 15-minute initial consultation. Get in touch through our contact page to arrange a telephone consultation and we will find a time that suits you, with no pressure and no commitment. You are also welcome to call, send a WhatsApp message or email us directly.",
+    contacts: [
+      {
+        name: "Esther",
+        phone: "07923 909687",
+        tel: "+447923909687",
+        email: "esther@newfuturetherapy.co.uk",
+      },
+      {
+        name: "Laura",
+        phone: "07526 749106",
+        tel: "+447526749106",
+        email: "laura@newfuturetherapy.co.uk",
+      },
+    ],
   },
 ];
 
 const steps = [
   {
     title: "A free 15-minute consultation",
-    body: "We begin with a relaxed, no-pressure conversation so you can ask questions and get a feel for how we work.",
+    body: "We begin with a relaxed, no-pressure conversation so you can ask questions and get a feel for who we are and how we work. During this consultation we will start to explore what is bringing you to counselling and what you hope to get from it.",
   },
   {
     title: "Your first session",
-    body: "A gentle first meeting, in Wakefield or online, where we get to know you and what you are hoping for. You set the pace.",
+    body: "A gentle first meeting, in Wakefield or online, where we get to know you and what you are hoping for. You set the pace. One of the most important aspects of counselling is the relationship between you and your counsellor, so we encourage you to trust your instincts and notice how it feels: did you feel heard, accepted and understood, and does this feel like the right fit for you?",
   },
   {
     title: "Ongoing support",
-    body: "We work together at a rhythm that suits you, checking in regularly about what is helping and what you need.",
+    body: "We work together at a pace that feels right for you, creating a safe space to explore your experiences, develop greater understanding and work towards the changes that matter most to you. We check in regularly to make sure counselling continues to meet your needs, and there is no expectation to commit to a set number of sessions.",
+  },
+  {
+    title: "Moving forward",
+    body: "As counselling progresses, we will regularly review how things are going and whether you feel you are getting what you need. When the time feels right, we will think together about ending counselling — reflecting on your journey, the changes you have made and how you can continue to support yourself moving forward.",
   },
 ];
 
@@ -107,11 +141,22 @@ export default function CounsellingWakefieldPage() {
     {
       "@context": "https://schema.org",
       "@type": "FAQPage",
-      mainEntity: faqs.map((f) => ({
-        "@type": "Question",
-        name: f.question,
-        acceptedAnswer: { "@type": "Answer", text: f.answer },
-      })),
+      mainEntity: faqs.map((f) => {
+        let text = f.answer;
+        if (f.prices) {
+          text += ` ${f.prices.map((p) => `${p.label}: ${p.price}.`).join(" ")}`;
+        }
+        if (f.contacts) {
+          text += ` ${f.contacts
+            .map((c) => `${c.name}: ${c.phone}, ${c.email}.`)
+            .join(" ")}`;
+        }
+        return {
+          "@type": "Question",
+          name: f.question,
+          acceptedAnswer: { "@type": "Answer", text },
+        };
+      }),
     },
   ];
 
@@ -141,14 +186,14 @@ export default function CounsellingWakefieldPage() {
             </p>
             <p className="font-body text-lg text-muted leading-[1.9] mb-6">
               We believe growth begins with understanding. Whether you are
-              feeling stuck, anxious, low, or simply ready for something to
+              feeling stuck, anxious, low or simply ready for something to
               change, we offer a warm and confidential space to explore what is
               happening and to move towards a healthier future — at your own
-              pace, and without judgement.
+              pace and without judgement.
             </p>
             <p className="font-body text-lg text-muted leading-[1.9]">
               We welcome adults of all ages, from early adulthood through to
-              later life, and people of every background, identity and
+              later life and people of every background, identity and
               relationship structure. Our practice is actively LGBTQIA+
               affirming. Whoever you are, you are welcome here.
             </p>
@@ -207,7 +252,7 @@ export default function CounsellingWakefieldPage() {
               How It Works
             </h2>
           </Reveal>
-          <StaggerGroup className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <StaggerGroup className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {steps.map((step, i) => (
               <StaggerItem key={step.title}>
                 <div className="h-full bg-white rounded-2xl p-8 border border-grey-light shadow-sm">
@@ -249,6 +294,62 @@ export default function CounsellingWakefieldPage() {
                   <p className="font-body text-base text-muted leading-relaxed">
                     {faq.answer}
                   </p>
+
+                  {faq.prices && (
+                    <ul className="mt-5 border-t border-grey-light">
+                      {faq.prices.map((p) => (
+                        <li
+                          key={p.label}
+                          className="flex items-baseline justify-between gap-4 py-3 border-b border-grey-light"
+                        >
+                          <span className="font-body text-sm text-charcoal">
+                            {p.label}
+                          </span>
+                          <span className="font-heading text-lg font-light text-sage-dark shrink-0">
+                            {p.price}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  {faq.contacts && (
+                    <ul className="mt-5 space-y-4">
+                      {faq.contacts.map((c) => (
+                        <li
+                          key={c.name}
+                          className="flex flex-wrap items-center gap-x-5 gap-y-2"
+                        >
+                          <span className="font-body text-sm font-medium text-charcoal w-14">
+                            {c.name}
+                          </span>
+                          <a
+                            href={`tel:${c.tel}`}
+                            className="inline-flex items-center gap-1.5 font-body text-sm text-sage-dark hover:text-charcoal transition-colors duration-200"
+                          >
+                            <Phone size={14} strokeWidth={1.75} />
+                            {c.phone}
+                          </a>
+                          <a
+                            href={`https://wa.me/${c.tel.replace("+", "")}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 font-body text-sm text-sage-dark hover:text-charcoal transition-colors duration-200"
+                          >
+                            <MessageCircle size={14} strokeWidth={1.75} />
+                            WhatsApp
+                          </a>
+                          <a
+                            href={`mailto:${c.email}`}
+                            className="inline-flex items-center gap-1.5 font-body text-sm text-sage-dark hover:text-charcoal transition-colors duration-200"
+                          >
+                            <Mail size={14} strokeWidth={1.75} />
+                            Email
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </Reveal>
             ))}
