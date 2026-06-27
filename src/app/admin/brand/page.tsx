@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
-import { Check, Heart, Lightbulb, Users, X } from "lucide-react";
+import Link from "next/link";
+import { redirect } from "next/navigation";
+import { ArrowLeft, Check, Heart, Lightbulb, Users, X } from "lucide-react";
+import { isAdmin } from "@/lib/adminAuth";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
 import LogoSuite from "@/components/brand/LogoSuite";
@@ -14,12 +17,7 @@ const description =
 export const metadata: Metadata = {
   title: "Brand Guidelines",
   description,
-  alternates: { canonical: "/brand" },
-  openGraph: {
-    title: "Brand Guidelines | NewFuture Therapy",
-    description,
-    url: "/brand",
-  },
+  robots: { index: false, follow: false },
 };
 
 function SectionHead({
@@ -53,9 +51,24 @@ function SectionHead({
   );
 }
 
-export default function BrandGuidelinesPage() {
+export default async function BrandGuidelinesPage() {
+  if (!(await isAdmin())) redirect("/admin/login");
+
   return (
     <>
+      {/* Team-only — return to the admin dashboard */}
+      <div className="bg-cream border-b border-grey-light px-6 py-3">
+        <div className="max-w-6xl mx-auto">
+          <Link
+            href="/admin"
+            className="inline-flex items-center gap-2 font-body text-sm text-sage-dark hover:text-charcoal transition-colors duration-200"
+          >
+            <ArrowLeft size={15} />
+            Back to Admin Dashboard
+          </Link>
+        </div>
+      </div>
+
       {/* Canonical webfonts so the logo engine's canvas measurement resolves the
           exact families used in downloads (next/font self-hosts under hashed
           names the canvas cannot reference). */}

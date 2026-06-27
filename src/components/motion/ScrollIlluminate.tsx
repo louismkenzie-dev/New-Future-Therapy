@@ -42,8 +42,12 @@ export default function ScrollIlluminate({
   });
 
   const words = text.split(" ");
-  const tailOpacity = useTransform(scrollYProgress, [0.72, 0.92], [0, 1]);
-  const tailY = useTransform(scrollYProgress, [0.72, 0.92], [24, 0]);
+  /* Words finish illuminating at ~0.65 (0.1 start + 0.55 span). Reveal the
+     buttons right after, then hold them: useTransform clamps, so once shown
+     they stay visible (and the text stays lit) for the rest of the downward
+     scroll — both only reverse when the user scrolls back up. */
+  const tailOpacity = useTransform(scrollYProgress, [0.6, 0.72], [0, 1]);
+  const tailY = useTransform(scrollYProgress, [0.6, 0.72], [24, 0]);
 
   return (
     <div ref={ref} className="relative bg-sage-dark" style={{ height }}>
