@@ -80,6 +80,18 @@ export default function Footer() {
             </Link>
           </div>
         </div>
+
+        <p className="font-body text-xs text-cream/30 text-center mt-8">
+          Developed by{" "}
+          <a
+            href="https://nullshift.co.uk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-cream/50 hover:text-sage-light transition-colors duration-200"
+          >
+            Nullshift
+          </a>
+        </p>
       </div>
     </footer>
   );
