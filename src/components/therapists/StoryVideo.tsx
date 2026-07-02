@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import MuxPlayer from "@mux/mux-player-react";
 import { Play, X } from "lucide-react";
 import type { TherapistStory } from "@/lib/content/therapists";
+import { useAnalyticsConsent } from "@/lib/consent";
 
 /* Click-to-open story video for a therapist profile. On open it plays the
    brand's signature leaf-draw intro, then seamlessly crossfades into the video
@@ -72,6 +73,7 @@ export default function StoryVideo({
   const [mounted, setMounted] = useState(false);
   const [phase, setPhase] = useState<"intro" | "video">("intro");
   const reduced = useReducedMotion();
+  const analyticsAllowed = useAnalyticsConsent();
 
   useEffect(() => setMounted(true), []);
 
@@ -210,7 +212,7 @@ export default function StoryVideo({
                         streamType="on-demand"
                         autoPlay
                         accentColor="#6B8C6F"
-                        envKey={process.env.NEXT_PUBLIC_MUX_DATA_ENV_KEY}
+                        envKey={analyticsAllowed ? process.env.NEXT_PUBLIC_MUX_DATA_ENV_KEY : undefined}
                         metadata={{
                           video_id: `therapist-story/${story.playbackId}`,
                           video_title: `${name} — Therapist Story`,

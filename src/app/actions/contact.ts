@@ -17,9 +17,20 @@ export async function submitContactForm(
   const pronouns = formData.get("pronouns")?.toString().trim() ?? "";
   const phone = formData.get("phone")?.toString().trim() ?? "";
   const referral = formData.get("referral")?.toString().trim() ?? "";
+  const consent = formData.get("consent")?.toString() ?? "";
 
   if (!name || !email || !message) {
     return { status: "error", message: "Please fill in all required fields." };
+  }
+
+  /* UK GDPR: explicit consent is the lawful basis promised in the privacy
+     policy — refuse to process without the ticked box. */
+  if (consent !== "on") {
+    return {
+      status: "error",
+      message:
+        "Please tick the consent box so we have your permission to process your enquiry.",
+    };
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

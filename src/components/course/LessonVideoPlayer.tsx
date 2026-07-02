@@ -4,6 +4,7 @@ import { useRef } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import { PlayCircle, Headphones } from "lucide-react";
 import type { PlaybackTokens } from "@/lib/mux";
+import { useAnalyticsConsent } from "@/lib/consent";
 import {
   saveVideoPosition,
   markLessonCompleteFromPlayer,
@@ -34,6 +35,7 @@ export default function LessonVideoPlayer({
   audioOnly = false,
 }: LessonVideoPlayerProps) {
   const lastSavedRef = useRef(0);
+  const analyticsAllowed = useAnalyticsConsent();
 
   if (!playbackId) {
     return (
@@ -65,7 +67,7 @@ export default function LessonVideoPlayer({
         audio={audioOnly}
         startTime={startTime && startTime > 5 ? startTime : undefined}
         accentColor="#6B8C6F"
-        envKey={process.env.NEXT_PUBLIC_MUX_DATA_ENV_KEY}
+        envKey={analyticsAllowed ? process.env.NEXT_PUBLIC_MUX_DATA_ENV_KEY : undefined}
         metadata={{
           video_id: `${courseId}/${lessonId}`,
           video_title: title,

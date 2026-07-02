@@ -187,6 +187,35 @@ export default function ContactPage() {
                   />
                 </div>
 
+                {/* UK GDPR consent — the privacy policy promises an explicit
+                    tick-box before any personal data is processed. */}
+                <div className="flex items-start gap-3 p-4 bg-sage-pale/60 rounded-lg border border-sage-light/50">
+                  <input
+                    id="consent"
+                    name="consent"
+                    type="checkbox"
+                    required
+                    className="mt-0.5 w-5 h-5 shrink-0 rounded border-grey-light text-sage-dark accent-[#3A5A40] focus:ring-sage cursor-pointer"
+                  />
+                  <label
+                    htmlFor="consent"
+                    className="font-body text-sm text-muted leading-relaxed cursor-pointer"
+                  >
+                    I consent to NewFuture Therapy processing the information I
+                    have provided in order to respond to my enquiry, as
+                    described in the{" "}
+                    <a
+                      href="/privacy-policy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sage-dark underline underline-offset-2 hover:text-charcoal transition-colors duration-200"
+                    >
+                      Privacy &amp; Data Protection Policy
+                    </a>
+                    . <span className="text-sage">*</span>
+                  </label>
+                </div>
+
                 {state.status === "error" && (
                   <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
                     <AlertCircle size={18} className="text-red-500 shrink-0" />
@@ -204,9 +233,16 @@ export default function ContactPage() {
                 </button>
 
                 <p className="font-body text-xs text-muted">
-                  By submitting this form you agree to us contacting you in
-                  response to your enquiry. Your details will be handled in
-                  accordance with our privacy policy and GDPR guidelines.
+                  Your details are encrypted, stored securely and handled in
+                  accordance with UK GDPR and the BACP Ethical Framework. You
+                  can withdraw consent at any time — see our{" "}
+                  <a
+                    href="/privacy-policy"
+                    className="text-sage-dark underline underline-offset-2 hover:text-charcoal transition-colors duration-200"
+                  >
+                    privacy policy
+                  </a>
+                  .
                 </p>
               </form>
             )}

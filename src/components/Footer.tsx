@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Logo from "@/components/Logo";
+import CookieSettingsLink from "@/components/CookieSettingsLink";
 
 const footerLinks = [
   { href: "/", label: "Home" },
@@ -79,6 +80,29 @@ export default function Footer() {
               Team Login
             </Link>
           </div>
+        </div>
+
+        {/* Legal */}
+        <div className="mt-6 flex flex-wrap justify-center items-center gap-x-6 gap-y-2">
+          <Link
+            href="/privacy-policy"
+            className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200"
+          >
+            Privacy &amp; Data Protection
+          </Link>
+          <Link
+            href="/terms"
+            className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200"
+          >
+            Terms &amp; Conditions
+          </Link>
+          <Link
+            href="/cookie-policy"
+            className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200"
+          >
+            Cookie Policy
+          </Link>
+          <CookieSettingsLink className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200" />
         </div>
 
         <p className="font-body text-xs text-cream/30 text-center mt-8">
