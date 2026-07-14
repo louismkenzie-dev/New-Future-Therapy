@@ -8,6 +8,7 @@ import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import {
   ArrowRight,
   Plus,
+  ChevronDown,
   Users,
   Briefcase,
   HeartPulse,
@@ -103,6 +104,31 @@ const TWINS = [
         body: "We can help you explore difficulties relating to sex, intimacy and desire in a safe, non-judgemental space. This may include differences in desire, loss of intimacy, sexual confidence, the impact of trauma, relationship difficulties, body image concerns, menopause-related changes and reconnecting with yourself or your partner.",
       },
     ],
+    qualifications: [
+      "ABC Diploma in Therapeutic Counselling",
+      "Diploma in Couple Counselling",
+      "Certificate in Internal Family Systems Trauma Treatment",
+      "Certificate in Integrative Sex and Couples with Tammy Nelson",
+      "Couples Therapy — Navigating Modern Relationships",
+      "Emotionally Focused Couples Therapy (EFCT) Certificate: Repairing Relationships and Healing Emotional Disconnection",
+      "Mother Hunger: Treating Trauma, Grief and Attachment Wounds from Unmet Maternal Needs",
+      "Healing from Affairs: Moving Past the Trauma of Betrayal and Infidelity",
+      "Neurodiversity Affirming Therapy with Autism and ADHD Clients",
+      "Working with Survivors of Childhood Sexual Abuse",
+      "IARTT Rewind Trauma Therapy",
+      "Treating Adult Clients of Emotionally Immature Parents",
+      "Group Therapy Certificate: Evidence-Based Strategies to Develop and Facilitate Dynamic, Purposeful and Effective Group Therapy",
+      "Certificate in Narcissistic Abuse — In-Depth Workshop with Ramani Durvasula",
+      "Certificate in Self-Harm and Suicide Prevention",
+      "Safeguarding Adults",
+      "Carolyn Spring — Working with Shame",
+      "Understanding Childhood Sexual Exploitation, the Grooming Process and How to Recognise the Signs",
+      "Fitness Instructor and Personal Trainer",
+      "Adapting Fitness Instruction for Adolescence",
+      "Counselling Tutor Certificate: Online and Telephone Counselling",
+      "Adverse Childhood Experiences (ACEs)",
+      "Clients Who Self-Harm (Certified)",
+    ],
   },
   {
     name: "Laura",
@@ -137,6 +163,38 @@ const TWINS = [
         body: "We can help you process difficult or painful experiences safely and at your own pace, understand how trauma affects you and gently move towards feeling more grounded, settled and in control.",
       },
     ],
+    qualifications: [
+      "ABC Diploma in Therapeutic Counselling",
+      "Diploma in Couple Counselling",
+      "Certificate in Internal Family Systems Trauma Treatment",
+      "Certificate in Integrative Sex and Couples with Tammy Nelson",
+      "Couples Therapy — Navigating Modern Relationships",
+      "Emotionally Focused Couples Therapy (EFCT) Certificate: Repairing Relationships and Healing Emotional Disconnection",
+      "Mother Hunger: Treating Trauma, Grief and Attachment Wounds from Unmet Maternal Needs",
+      "Healing from Affairs: Moving Past the Trauma of Betrayal and Infidelity",
+      "Neurodiversity Affirming Therapy with Autism and ADHD Clients",
+      "Working with Survivors of Childhood Sexual Abuse",
+      "IARTT Rewind Trauma Therapy",
+      "Treating Adult Clients of Emotionally Immature Parents",
+      "Certificate in Self-Harm and Suicide Prevention",
+      "APT Accreditation: Trauma-Focused CBT for Children and Families",
+      "APT Accreditation: CBT for Eating Disorders",
+      "Carolyn Spring — Working with Shame",
+      "Understanding Childhood Sexual Exploitation, the Grooming Process and How to Recognise the Signs",
+      "Mental Health Act Training",
+      "Clinical Risk, Formulation and Management Training",
+      "Health, Safety & Welfare",
+      "Fitness Instructor and Personal Trainer",
+      "Adapting Fitness Instruction for Adolescence",
+      "Breathwork for Anxiety and Trauma Recovery",
+      "Working with Bereaved Children: Theory and Practice",
+      "Adverse Childhood Experiences (ACEs)",
+      "Working with Children in Therapy (Certified)",
+      "Clients Who Self-Harm (Certified)",
+      "The Impact of Sleep on Emotional Wellbeing",
+      "Autism Education Trust — Schools: Making Sense of Autism",
+      "CBT Skills: Exposure Therapy",
+    ],
   },
 ];
 
@@ -145,6 +203,7 @@ const HEADLINE = "Our Journey So Far".split(" ");
 function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean }) {
   const story = therapistStories[twin.name as "Esther" | "Laura"];
   const [active, setActive] = useState<number | null>(null);
+  const [qualsOpen, setQualsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -278,6 +337,58 @@ function TwinPanel({ twin, flip }: { twin: (typeof TWINS)[number]; flip: boolean
             <StoryVideo name={twin.name} story={story} variant="pill" />
           </div>
         )}
+
+        {/* Qualifications & training — collapsible, given the length */}
+        <div className="mt-8 border-t border-grey-light pt-6">
+          <button
+            type="button"
+            onClick={() => setQualsOpen((v) => !v)}
+            aria-expanded={qualsOpen}
+            className="group flex w-full items-center gap-2.5 font-body text-sm text-sage-dark hover:text-charcoal transition-colors duration-200"
+          >
+            <GraduationCap size={17} strokeWidth={1.75} />
+            <span className="font-medium">Qualifications &amp; Training</span>
+            <span className="text-muted">({twin.qualifications.length})</span>
+            <ChevronDown
+              size={16}
+              className={`ml-auto transition-transform duration-300 ${
+                qualsOpen ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          <AnimatePresence initial={false}>
+            {qualsOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.5, ease: EASE_OUT }}
+                className="overflow-hidden"
+              >
+                <ul className="mt-5 grid grid-cols-1 gap-x-8 gap-y-2.5 sm:grid-cols-2">
+                  {twin.qualifications.map((q) => (
+                    <li
+                      key={q}
+                      className="flex gap-2.5 font-body text-sm text-muted leading-snug"
+                    >
+                      <span
+                        className="mt-[0.5em] shrink-0 w-1.5 h-1.5 rounded-full bg-sage"
+                        aria-hidden="true"
+                      />
+                      <span>{q}</span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-6 font-body text-xs text-muted italic">
+                  Accredited Registered Member of the BACP, working in
+                  accordance with the BACP Ethical Framework. Enhanced DBS
+                  checked and fully insured.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </div>
     </div>
   );

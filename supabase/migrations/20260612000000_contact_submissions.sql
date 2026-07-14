@@ -11,9 +11,11 @@ create table if not exists contact_submissions (
 -- Enable Row Level Security
 alter table contact_submissions enable row level security;
 
--- Allow the contact form (anon role) to INSERT only
+-- Allow the contact form to INSERT only.
+-- No role restriction (applies to `public`) so it works with both the
+-- legacy anon JWT and the newer sb_publishable_... API keys.
 create policy "anon_insert" on contact_submissions
-  for insert to anon
+  for insert
   with check (true);
 
 -- Only service_role (admin dashboard) may read
