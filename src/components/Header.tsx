@@ -13,6 +13,7 @@ const navLinks = [
   { href: "/our-approach", label: "Our Approach" },
   { href: "/how-we-can-help", label: "How We Can Help" },
   { href: "/articles", label: "Articles" },
+  { href: "/resources", label: "Resources" },
   { href: "/contact", label: "Contact" },
 ];
 

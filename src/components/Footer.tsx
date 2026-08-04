@@ -9,6 +9,7 @@ const footerLinks = [
   { href: "/how-we-can-help", label: "How We Can Help" },
   { href: "/counselling-wakefield", label: "Counselling in Wakefield" },
   { href: "/articles", label: "Articles" },
+  { href: "/resources", label: "Client Resources" },
   { href: "/contact", label: "Contact" },
 ];
 

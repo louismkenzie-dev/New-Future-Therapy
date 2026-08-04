@@ -73,3 +73,19 @@ html.lenis, html.lenis body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Print: strip the site chrome and undo scroll-reveal states so client
+   resources (and anything else) print cleanly. */
+@media print {
+  header, footer {
+    display: none !important;
+  }
+  * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  body {
+    background: #fff;
+  }
+}

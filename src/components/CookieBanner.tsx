@@ -36,7 +36,7 @@ export default function CookieBanner() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          className="fixed inset-x-4 bottom-4 z-[110] sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-w-md"
+          className="fixed inset-x-4 bottom-4 z-[110] sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-w-md print:hidden"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 24 }}
