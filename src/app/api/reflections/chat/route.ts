@@ -254,9 +254,18 @@ export async function POST(request: NextRequest): Promise<Response> {
       } catch (error) {
         console.error("Reflections stream failed:", error);
         if (!full) {
+          // Billing/config failures are not transient — do not tell the
+          // participant to retry when retrying cannot help.
+          const text = error instanceof Error ? error.message : "";
+          const configIssue =
+            text.includes("credit balance") ||
+            text.includes("authentication_error") ||
+            text.includes("invalid x-api-key");
           controller.enqueue(
             encoder.encode(
-              "I am sorry — something went wrong on my side just now. Your words have been kept safely; please try again in a moment."
+              configIssue
+                ? "Reflections is not available at the moment — the NewFuture team has been made aware. Your course and worksheets work as normal in the meantime."
+                : "I am sorry — something went wrong on my side just now. Your words have been kept safely; please try again in a moment."
             )
           );
         }
