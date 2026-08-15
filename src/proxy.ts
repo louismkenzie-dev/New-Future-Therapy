@@ -10,13 +10,12 @@ function isPreviewLessonPath(pathname: string): boolean {
   return Boolean(entry?.lesson.preview);
 }
 
-/* The course platform is built but kept out of public view until launch.
-   While disabled, every course/auth/member route redirects to the home page
-   so nothing half-finished is reachable. Set NEXT_PUBLIC_COURSE_ENABLED=true
-   to restore them (Header shows the links under the same flag). */
-const COURSE_ENABLED = process.env.NEXT_PUBLIC_COURSE_ENABLED === "true";
+/* The course platform is reachable by direct URL for enrolled members and
+   testers, but deliberately unlinked: the Header shows course/sign-in links
+   only when NEXT_PUBLIC_COURSE_ENABLED=true, and robots.ts disallows all
+   member and auth routes. */
 
-/* Routes that require an authenticated member when the platform is live. */
+/* Routes that require an authenticated member. */
 function isProtectedPath(pathname: string): boolean {
   return pathname.startsWith("/learn") || pathname.startsWith("/account");
 }
@@ -27,13 +26,6 @@ function isProtectedPath(pathname: string): boolean {
    the DAL (src/lib/auth/session.ts). */
 
 export async function proxy(request: NextRequest) {
-  if (!COURSE_ENABLED) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/";
-    url.search = "";
-    return NextResponse.redirect(url);
-  }
-
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(

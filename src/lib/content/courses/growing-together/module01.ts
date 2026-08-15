@@ -1,4 +1,5 @@
 import type { CourseModule } from "../types";
+import { privacyVsSecrecyLesson } from "./privacyVsSecrecy";
 
 export const module01: CourseModule = {
   id: "beginnings",
@@ -185,5 +186,6 @@ Please also be honest with yourself about what a course can and cannot do. This 
         },
       ],
     },
+    privacyVsSecrecyLesson,
   ],
 };

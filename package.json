@@ -8,6 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.117.1",
     "@mux/mux-node": "^14.1.1",
     "@mux/mux-player-react": "^3.13.0",
     "@react-pdf/renderer": "^4.5.1",

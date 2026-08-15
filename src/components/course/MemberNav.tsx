@@ -2,10 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, Route, HeartHandshake, UserRound } from "lucide-react";
+import {
+  BookOpen,
+  Route,
+  HeartHandshake,
+  MessageCircleHeart,
+  UserRound,
+} from "lucide-react";
 
 const links = [
   { href: "/learn", label: "My Course", icon: BookOpen, exactish: true },
+  { href: "/learn/reflections", label: "Reflections", icon: MessageCircleHeart },
   { href: "/learn/path", label: "Learning Path", icon: Route },
   { href: "/learn/shared", label: "Shared With Me", icon: HeartHandshake },
   { href: "/account", label: "Account", icon: UserRound },
@@ -25,7 +32,8 @@ export default function MemberNav() {
             ? pathname === href ||
               (pathname.startsWith("/learn/") &&
                 !pathname.startsWith("/learn/path") &&
-                !pathname.startsWith("/learn/shared"))
+                !pathname.startsWith("/learn/shared") &&
+                !pathname.startsWith("/learn/reflections"))
             : pathname === href || pathname.startsWith(`${href}/`);
           return (
             <Link

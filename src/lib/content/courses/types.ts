@@ -68,6 +68,39 @@ export type LessonBlock =
       cadence?: "once" | "weekly" | "monthly";
     }
   | {
+      /** Mixed-field reflection worksheet a member may share with their
+         linked partner as one deliberate act. Individual fields are private
+         by default; the couple section is designed to be completed together. */
+      kind: "worksheet";
+      exerciseId: string;
+      title: string;
+      intro?: string;
+      fields: {
+        id: string;
+        label: string;
+        type: "text" | "scale" | "choices";
+        /** scale: ordered single-choice labels; choices: multi-select. */
+        options?: string[];
+        hint?: string;
+        /** Optional section heading rendered above this field. */
+        section?: string;
+      }[];
+      coupleSection?: {
+        title: string;
+        intro: string;
+        groundRules: string[];
+        fields: { id: string; label: string }[];
+      };
+      /** Shown beside the share toggle when a partner is linked. */
+      partnerNote: string;
+      closing?: {
+        heading: string;
+        body: string;
+        question: string;
+        pull: string;
+      };
+    }
+  | {
       /** Branded PDF worksheet, served via an entitlement-gated action. */
       kind: "download";
       title: string;

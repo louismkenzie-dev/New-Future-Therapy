@@ -143,8 +143,61 @@ export async function saveCheckinResponse(
   return { status: "success", message: "Saved. You can return to this any time." };
 }
 
+export async function saveWorksheetResponse(
+  _prev: ExerciseFormState,
+  formData: FormData
+): Promise<ExerciseFormState> {
+  const { courseId, lessonId, exerciseId } = fields(formData);
+  const user = await requireUser(`/learn/${courseId}/${lessonId}`);
+
+  const block = findExercise(courseId, lessonId, exerciseId);
+  if (!block || block.kind !== "worksheet") return FAILED;
+
+  const data: ResponseData = { texts: {}, choices: {} };
+  const textFields = [
+    ...block.fields.filter((f) => f.type === "text"),
+    ...(block.coupleSection?.fields ?? []),
+  ];
+  for (const field of textFields) {
+    const value = formData.get(`text-${field.id}`)?.toString().trim() ?? "";
+    if (value) data.texts![field.id] = value;
+  }
+  for (const field of block.fields) {
+    if (field.type === "scale") {
+      const value = formData.get(`scale-${field.id}`)?.toString() ?? "";
+      if (field.options?.includes(value)) data.choices![field.id] = [value];
+    } else if (field.type === "choices") {
+      const chosen = formData
+        .getAll(`choices-${field.id}`)
+        .map((v) => v.toString())
+        .filter((v) => field.options?.includes(v));
+      if (chosen.length) data.choices![field.id] = chosen;
+    }
+  }
+
+  if (
+    Object.keys(data.texts!).length === 0 &&
+    Object.keys(data.choices!).length === 0
+  ) {
+    return {
+      status: "error",
+      message: "Answer at least one question before saving.",
+    };
+  }
+
+  try {
+    await saveResponse(user.id, courseId, lessonId, exerciseId, "worksheet", data);
+  } catch (error) {
+    console.error("Worksheet save failed:", error);
+    return FAILED;
+  }
+
+  revalidatePath(`/learn/${courseId}/${lessonId}`);
+  return SAVED;
+}
+
 /* Sharing is a deliberate, separate act — and always reversible. RLS plus the
-   kind filter ensure only the owner's shared_journal rows can be toggled. */
+   kind filter ensure only the owner's shareable rows can be toggled. */
 export async function toggleResponseShare(formData: FormData): Promise<void> {
   const responseId = formData.get("responseId")?.toString() ?? "";
   const share = formData.get("share")?.toString() === "true";
@@ -163,7 +216,7 @@ export async function toggleResponseShare(formData: FormData): Promise<void> {
     })
     .eq("id", responseId)
     .eq("user_id", user.id)
-    .eq("exercise_kind", "shared_journal");
+    .in("exercise_kind", ["shared_journal", "worksheet"]);
 
   revalidatePath(`/learn/${courseId}/${lessonId}`);
   revalidatePath("/learn/shared");

@@ -85,7 +85,34 @@ export default async function SharedWithYouPage() {
       response.lessonId,
       response.exerciseId
     );
-    if (!lessonEntry || !block || block.kind !== "sharedJournal") continue;
+    if (!lessonEntry || !block) continue;
+
+    /* Both shareable kinds flatten to prompt/answer pairs for the card. */
+    let prompts: string[];
+    let answers: string[];
+    if (block.kind === "sharedJournal") {
+      prompts = block.prompts;
+      answers = response.data.answers ?? [];
+    } else if (block.kind === "worksheet") {
+      prompts = [];
+      answers = [];
+      const texts = response.data.texts ?? {};
+      const choices = response.data.choices ?? {};
+      const allFields = [
+        ...block.fields.map((f) => ({ id: f.id, label: f.label })),
+        ...(block.coupleSection?.fields ?? []),
+      ];
+      for (const field of allFields) {
+        const value = texts[field.id] ?? choices[field.id]?.join(", ");
+        if (value) {
+          prompts.push(field.label);
+          answers.push(value);
+        }
+      }
+      if (prompts.length === 0) continue;
+    } else {
+      continue;
+    }
 
     const own = (reactions.get(response.id) ?? []).find(
       (r) => r.reactorId === user.id
@@ -97,8 +124,8 @@ export default async function SharedWithYouPage() {
       moduleTitle: `Module ${lessonEntry.module.number} · ${lessonEntry.module.title}`,
       lessonTitle: lessonEntry.lesson.title,
       exerciseTitle: block.title,
-      prompts: block.prompts,
-      answers: response.data.answers ?? [],
+      prompts,
+      answers,
       sharedAt: response.sharedAt,
       partnerName,
       existingReaction: own

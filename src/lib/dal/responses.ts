@@ -11,7 +11,12 @@ import { createServerSupabase } from "@/lib/supabase/server";
    ciphertext. RLS governs which rows are visible (own rows, plus a partner's
    rows where is_shared and the couple is active). */
 
-export type ExerciseKind = "journal" | "quiz" | "checkin" | "shared_journal";
+export type ExerciseKind =
+  | "journal"
+  | "quiz"
+  | "checkin"
+  | "shared_journal"
+  | "worksheet";
 
 export interface ResponseData {
   /** journal / sharedJournal: one entry per prompt */

@@ -12,6 +12,7 @@ import LessonVideoPlayer from "@/components/course/LessonVideoPlayer";
 import JournalExercise, {
   type ReceivedReaction,
 } from "@/components/course/exercises/JournalExercise";
+import WorksheetExercise from "@/components/course/exercises/WorksheetExercise";
 import QuizExercise from "@/components/course/exercises/QuizExercise";
 import CheckinExercise from "@/components/course/exercises/CheckinExercise";
 import { getLesson, type LessonBlock } from "@/lib/content/courses";
@@ -348,6 +349,35 @@ async function Block({
               ? { selections: saved.data.selections }
               : undefined
           }
+          interactive={interactive}
+        />
+      );
+    }
+
+    case "worksheet": {
+      const saved = responses.get(block.exerciseId);
+      return (
+        <WorksheetExercise
+          courseId={courseId}
+          lessonId={lessonId}
+          exerciseId={block.exerciseId}
+          title={block.title}
+          intro={block.intro}
+          fields={block.fields}
+          coupleSection={block.coupleSection}
+          partnerNote={block.partnerNote}
+          closing={block.closing}
+          saved={
+            saved
+              ? {
+                  responseId: saved.id,
+                  texts: saved.data.texts ?? {},
+                  choices: saved.data.choices ?? {},
+                  isShared: saved.isShared,
+                }
+              : undefined
+          }
+          partnerName={partnerName}
           interactive={interactive}
         />
       );
