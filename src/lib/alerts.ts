@@ -62,11 +62,67 @@ async function loadConfig(): Promise<AlertConfig | null> {
   };
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+/* Branded, email-client-safe HTML: table layout, inline styles, the leaf
+   mark as a hosted PNG (SVG is stripped by Gmail), Georgia standing in for
+   Cormorant Garamond. */
+function alertHtml(firstName: string, when: string): string {
+  const name = escapeHtml(firstName);
+  return `<!DOCTYPE html>
+<html lang="en-GB">
+<body style="margin:0;padding:0;background-color:#F5F3EF;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F5F3EF;padding:32px 16px;">
+    <tr><td align="center">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background-color:#FFFFFF;border:1px solid #E4E0DB;border-radius:16px;">
+        <tr><td style="padding:36px 40px 28px;text-align:center;">
+          <img src="${SITE_URL}/apple-icon.png" width="44" height="44" alt="" style="display:inline-block;border-radius:10px;" />
+          <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;letter-spacing:3px;color:#5C5651;text-transform:uppercase;">NewFuture Therapy</p>
+        </td></tr>
+        <tr><td style="padding:0 40px;text-align:center;">
+          <p style="margin:0 auto;width:32px;border-top:2px solid #6B8C6F;font-size:0;line-height:0;">&nbsp;</p>
+          <h1 style="margin:20px 0 14px;font-family:Georgia,'Times New Roman',serif;font-weight:normal;font-size:26px;line-height:1.25;color:#2D2926;">New Consultation Enquiry</h1>
+          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.65;color:#5C5651;">
+            <strong style="color:#3A5A40;">${name}</strong> sent an enquiry through the website on
+          </p>
+          <p style="margin:0 0 24px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:17px;color:#3A5A40;">${escapeHtml(when)}</p>
+        </td></tr>
+        <tr><td style="padding:0 40px 8px;text-align:center;">
+          <a href="${SITE_URL}/admin" style="display:inline-block;background-color:#3A5A40;color:#F5F3EF;font-family:Arial,Helvetica,sans-serif;font-size:14px;text-decoration:none;padding:14px 34px;border-radius:999px;">Read It in the Team Area</a>
+        </td></tr>
+        <tr><td style="padding:24px 40px 34px;text-align:center;">
+          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:1.6;color:#8C8680;">
+            For confidentiality, the enquiry itself is not included in this email — it is waiting, encrypted, in the team area.
+          </p>
+        </td></tr>
+      </table>
+      <p style="margin:20px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#8C8680;">NewFuture Therapy &middot; Wakefield &amp; Online</p>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
 export async function sendEnquiryAlert(enquirerName: string): Promise<void> {
   const config = await loadConfig();
   if (!config) return;
 
-  const safeName = enquirerName.slice(0, 80);
+  const firstName = enquirerName.trim().split(/\s+/)[0].slice(0, 40);
+  const when = new Date().toLocaleString("en-GB", {
+    timeZone: "Europe/London",
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   try {
     const response = await fetch("https://api.resend.com/emails", {
@@ -78,14 +134,15 @@ export async function sendEnquiryAlert(enquirerName: string): Promise<void> {
       body: JSON.stringify({
         from: config.from,
         to: config.to,
-        subject: "New consultation enquiry on the website",
-        text: `You have received a new consultation enquiry from ${safeName}.
+        subject: `New consultation enquiry from ${firstName}`,
+        html: alertHtml(firstName, when),
+        text: `${firstName} sent an enquiry through the website on ${when}.
 
-For confidentiality, the details are not included in this email. Sign in to the team area to read and respond:
+For confidentiality, the enquiry itself is not included in this email. Sign in to the team area to read and respond:
 
 ${SITE_URL}/admin
 
-— NewFuture Therapy website`,
+— NewFuture Therapy · Wakefield & Online`,
       }),
     });
     if (!response.ok) {
