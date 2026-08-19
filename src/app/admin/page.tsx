@@ -14,6 +14,7 @@ import { isAdmin } from "@/lib/adminAuth";
 import { listSubmissions, type Submission } from "@/lib/submissions";
 import { logout, toggleContacted } from "@/app/actions/admin";
 import AdminTabs from "@/components/admin/AdminTabs";
+import DeleteEnquiryButton from "@/components/admin/DeleteEnquiryButton";
 
 export const dynamic = "force-dynamic";
 
@@ -100,6 +101,8 @@ function SubmissionCard({ submission }: { submission: Submission }) {
               {contacted ? "Undo" : "Mark as Contacted"}
             </button>
           </form>
+
+          <DeleteEnquiryButton dbId={submission.dbId} name={submission.name} />
         </div>
       </div>
 

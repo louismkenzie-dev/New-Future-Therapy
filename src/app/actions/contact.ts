@@ -1,6 +1,7 @@
 "use server";
 
 import { saveSubmission } from "@/lib/submissions";
+import { sendEnquiryAlert } from "@/lib/alerts";
 
 export interface ContactFormState {
   status: "idle" | "success" | "error";
@@ -40,6 +41,8 @@ export async function submitContactForm(
 
   try {
     await saveSubmission({ name, email, phone, pronouns, referral, message });
+    // Alert the team; never let a notification failure break the enquiry.
+    await sendEnquiryAlert(name);
   } catch (error) {
     console.error("Failed to store contact submission:", error);
     return {

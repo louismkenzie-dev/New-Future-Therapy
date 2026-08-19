@@ -90,6 +90,17 @@ export async function listSubmissions(): Promise<Submission[]> {
   return submissions;
 }
 
+/* Hard delete — used once an enquiry has been dealt with. Also good GDPR
+   hygiene: no PII kept longer than needed. */
+export async function deleteSubmission(dbId: string): Promise<void> {
+  const { error } = await supabaseAdmin()
+    .from("contact_submissions")
+    .delete()
+    .eq("id", dbId);
+
+  if (error) throw new Error(error.message);
+}
+
 export async function setContacted(dbId: string, contacted: boolean): Promise<void> {
   const { error } = await supabaseAdmin()
     .from("contact_submissions")

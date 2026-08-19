@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { verifyPassword, createSession, destroySession } from "@/lib/adminAuth";
-import { setContacted } from "@/lib/submissions";
+import { setContacted, deleteSubmission } from "@/lib/submissions";
 import { isAdmin } from "@/lib/adminAuth";
 
 export interface LoginState {
@@ -34,5 +34,12 @@ export async function toggleContacted(formData: FormData): Promise<void> {
   const dbId = formData.get("dbId")?.toString() ?? "";
   const contacted = formData.get("contacted") === "true";
   await setContacted(dbId, contacted);
+  revalidatePath("/admin");
+}
+
+export async function deleteEnquiry(formData: FormData): Promise<void> {
+  if (!(await isAdmin())) redirect("/admin/login");
+  const dbId = formData.get("dbId")?.toString() ?? "";
+  if (dbId) await deleteSubmission(dbId);
   revalidatePath("/admin");
 }
