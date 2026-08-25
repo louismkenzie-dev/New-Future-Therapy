@@ -56,8 +56,8 @@ const faqs: Faq[] = [
     answer:
       "We are happy to talk through our fees during your free 15-minute initial consultation, so you have all the information you need before deciding whether to go ahead.",
     prices: [
-      { label: "Individual sessions", price: "£65.00" },
-      { label: "Couples", price: "£85.00" },
+      { label: "Individual sessions", price: "£70.00" },
+      { label: "Couples", price: "£90.00" },
       {
         label:
           "Relationship counselling (trouples, polyamorous and other relationship structures)",
