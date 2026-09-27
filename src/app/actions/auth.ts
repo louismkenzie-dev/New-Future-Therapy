@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { SIGNUPS_OPEN } from "@/lib/launch";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
 import { siteUrl } from "@/lib/siteUrl";
@@ -22,6 +23,13 @@ export async function signUp(
   _prevState: AuthFormState,
   formData: FormData
 ): Promise<AuthFormState> {
+  if (!SIGNUPS_OPEN) {
+    return {
+      status: "error",
+      message:
+        "Sign-ups are not open yet. If you already have an account, please sign in.",
+    };
+  }
   const name = formData.get("name")?.toString().trim() ?? "";
   const email = formData.get("email")?.toString().trim() ?? "";
   const password = formData.get("password")?.toString() ?? "";

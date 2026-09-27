@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { SIGNUPS_OPEN } from "@/lib/launch";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase";
 import { requireUser } from "@/lib/auth/session";
@@ -31,6 +32,9 @@ export async function startCheckout(formData: FormData): Promise<void> {
   const planKey = formData.get("planKey")?.toString() ?? "";
   const courseId = formData.get("courseId")?.toString() ?? "";
   const returnPath = `/courses/${encodeURIComponent(courseId)}`;
+
+  // Checkout is closed until launch — nobody can pay before the founders open it.
+  if (!SIGNUPS_OPEN) redirect(returnPath);
 
   const user = await requireUser(returnPath);
 

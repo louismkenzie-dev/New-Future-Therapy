@@ -17,10 +17,10 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-/* The course platform (sales pages, sign in, member area) is built but kept
-   out of public view until launch. Set NEXT_PUBLIC_COURSE_ENABLED=true to
-   restore the "Course" and "Sign In" links — proxy.ts gates the routes with
-   the same flag. */
+/* The programme's sales page stays unlinked until launch; set
+   NEXT_PUBLIC_COURSE_ENABLED=true to add the "Course" link. The sign-in /
+   "My Programme" link is always shown so existing members (and testers)
+   can reach the member area from the site. */
 const COURSE_ENABLED = process.env.NEXT_PUBLIC_COURSE_ENABLED === "true";
 
 function isActive(pathname: string, href: string): boolean {
@@ -75,31 +75,29 @@ export default function Header() {
             );
           })}
           {COURSE_ENABLED && (
-            <>
-              <Link
-                href="/courses"
-                className={`font-body text-sm tracking-wide transition-colors duration-200 ${
-                  isActive(pathname, "/courses")
-                    ? "text-sage-dark border-b border-sage"
-                    : "text-muted hover:text-charcoal"
-                }`}
-              >
-                Course
-              </Link>
-              <Link
-                href={signedIn ? "/learn" : "/login"}
-                className={`font-body text-sm tracking-wide transition-all duration-300 ${
-                  signedIn === null ? "opacity-0 pointer-events-none" : "opacity-100"
-                } ${
-                  isActive(pathname, signedIn ? "/learn" : "/login")
-                    ? "text-sage-dark border-b border-sage"
-                    : "text-muted hover:text-charcoal"
-                }`}
-              >
-                {signedIn ? "My Course" : "Sign In"}
-              </Link>
-            </>
+            <Link
+              href="/courses"
+              className={`font-body text-sm tracking-wide transition-colors duration-200 ${
+                isActive(pathname, "/courses")
+                  ? "text-sage-dark border-b border-sage"
+                  : "text-muted hover:text-charcoal"
+              }`}
+            >
+              Course
+            </Link>
           )}
+          <Link
+            href={signedIn ? "/learn" : "/login"}
+            className={`font-body text-sm tracking-wide transition-all duration-300 ${
+              signedIn === null ? "opacity-0 pointer-events-none" : "opacity-100"
+            } ${
+              isActive(pathname, signedIn ? "/learn" : "/login")
+                ? "text-sage-dark border-b border-sage"
+                : "text-muted hover:text-charcoal"
+            }`}
+          >
+            {signedIn ? "My Programme" : "Programme Sign In"}
+          </Link>
           <Link
             href="/contact"
             className="font-body text-sm bg-sage text-cream px-5 py-2 rounded-full hover:bg-sage-dark transition-colors duration-200"
@@ -137,29 +135,27 @@ export default function Header() {
             );
           })}
           {COURSE_ENABLED && (
-            <>
-              <Link
-                href="/courses"
-                className={`font-body text-base transition-colors duration-200 ${
-                  isActive(pathname, "/courses")
-                    ? "text-sage-dark font-medium"
-                    : "text-muted hover:text-charcoal"
-                }`}
-              >
-                Course
-              </Link>
-              <Link
-                href={signedIn ? "/learn" : "/login"}
-                className={`font-body text-base transition-colors duration-200 ${
-                  isActive(pathname, signedIn ? "/learn" : "/login")
-                    ? "text-sage-dark font-medium"
-                    : "text-muted hover:text-charcoal"
-                }`}
-              >
-                {signedIn ? "My Course" : "Sign In"}
-              </Link>
-            </>
+            <Link
+              href="/courses"
+              className={`font-body text-base transition-colors duration-200 ${
+                isActive(pathname, "/courses")
+                  ? "text-sage-dark font-medium"
+                  : "text-muted hover:text-charcoal"
+              }`}
+            >
+              Course
+            </Link>
           )}
+          <Link
+            href={signedIn ? "/learn" : "/login"}
+            className={`font-body text-base transition-colors duration-200 ${
+              isActive(pathname, signedIn ? "/learn" : "/login")
+                ? "text-sage-dark font-medium"
+                : "text-muted hover:text-charcoal"
+            }`}
+          >
+            {signedIn ? "My Programme" : "Programme Sign In"}
+          </Link>
           <Link
             href="/contact"
             className="font-body text-sm bg-sage text-cream px-5 py-3 rounded-full text-center hover:bg-sage-dark transition-colors duration-200 mt-2"

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 import { startCheckout } from "@/app/actions/billing";
+import { SIGNUPS_OPEN } from "@/lib/launch";
 import {
   formatPence,
   type PlanInfo,
@@ -163,17 +164,23 @@ function PlanCard({
         ))}
       </ul>
 
-      <form action={startCheckout} className="mt-10">
-        <input type="hidden" name="planKey" value={plan.key} />
-        <input type="hidden" name="courseId" value={courseId} />
-        <button
-          type="submit"
-          className="w-full inline-flex items-center justify-center gap-2 font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200"
-        >
-          Begin With {name}
-          <ArrowRight size={16} />
-        </button>
-      </form>
+      {SIGNUPS_OPEN ? (
+        <form action={startCheckout} className="mt-10">
+          <input type="hidden" name="planKey" value={plan.key} />
+          <input type="hidden" name="courseId" value={courseId} />
+          <button
+            type="submit"
+            className="w-full inline-flex items-center justify-center gap-2 font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200"
+          >
+            Begin With {name}
+            <ArrowRight size={16} />
+          </button>
+        </form>
+      ) : (
+        <p className="mt-10 w-full text-center font-body text-sm text-sage-dark bg-sage-pale border border-sage-light/50 px-8 py-4 rounded-full">
+          Opening soon
+        </p>
+      )}
     </motion.div>
   );
 }

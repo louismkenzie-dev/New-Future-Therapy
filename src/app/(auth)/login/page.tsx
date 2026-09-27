@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AuthCard from "@/components/auth/AuthCard";
 import LoginForm from "@/components/auth/LoginForm";
+import { SIGNUPS_OPEN } from "@/lib/launch";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -20,11 +21,19 @@ export default async function LoginPage({
     <AuthCard
       eyebrow="Welcome Back"
       title="Sign In"
-      footer={{
-        text: "New to the course?",
-        linkLabel: "Create an account",
-        href: `/signup?next=${encodeURIComponent(safeNext)}`,
-      }}
+      footer={
+        SIGNUPS_OPEN
+          ? {
+              text: "New to the course?",
+              linkLabel: "Create an account",
+              href: `/signup?next=${encodeURIComponent(safeNext)}`,
+            }
+          : {
+              text: "Sign-ups open soon.",
+              linkLabel: "Get in touch",
+              href: "/contact",
+            }
+      }
     >
       <LoginForm next={safeNext} linkError={error === "link"} />
     </AuthCard>

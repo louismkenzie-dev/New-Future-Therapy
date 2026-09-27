@@ -5,6 +5,7 @@ import AuthCard from "@/components/auth/AuthCard";
 import AcceptInviteForm from "@/components/account/AcceptInviteForm";
 import { supabaseAdmin } from "@/lib/supabase";
 import { getUser } from "@/lib/auth/session";
+import { SIGNUPS_OPEN } from "@/lib/launch";
 
 export const dynamic = "force-dynamic";
 
@@ -79,12 +80,14 @@ export default async function InvitePage({
         )
       ) : (
         <div className="space-y-4">
-          <Link
-            href={`/signup?next=${encodeURIComponent(`/invite/${token}`)}`}
-            className="w-full inline-flex items-center justify-center gap-2 font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200"
-          >
-            Create an Account to Accept
-          </Link>
+          {SIGNUPS_OPEN && (
+            <Link
+              href={`/signup?next=${encodeURIComponent(`/invite/${token}`)}`}
+              className="w-full inline-flex items-center justify-center gap-2 font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200"
+            >
+              Create an Account to Accept
+            </Link>
+          )}
           <Link
             href={`/login?next=${encodeURIComponent(`/invite/${token}`)}`}
             className="w-full inline-flex items-center justify-center gap-2 font-body text-sm border border-grey-light text-charcoal px-8 py-4 rounded-full hover:border-sage-light hover:text-sage-dark transition-colors duration-200"
