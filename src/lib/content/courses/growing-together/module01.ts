@@ -33,7 +33,7 @@ export const module01: CourseModule = {
         {
           kind: "video",
           title: "Our Relationship So Far — Part 1",
-          playbackId: "",
+          playbackId: "JxCY3y00qSCRmG02FPgf00CHCipsb9S4UAeX02QY02jNc00lA",
           durationSeconds: 600,
         },
         {
