@@ -1,4 +1,5 @@
 import type { CourseModule } from "../types";
+import { privacyVsSecrecyLesson } from "./privacyVsSecrecy";
 
 export const module06: CourseModule = {
   id: "trust-and-boundaries",
@@ -159,5 +160,6 @@ What rises from this work is not the old relationship restored. It is a new one 
         },
       ],
     },
+    privacyVsSecrecyLesson,
   ],
 };

@@ -16,20 +16,25 @@ export type ExerciseKind =
   | "quiz"
   | "checkin"
   | "shared_journal"
-  | "worksheet";
+  | "worksheet"
+  | "paired_reflection";
 
 export interface ResponseData {
   /** journal / sharedJournal: one entry per prompt */
   answers?: string[];
   /** quiz: question id -> chosen profile id */
   selections?: Record<string, string>;
-  /** checkin: field id -> 1..10 */
+  /** checkin / pairedReflection: field id -> 1..10 */
   scales?: Record<string, number>;
-  /** checkin: field id -> free text */
+  /** checkin / worksheet / pairedReflection: field id -> free text */
   texts?: Record<string, string>;
   /** checkin: field id -> chosen options */
   choices?: Record<string, string[]>;
 }
+
+/* A member without a linked partner saves a paired reflection's "together"
+   answers privately, in their own row under this suffixed exercise id. */
+export const TOGETHER_SUFFIX = "::together";
 
 export interface ResponseRecord {
   id: string;
@@ -246,4 +251,115 @@ export async function getSharedFromPartner(
     .eq("is_shared", true)
     .order("shared_at", { ascending: false });
   return ((data ?? []) as ResponseRow[]).map(mapRow);
+}
+
+/* The active partner's shared response to ONE exercise — the other half of a
+   paired reflection's side-by-side reveal. RLS makes this null unless the
+   partner has shared it and the couple is active. */
+export async function getPartnerSharedResponse(
+  userId: string,
+  courseId: string,
+  lessonId: string,
+  exerciseId: string
+): Promise<ResponseRecord | null> {
+  const supabase = await createServerSupabase();
+  const { data } = await supabase
+    .from("exercise_responses")
+    .select(SELECT_COLUMNS)
+    .neq("user_id", userId)
+    .eq("course_id", courseId)
+    .eq("lesson_id", lessonId)
+    .eq("exercise_id", exerciseId)
+    .eq("is_shared", true)
+    .maybeSingle();
+  return data ? mapRow(data as ResponseRow) : null;
+}
+
+export interface PartnerExerciseStatus {
+  saved: boolean;
+  shared: boolean;
+}
+
+/* Has my partner saved / shared this exercise? Presence only — the
+   security-definer function never returns content, so the "are we both
+   ready to come back together?" moment costs nothing in privacy. */
+export async function getPartnerExerciseStatus(
+  courseId: string,
+  lessonId: string,
+  exerciseId: string
+): Promise<PartnerExerciseStatus> {
+  const supabase = await createServerSupabase();
+  const { data, error } = await supabase.rpc("partner_exercise_status", {
+    p_course_id: courseId,
+    p_lesson_id: lessonId,
+    p_exercise_id: exerciseId,
+  });
+  if (error) {
+    console.error("partner_exercise_status failed:", error);
+    return { saved: false, shared: false };
+  }
+  const row = (Array.isArray(data) ? data[0] : data) as
+    | { saved: boolean; shared: boolean }
+    | undefined;
+  return { saved: Boolean(row?.saved), shared: Boolean(row?.shared) };
+}
+
+/* ---------------------------------------------------------------------------
+   COUPLE RESPONSES — answers a linked couple writes together. One record per
+   couple per exercise, readable and editable by either member while the
+   couple is active. Same encryption as individual responses.
+   ------------------------------------------------------------------------- */
+
+export interface CoupleResponseRecord {
+  id: string;
+  coupleId: string;
+  data: ResponseData;
+  updatedBy: string | null;
+  updatedAt: string;
+}
+
+export async function getCoupleResponse(
+  courseId: string,
+  lessonId: string,
+  exerciseId: string
+): Promise<CoupleResponseRecord | null> {
+  const supabase = await createServerSupabase();
+  const { data } = await supabase
+    .from("couple_responses")
+    .select("id, couple_id, content, updated_by, updated_at")
+    .eq("course_id", courseId)
+    .eq("lesson_id", lessonId)
+    .eq("exercise_id", exerciseId)
+    .maybeSingle();
+  if (!data) return null;
+  return {
+    id: data.id,
+    coupleId: data.couple_id,
+    data: fromStored(data.content),
+    updatedBy: data.updated_by,
+    updatedAt: data.updated_at,
+  };
+}
+
+export async function saveCoupleResponse(
+  coupleId: string,
+  userId: string,
+  courseId: string,
+  lessonId: string,
+  exerciseId: string,
+  data: ResponseData
+): Promise<void> {
+  const supabase = await createServerSupabase();
+  const { error } = await supabase.from("couple_responses").upsert(
+    {
+      couple_id: coupleId,
+      course_id: courseId,
+      lesson_id: lessonId,
+      exercise_id: exerciseId,
+      content: toStored(data),
+      updated_by: userId,
+    },
+    { onConflict: "couple_id,course_id,lesson_id,exercise_id" }
+  );
+  if (error) throw new Error(`Saving couple response failed: ${error.message}`);
 }

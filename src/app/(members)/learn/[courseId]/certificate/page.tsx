@@ -117,7 +117,7 @@ export default async function CertificatePage({
             </p>
 
             <p className="font-body text-sm text-muted mt-8 leading-relaxed max-w-md mx-auto">
-              has completed all ten modules and {total} lessons of
+              has completed the introduction, all ten modules and {total} lessons of
             </p>
             <p className="font-heading text-2xl font-medium text-sage-dark mt-2">
               {course.title}

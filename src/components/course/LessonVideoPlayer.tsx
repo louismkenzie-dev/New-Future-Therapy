@@ -52,7 +52,7 @@ export default function LessonVideoPlayer({
         <p className="font-body text-sm text-center px-6">
           {audioOnly
             ? "This audio practice is being recorded — it will appear here soon."
-            : "This video is being recorded — it will appear here soon."}
+            : "This video is being prepared for the programme — it will appear here soon."}
         </p>
       </div>
     );

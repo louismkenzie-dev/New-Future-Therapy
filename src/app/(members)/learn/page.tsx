@@ -8,7 +8,7 @@ import { requireUser } from "@/lib/auth/session";
 import { requireEntitlement } from "@/lib/dal/entitlement";
 import { syncFromCheckoutSession } from "@/lib/dal/subscriptions";
 import { getProgressMap } from "@/lib/dal/progress";
-import { courses, flattenLessons } from "@/lib/content/courses";
+import { courses, flattenLessons, moduleLabel } from "@/lib/content/courses";
 
 export const dynamic = "force-dynamic";
 
@@ -80,7 +80,7 @@ export default async function LearnDashboard({
                 {completed === 0 ? "Begin Here" : "Continue Where You Left Off"}
               </p>
               <p className="font-body text-sm text-muted mb-1">
-                Module {nextUp.module.number} · {nextUp.module.title}
+                {moduleLabel(nextUp.module)} · {nextUp.module.title}
               </p>
               <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal mb-4">
                 {nextUp.lesson.title}

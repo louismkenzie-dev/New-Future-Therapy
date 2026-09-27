@@ -50,8 +50,12 @@ export default function CourseModulesAccordion({
               aria-expanded={isOpen}
               aria-controls={`module-${module.id}`}
             >
-              <span className="font-heading text-3xl font-light text-sage shrink-0 w-10 text-center">
-                {module.number}
+              <span
+                className={`font-heading font-light text-sage shrink-0 w-10 text-center ${
+                  module.number === 0 ? "text-lg pt-2" : "text-3xl"
+                }`}
+              >
+                {module.number === 0 ? "Intro" : module.number}
               </span>
               <div className="flex-1 min-w-0">
                 <span className="block w-8 h-0.5 bg-sage mb-3" aria-hidden="true" />

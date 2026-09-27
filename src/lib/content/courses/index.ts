@@ -1,7 +1,13 @@
 import type { Course, CourseModule, Lesson } from "./types";
 import { growingTogether } from "./growing-together";
 
-export type { Course, CourseModule, Lesson, LessonBlock } from "./types";
+export type {
+  Course,
+  CourseModule,
+  Lesson,
+  LessonBlock,
+  PairedQuestion,
+} from "./types";
 
 export const courses: Course[] = [growingTogether];
 
@@ -47,6 +53,16 @@ export function countLessons(course: Course): number {
   return course.modules.reduce((sum, m) => sum + m.lessons.length, 0);
 }
 
+/** "Introduction" for the pre-module, otherwise "Module N". */
+export function moduleLabel(module: Pick<CourseModule, "number">): string {
+  return module.number === 0 ? "Introduction" : `Module ${module.number}`;
+}
+
+/** Short form for the numeral roundel: "Intro" or "N". */
+export function moduleNumeral(module: Pick<CourseModule, "number">): string {
+  return module.number === 0 ? "Intro" : String(module.number);
+}
+
 /** Exercise ids that live in a given course (used to validate saves). */
 export function findExercise(courseId: string, lessonId: string, exerciseId: string) {
   const entry = getLesson(courseId, lessonId);
@@ -57,7 +73,8 @@ export function findExercise(courseId: string, lessonId: string, exerciseId: str
         block.kind === "sharedJournal" ||
         block.kind === "quiz" ||
         block.kind === "checkin" ||
-        block.kind === "worksheet") &&
+        block.kind === "worksheet" ||
+        block.kind === "pairedReflection") &&
       block.exerciseId === exerciseId
     ) {
       return block;

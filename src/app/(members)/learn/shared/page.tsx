@@ -11,7 +11,7 @@ import { getCoupleState } from "@/lib/dal/couples";
 import { getSharedFromPartner } from "@/lib/dal/responses";
 import { getReactionsForResponses } from "@/lib/dal/reactions";
 import { getBookmarkedResponseIds } from "@/lib/dal/learningPath";
-import { findExercise, getLesson } from "@/lib/content/courses";
+import { findExercise, getLesson, moduleLabel } from "@/lib/content/courses";
 
 export const dynamic = "force-dynamic";
 
@@ -110,6 +110,22 @@ export default async function SharedWithYouPage() {
         }
       }
       if (prompts.length === 0) continue;
+    } else if (block.kind === "pairedReflection") {
+      prompts = [];
+      answers = [];
+      const texts = response.data.texts ?? {};
+      const scales = response.data.scales ?? {};
+      for (const question of block.individual.questions) {
+        const scale =
+          scales[question.id] !== undefined ? `${scales[question.id]} out of 10` : "";
+        const text = texts[question.id] ?? "";
+        const value = [scale, text].filter(Boolean).join(" — ");
+        if (value) {
+          prompts.push(question.label);
+          answers.push(value);
+        }
+      }
+      if (prompts.length === 0) continue;
     } else {
       continue;
     }
@@ -121,7 +137,7 @@ export default async function SharedWithYouPage() {
       responseId: response.id,
       courseId: response.courseId,
       lessonId: response.lessonId,
-      moduleTitle: `Module ${lessonEntry.module.number} · ${lessonEntry.module.title}`,
+      moduleTitle: `${moduleLabel(lessonEntry.module)} · ${lessonEntry.module.title}`,
       lessonTitle: lessonEntry.lesson.title,
       exerciseTitle: block.title,
       prompts,

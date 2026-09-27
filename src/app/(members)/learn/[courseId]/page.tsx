@@ -6,7 +6,7 @@ import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
 import { requireEntitlement } from "@/lib/dal/entitlement";
 import { getProgressMap } from "@/lib/dal/progress";
-import { getCourse } from "@/lib/content/courses";
+import { getCourse, moduleNumeral } from "@/lib/content/courses";
 
 export const dynamic = "force-dynamic";
 
@@ -45,8 +45,12 @@ export default async function CourseOverviewPage({
               <Reveal key={module.id} delay={Math.min(index * 0.05, 0.3)}>
                 <div className="bg-white rounded-2xl border border-grey-light shadow-sm overflow-hidden">
                   <div className="p-6 md:p-8 flex items-start gap-5">
-                    <span className="font-heading text-3xl font-light text-sage shrink-0 w-10 text-center">
-                      {module.number}
+                    <span
+                      className={`font-heading font-light text-sage shrink-0 w-10 text-center ${
+                        module.number === 0 ? "text-lg pt-2" : "text-3xl"
+                      }`}
+                    >
+                      {moduleNumeral(module)}
                     </span>
                     <div className="flex-1 min-w-0">
                       <span

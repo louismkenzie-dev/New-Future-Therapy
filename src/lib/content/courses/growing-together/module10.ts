@@ -33,7 +33,7 @@ And if some answers have not moved, that is information too, not failure. It tel
           exerciseId: "final-checkin",
           title: "Where We Are Now — Revisited",
           intro:
-            "The same questions you answered in Module 1. Answer for today; your first answers will be shown alongside.",
+            "Answer for how things feel today, kindly and honestly, having come this far.",
           cadence: "once",
           fields: [
             {
@@ -63,7 +63,7 @@ And if some answers have not moved, that is information too, not failure. It tel
             },
             {
               id: "changed",
-              label: "Looking back at your hopes from Module 1 — what has actually changed?",
+              label: "Looking back at what you hoped for when you began — what has actually changed?",
               type: "text",
             },
           ],
@@ -180,7 +180,7 @@ We offer therapy for individuals and couples, in Wakefield and online, and we ar
         },
         {
           kind: "prose",
-          body: `You have reached the end of Growing Together — forty-four lessons of honest looking, which is no small thing. Whether you moved through in weeks or seasons, alone or alongside a partner, you have done real work, and we hope you are quietly proud of it.
+          body: `You have reached the end of Growing Together — an introduction and ten modules of honest looking, which is no small thing. Whether you moved through in weeks or seasons, alone or alongside a partner, you have done real work, and we hope you are quietly proud of it.
 
 Your certificate is ready on your completion page, along with your thank-you towards a first one-to-one session, should you ever want one. Your reflections, your learning path and all your practices remain in your account for as long as you are a member — this is a library now, not just a course.
 

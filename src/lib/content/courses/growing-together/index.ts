@@ -1,4 +1,5 @@
 import type { Course } from "../types";
+import { module00 } from "./module00";
 import { module01 } from "./module01";
 import { module02 } from "./module02";
 import { module03 } from "./module03";
@@ -21,6 +22,7 @@ export const growingTogether: Course = {
     "For adults of all ages, 18 to 70 and beyond — single, partnered, monogamous, non-monogamous or polyamorous, LGBTQIA+ and questioning. Take it on your own, or alongside a partner with linked accounts and optional sharing.",
   trailerPlaybackId: "7jguOU5tUIEvyjKTrScNomWIq00d00Xw6M9SMgwpcbGoY",
   modules: [
+    module00,
     module01,
     module02,
     module03,
@@ -35,9 +37,9 @@ export const growingTogether: Course = {
   valueAdds: [
     {
       icon: "video",
-      title: "Forty-Four Guided Lessons",
+      title: "Guided Video Lessons",
       description:
-        "Ten modules of video lessons from Esther and Laura, paced for real life — watch in fifteen-minute sittings, pause whenever you need, return any time.",
+        "An introduction and ten modules of video lessons from Laura and Esther, paced for real life — about one module a week, pause whenever you need, return any time.",
     },
     {
       icon: "pen-line",
@@ -94,7 +96,7 @@ export const growingTogether: Course = {
     {
       question: "How long does the course take?",
       answer:
-        "There are ten modules and forty-four lessons, most taking fifteen to twenty-five minutes. Some members move through in a couple of months; others take a season per module. There is no schedule and no pressure — your subscription gives you access to everything, and your progress is saved as you go.",
+        "There is an introduction and ten modules. Laura and Esther suggest completing approximately one module each week, but there is no schedule and no pressure — your subscription gives you access to everything, and your progress is saved as you go.",
     },
     {
       question: "Who can see what I write?",

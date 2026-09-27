@@ -4,7 +4,13 @@ import { revalidatePath } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
 import { findExercise } from "@/lib/content/courses";
-import { saveResponse, type ResponseData } from "@/lib/dal/responses";
+import { getCoupleState } from "@/lib/dal/couples";
+import {
+  TOGETHER_SUFFIX,
+  saveCoupleResponse,
+  saveResponse,
+  type ResponseData,
+} from "@/lib/dal/responses";
 
 export interface ExerciseFormState {
   status: "idle" | "success" | "error";
@@ -196,6 +202,118 @@ export async function saveWorksheetResponse(
   return SAVED;
 }
 
+/* Paired reflection, individual half: each partner's own private answers
+   (free text encrypted; any 1–10 scales kept plain). Never shared here —
+   sharing is the separate toggle below. */
+export async function savePairedIndividual(
+  _prev: ExerciseFormState,
+  formData: FormData
+): Promise<ExerciseFormState> {
+  const { courseId, lessonId, exerciseId } = fields(formData);
+  const user = await requireUser(`/learn/${courseId}/${lessonId}`);
+
+  const block = findExercise(courseId, lessonId, exerciseId);
+  if (!block || block.kind !== "pairedReflection") return FAILED;
+
+  const data: ResponseData = { texts: {}, scales: {} };
+  for (const question of block.individual.questions) {
+    const text = formData.get(`text-${question.id}`)?.toString().trim() ?? "";
+    if (text) data.texts![question.id] = text;
+    if (question.scale) {
+      const value = Number(formData.get(`scale-${question.id}`));
+      if (Number.isFinite(value) && value >= 1 && value <= 10) {
+        data.scales![question.id] = value;
+      }
+    }
+  }
+
+  if (
+    Object.keys(data.texts!).length === 0 &&
+    Object.keys(data.scales!).length === 0
+  ) {
+    return {
+      status: "error",
+      message: "Answer at least one question before saving.",
+    };
+  }
+
+  try {
+    await saveResponse(
+      user.id,
+      courseId,
+      lessonId,
+      exerciseId,
+      "paired_reflection",
+      data
+    );
+  } catch (error) {
+    console.error("Paired reflection save failed:", error);
+    return FAILED;
+  }
+
+  revalidatePath(`/learn/${courseId}/${lessonId}`);
+  return SAVED;
+}
+
+/* Paired reflection, "Coming Back Together" half. With an active partner the
+   answers are one joint record owned by the couple (either may edit it);
+   without one they are saved privately to the member's own account. */
+export async function savePairedTogether(
+  _prev: ExerciseFormState,
+  formData: FormData
+): Promise<ExerciseFormState> {
+  const { courseId, lessonId, exerciseId } = fields(formData);
+  const user = await requireUser(`/learn/${courseId}/${lessonId}`);
+
+  const block = findExercise(courseId, lessonId, exerciseId);
+  if (!block || block.kind !== "pairedReflection") return FAILED;
+
+  const data: ResponseData = { texts: {} };
+  for (const question of block.together.questions) {
+    const text = formData.get(`together-${question.id}`)?.toString().trim() ?? "";
+    if (text) data.texts![question.id] = text;
+  }
+  if (Object.keys(data.texts!).length === 0) {
+    return {
+      status: "error",
+      message: "Write a little in at least one question before saving.",
+    };
+  }
+
+  try {
+    const couple = await getCoupleState(user.id);
+    if (couple && couple.status === "active") {
+      await saveCoupleResponse(
+        couple.coupleId,
+        user.id,
+        courseId,
+        lessonId,
+        exerciseId,
+        data
+      );
+      revalidatePath(`/learn/${courseId}/${lessonId}`);
+      return {
+        status: "success",
+        message: "Saved for both of you. Either of you can return and add to this.",
+      };
+    }
+    await saveResponse(
+      user.id,
+      courseId,
+      lessonId,
+      `${exerciseId}${TOGETHER_SUFFIX}`,
+      "paired_reflection",
+      data
+    );
+  } catch (error) {
+    console.error("Together save failed:", error);
+    return FAILED;
+  }
+
+  revalidatePath(`/learn/${courseId}/${lessonId}`);
+  return SAVED;
+}
+
 /* Sharing is a deliberate, separate act — and always reversible. RLS plus the
    kind filter ensure only the owner's shareable rows can be toggled. */
 export async function toggleResponseShare(formData: FormData): Promise<void> {
@@ -216,7 +334,7 @@ export async function toggleResponseShare(formData: FormData): Promise<void> {
     })
     .eq("id", responseId)
     .eq("user_id", user.id)
-    .in("exercise_kind", ["shared_journal", "worksheet"]);
+    .in("exercise_kind", ["shared_journal", "worksheet", "paired_reflection"]);
 
   revalidatePath(`/learn/${courseId}/${lessonId}`);
   revalidatePath("/learn/shared");

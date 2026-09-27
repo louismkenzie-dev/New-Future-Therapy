@@ -13,16 +13,21 @@ import JournalExercise, {
   type ReceivedReaction,
 } from "@/components/course/exercises/JournalExercise";
 import WorksheetExercise from "@/components/course/exercises/WorksheetExercise";
+import PairedReflection from "@/components/course/exercises/PairedReflection";
 import QuizExercise from "@/components/course/exercises/QuizExercise";
 import CheckinExercise from "@/components/course/exercises/CheckinExercise";
-import { getLesson, type LessonBlock } from "@/lib/content/courses";
+import { getLesson, moduleLabel, type LessonBlock } from "@/lib/content/courses";
 import { getPlaybackTokens } from "@/lib/mux";
 import { getUser, type SessionUser } from "@/lib/auth/session";
 import { requireEntitlement } from "@/lib/dal/entitlement";
 import { getProgressMap, type LessonProgressEntry } from "@/lib/dal/progress";
 import {
+  TOGETHER_SUFFIX,
+  getCoupleResponse,
   getOwnResponse,
   getOwnResponsesForLesson,
+  getPartnerExerciseStatus,
+  getPartnerSharedResponse,
   type ResponseRecord,
 } from "@/lib/dal/responses";
 import { getActivePartner } from "@/lib/dal/couples";
@@ -114,7 +119,7 @@ export default async function LessonPage({
       <section className="bg-sage-pale pt-12 pb-10 px-6">
         <div className="max-w-3xl mx-auto">
           <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-4">
-            Module {module.number} · {module.title}
+            {moduleLabel(module)} · {module.title}
           </p>
           <h1 className="font-heading text-4xl md:text-5xl font-light text-charcoal leading-tight">
             {lesson.title}
@@ -144,8 +149,9 @@ export default async function LessonPage({
               courseId={courseId}
               lessonId={lessonId}
               interactive={interactive}
+              viewer={user ? { id: user.id, name: user.profile.displayName } : null}
               responses={responses}
-              partnerName={partner?.name ?? null}
+              partner={partner}
               reactionsByResponse={reactionsByResponse}
               startTime={progress?.videoPositionSeconds ?? undefined}
               baselineCompare={baselineCompare}
@@ -234,8 +240,9 @@ async function Block({
   courseId,
   lessonId,
   interactive,
+  viewer,
   responses,
-  partnerName,
+  partner,
   reactionsByResponse,
   startTime,
   baselineCompare,
@@ -244,12 +251,14 @@ async function Block({
   courseId: string;
   lessonId: string;
   interactive: boolean;
+  viewer: { id: string; name: string } | null;
   responses: Map<string, ResponseRecord>;
-  partnerName: string | null;
+  partner: { id: string; name: string } | null;
   reactionsByResponse: Map<string, ReceivedReaction[]>;
   startTime?: number;
   baselineCompare?: Record<string, number>;
 }) {
+  const partnerName = partner?.name ?? null;
   switch (block.kind) {
     case "video":
     case "audio": {
@@ -279,14 +288,40 @@ async function Block({
     case "prose":
       return (
         <div>
-          {block.body.split("\n\n").map((para, i) => (
-            <p
-              key={i}
-              className="font-body text-lg text-muted leading-[1.9] mb-6 last:mb-0"
-            >
-              {para}
-            </p>
-          ))}
+          {block.heading && (
+            <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal leading-tight mb-6">
+              {block.heading}
+            </h2>
+          )}
+          {block.body.split("\n\n").map((para, i) => {
+            const lines = para.split("\n");
+            if (lines.length > 0 && lines.every((l) => l.startsWith("- "))) {
+              return (
+                <ul key={i} className="space-y-2.5 mb-6 last:mb-0">
+                  {lines.map((line) => (
+                    <li
+                      key={line}
+                      className="flex gap-3 font-body text-lg text-muted leading-[1.7]"
+                    >
+                      <span
+                        className="mt-4 shrink-0 w-6 h-0.5 bg-sage"
+                        aria-hidden="true"
+                      />
+                      {line.slice(2)}
+                    </li>
+                  ))}
+                </ul>
+              );
+            }
+            return (
+              <p
+                key={i}
+                className="font-body text-lg text-muted leading-[1.9] mb-6 last:mb-0"
+              >
+                {para}
+              </p>
+            );
+          })}
         </div>
       );
 
@@ -378,6 +413,83 @@ async function Block({
               : undefined
           }
           partnerName={partnerName}
+          interactive={interactive}
+        />
+      );
+    }
+
+    case "pairedReflection": {
+      const saved = responses.get(block.exerciseId);
+      const soloTogether = responses.get(`${block.exerciseId}${TOGETHER_SUFFIX}`);
+
+      let partnerView: React.ComponentProps<typeof PairedReflection>["partner"] = null;
+      let togetherSaved: React.ComponentProps<typeof PairedReflection>["togetherSaved"];
+
+      if (viewer && partner) {
+        const [status, theirs, joint] = await Promise.all([
+          getPartnerExerciseStatus(courseId, lessonId, block.exerciseId),
+          saved?.isShared
+            ? getPartnerSharedResponse(viewer.id, courseId, lessonId, block.exerciseId)
+            : Promise.resolve(null),
+          getCoupleResponse(courseId, lessonId, block.exerciseId),
+        ]);
+        partnerView = {
+          name: partner.name,
+          saved: status.saved,
+          shared: status.shared,
+          answers: theirs
+            ? { texts: theirs.data.texts ?? {}, scales: theirs.data.scales ?? {} }
+            : undefined,
+        };
+        if (joint) {
+          togetherSaved = {
+            texts: joint.data.texts ?? {},
+            joint: true,
+            updatedByName:
+              joint.updatedBy === viewer.id
+                ? viewer.name
+                : joint.updatedBy === partner.id
+                  ? partner.name
+                  : null,
+            updatedAt: joint.updatedAt,
+          };
+        }
+      } else if (soloTogether) {
+        togetherSaved = {
+          texts: soloTogether.data.texts ?? {},
+          joint: false,
+          updatedByName: null,
+          updatedAt: soloTogether.updatedAt,
+        };
+      }
+
+      return (
+        <PairedReflection
+          courseId={courseId}
+          lessonId={lessonId}
+          exerciseId={block.exerciseId}
+          eyebrow={block.eyebrow}
+          title={block.title}
+          intro={block.intro}
+          order={block.order}
+          individual={block.individual}
+          together={block.together}
+          compare={block.compare}
+          revealNote={block.revealNote}
+          closing={block.closing}
+          viewerName={viewer?.name ?? "You"}
+          saved={
+            saved
+              ? {
+                  responseId: saved.id,
+                  texts: saved.data.texts ?? {},
+                  scales: saved.data.scales ?? {},
+                  isShared: saved.isShared,
+                }
+              : undefined
+          }
+          partner={partnerView}
+          togetherSaved={togetherSaved}
           interactive={interactive}
         />
       );

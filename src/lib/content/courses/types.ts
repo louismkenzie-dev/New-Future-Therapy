@@ -1,6 +1,15 @@
 /* Course content model. Content lives in code (like helpAreas.ts); all
    member data — progress, responses, reactions — lives in Supabase. */
 
+export interface PairedQuestion {
+  id: string;
+  label: string;
+  /** The therapists' follow-on prompts, shown beneath the question. */
+  hint?: string;
+  /** Adds a 1–10 slider above the written answer. */
+  scale?: { low: string; high: string };
+}
+
 export type LessonBlock =
   | {
       kind: "video";
@@ -17,8 +26,10 @@ export type LessonBlock =
       durationSeconds: number;
     }
   | {
-      /** Paragraphs separated by blank lines. */
+      /** Paragraphs separated by blank lines; a paragraph whose lines all
+         begin "- " renders as a list. */
       kind: "prose";
+      heading?: string;
       body: string;
     }
   | { kind: "quote"; text: string; attribution?: string }
@@ -101,6 +112,41 @@ export type LessonBlock =
       };
     }
   | {
+      /** The programme's signature activity: each partner answers the
+         individual questions privately in their own login, chooses whether
+         to share, and — once both have shared — sees the answers side by
+         side before completing the "Coming Back Together" questions as one
+         joint record owned by the couple. Members without a linked partner
+         complete both halves privately. */
+      kind: "pairedReflection";
+      exerciseId: string;
+      /** e.g. "Part 1" — rendered as a tracked eyebrow above the title. */
+      eyebrow?: string;
+      title: string;
+      intro?: string;
+      /** Ground Rules is mostly written together, so it leads with that half. */
+      order?: "individualFirst" | "togetherFirst";
+      individual: {
+        title: string;
+        intro?: string;
+        questions: PairedQuestion[];
+      };
+      together: {
+        title: string;
+        intro?: string;
+        /** How to come back together, as the therapists describe it. */
+        steps?: string[];
+        questions: { id: string; label: string; hint?: string }[];
+      };
+      /** Check-in style comparisons: my question id -> the partner question
+         it should sit beside (e.g. "How do I think you are?" beside their
+         "How am I?"). Defaults to same-id pairing. */
+      compare?: Record<string, string>;
+      /** Shown beneath the side-by-side reveal. */
+      revealNote?: string;
+      closing?: { text: string };
+    }
+  | {
       /** Branded PDF worksheet, served via an entitlement-gated action. */
       kind: "download";
       title: string;
@@ -122,6 +168,7 @@ export interface Lesson {
 
 export interface CourseModule {
   id: string;
+  /** 0 is the Introduction that precedes Module One. */
   number: number;
   title: string;
   lede: string;
