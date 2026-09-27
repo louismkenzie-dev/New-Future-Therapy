@@ -74,7 +74,8 @@ export function findExercise(courseId: string, lessonId: string, exerciseId: str
         block.kind === "quiz" ||
         block.kind === "checkin" ||
         block.kind === "worksheet" ||
-        block.kind === "pairedReflection") &&
+        block.kind === "pairedReflection" ||
+        block.kind === "tapChoice") &&
       block.exerciseId === exerciseId
     ) {
       return block;

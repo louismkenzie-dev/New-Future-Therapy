@@ -29,92 +29,187 @@ export const module00: CourseModule = {
         },
         {
           kind: "prose",
-          body: `Welcome to our NewFuture Therapy Couples Relationship Programme.
+          body: `Welcome to our NewFuture Therapy Couples Relationship Programme. We are Laura and Esther — identical twins, qualified counsellors and couples therapists based in Yorkshire.
 
-We are Laura and Esther — identical twins, qualified counsellors and couples therapists based in Yorkshire.
-
-We have created this programme to help you understand why you can get stuck in the same relationship patterns, communicate more effectively, feel more connected and navigate conflict in a less painful way.
-
-Throughout the programme, you will find practical information, individual and couples activities, and guided reflection exercises to help you learn more about yourself, your partner and what happens between you.
-
-Before you begin, please read the following information carefully. It will help you decide whether this programme is right for you and whether now is the right time to complete it together.`,
+We have created this programme to help you understand why you can get stuck in the same relationship patterns, communicate more effectively, feel more connected and navigate conflict in a less painful way.`,
         },
         {
-          kind: "prose",
-          heading: "Who Is This Programme For?",
-          body: `This programme is designed for couples over the age of 18 who want to understand more about their relationship and feel more fulfilled and connected.
-
-It may be helpful if:
-
-- Your relationship is generally going well and you want to strengthen it.
-- You find yourselves having the same arguments or disagreements repeatedly.
-- Communication, trust or intimacy has become challenging.
-- You have been together for a long time and want to reinvest time and effort into your relationship.`,
+          kind: "photo",
+          src: "/photos/twins-laptop.jpg",
+          alt: "Laura and Esther working together at a laptop",
+          position: "center 30%",
+          caption: "Laura and Esther — NewFuture Therapy, Wakefield & Online",
         },
         {
-          kind: "prose",
-          heading: "An Inclusive Programme",
+          kind: "iconCards",
+          heading: "What You Will Find Inside",
+          columns: 3,
+          items: [
+            {
+              icon: "book-open-text",
+              title: "Practical information",
+              body: "Counselling theories, techniques and tools, drawn from our research, knowledge and experience as couples therapists.",
+            },
+            {
+              icon: "users",
+              title: "Individual and couples activities",
+              body: "Questions you answer on your own in your own login, then bring back together.",
+            },
+            {
+              icon: "pen-line",
+              title: "Guided reflection",
+              body: "Exercises to help you learn more about yourself, your partner and what happens between you.",
+            },
+          ],
+        },
+        {
+          kind: "tapChoice",
+          exerciseId: "welcome-where-you-are",
+          title: "Who Is This Programme For?",
+          intro:
+            "This programme is designed for couples over the age of 18 who want to understand more about their relationship and feel more fulfilled and connected. Which sounds most like you right now? There is no wrong answer.",
+          questions: [
+            {
+              id: "where",
+              text: "Which of these sounds most like where you are?",
+              options: [
+                {
+                  value: "strengthen",
+                  label: "Things are going well and we want to strengthen it",
+                  response:
+                    "A strong place to begin. Understanding why things work is as valuable as understanding why they do not — and it makes what you have easier to protect.",
+                },
+                {
+                  value: "same-arguments",
+                  label: "We keep having the same arguments",
+                  response:
+                    "You are not alone in that. Much of this programme is about why couples get stuck in the same patterns — and how to step out of them together.",
+                },
+                {
+                  value: "harder",
+                  label: "Communication, trust or intimacy has become challenging",
+                  response:
+                    "These are exactly the areas we explore, gently and in turn. Go at your own pace; nothing here has to be rushed.",
+                },
+                {
+                  value: "reinvest",
+                  label: "We have been together a long time and want to reinvest",
+                  response:
+                    "Choosing to reinvest time and effort is itself a sign of care. We begin, in Module One, with the story you have built so far.",
+                },
+              ],
+            },
+          ],
+        },
+        {
+          kind: "callout",
+          icon: "heart-handshake",
+          title: "An Inclusive Programme",
           body: `Relationships come in many different forms. This programme is designed to be inclusive of couples of all genders, sexual orientations, cultures and backgrounds.
 
-Throughout the programme, we use words such as partner or couple simply to make the material easier to follow. We know these terms will not reflect every relationship structure, so please adapt them in any way that feels right for you.
-
-Our intention throughout is to use language that feels respectful and welcoming to everyone.`,
+We use words such as partner or couple simply to make the material easier to follow. We know these terms will not reflect every relationship structure, so please adapt them in any way that feels right for you. Our intention throughout is to use language that feels respectful and welcoming to everyone.`,
         },
         {
-          kind: "prose",
+          kind: "contrast",
           heading: "What This Programme Is — and Is Not",
-          body: `This is a psychoeducational, self-led, online relationship programme.
-
-We will introduce you to counselling theories and techniques, alongside practical tools based on our research, knowledge and experience as counsellors and couples therapists.
-
-This programme is not the same as individual counselling or couples therapy. We do not know your personal circumstances, so the information we provide cannot replace professional assessment, counselling, medical advice or crisis support.
-
-The activities are designed to encourage curiosity about yourself and your partner and to open up conversations. They are not designed to tell you what you should or should not do within your relationship.`,
+          columns: [
+            {
+              label: "It is",
+              icon: "sprout",
+              tone: "sage",
+              items: [
+                "A psychoeducational, self-led, online relationship programme.",
+                "Counselling theories, techniques and practical tools.",
+                "An invitation to be curious about yourself and your partner, and to open up conversations.",
+              ],
+            },
+            {
+              label: "It is not",
+              icon: "shield",
+              items: [
+                "The same as individual counselling or couples therapy.",
+                "A replacement for professional assessment, counselling, medical advice or crisis support.",
+                "Designed to tell you what you should or should not do within your relationship.",
+              ],
+            },
+          ],
+          note: "We do not know your personal circumstances — which is exactly why the activities encourage curiosity rather than instruction.",
         },
         {
-          kind: "prose",
+          kind: "accordion",
           heading: "Look After Yourself as You Work Through the Programme",
-          body: `Some of the subjects we explore may bring up difficult emotions. These include:
-
-- attachment strategies
+          intro:
+            "Some of the subjects we explore may bring up difficult emotions. Open each of these before you begin.",
+          items: [
+            {
+              icon: "compass",
+              title: "The subjects we will explore",
+              body: `- attachment strategies
 - nervous system responses
 - conflict and communication styles
 - boundaries
 - intimacy
 - trust
 
-You may discover things about yourself or your relationship that you had not previously realised or thought about.
-
-Go at your own pace. There is no benefit in pushing through an activity simply to get it done. You can pause, take a break, return another day, skip something or decide that a particular activity is not right for you.
-
-Pay attention to what you are physically experiencing in your body, as well as what you are thinking and feeling emotionally. If you become overwhelmed, or a conversation becomes heated or confrontational and you are unable to engage constructively, stop the activity rather than pushing through it. Take some time to regulate and return when you both feel able to engage safely and constructively.
-
-If something significant comes up that feels too difficult to manage on your own, consider seeking support from a qualified professional.`,
+You may discover things about yourself or your relationship that you had not previously realised or thought about.`,
+            },
+            {
+              icon: "hourglass",
+              title: "Go at your own pace",
+              body: `There is no benefit in pushing through an activity simply to get it done. You can pause, take a break, return another day, skip something or decide that a particular activity is not right for you.`,
+            },
+            {
+              icon: "wind",
+              title: "Notice your body as well as your thoughts",
+              body: `Pay attention to what you are physically experiencing in your body, as well as what you are thinking and feeling emotionally.`,
+            },
+            {
+              icon: "pause-circle",
+              title: "If a conversation becomes heated",
+              body: `If you become overwhelmed, or a conversation becomes heated or confrontational and you are unable to engage constructively, stop the activity rather than pushing through it. Take some time to regulate and return when you both feel able to engage safely and constructively.`,
+            },
+            {
+              icon: "hand-heart",
+              title: "If something feels too much to manage alone",
+              body: `If something significant comes up that feels too difficult to manage on your own, consider seeking support from a qualified professional.`,
+            },
+          ],
         },
         {
-          kind: "prose",
+          kind: "iconCards",
           heading: "Approach Each Other With Respect and Curiosity",
-          body: `You may remember the same event differently. Something that felt insignificant to one of you may have had a much greater impact on the other.
-
-The aim is not to prove whose version is correct. Instead, try to become curious about your partner's experience, the meaning they have placed on it and the impact it may have had.
-
-Try to listen without immediately defending or correcting. You do not have to agree with your partner's experience or feelings in order to listen to them.
-
-You also always have a choice about what you share. If an activity is an individual reflection, you do not automatically have to share your answers with your partner.`,
+          columns: 3,
+          items: [
+            {
+              icon: "eye",
+              title: "You may remember the same event differently",
+              body: "Something that felt insignificant to one of you may have had a much greater impact on the other. The aim is not to prove whose version is correct.",
+            },
+            {
+              icon: "ear",
+              title: "Listen without defending or correcting",
+              body: "Try to become curious about your partner's experience, the meaning they have placed on it and the impact it may have had. You do not have to agree in order to listen.",
+            },
+            {
+              icon: "lock",
+              title: "You always have a choice about what you share",
+              body: "If an activity is an individual reflection, you do not automatically have to share your answers with your partner.",
+            },
+          ],
         },
         {
-          kind: "prose",
-          heading: "When This Programme Is Not Appropriate",
-          body: `There are circumstances where a self-led relationship programme may not be appropriate.
-
-If there is any form of abuse or controlling behaviour within your relationship, or you do not feel able to express yourself safely, we would not recommend completing this programme together. Please consider seeking appropriate professional or specialist support instead.`,
+          kind: "callout",
+          icon: "shield-alert",
+          tone: "dark",
+          title: "When This Programme Is Not Appropriate",
+          body: `If there is any form of abuse or controlling behaviour within your relationship, or you do not feel able to express yourself safely, we would not recommend completing this programme together. Please consider seeking appropriate professional or specialist support instead.`,
         },
         {
           kind: "prose",
           heading: "There Are No Perfect Answers",
-          body: `This programme is not a test. You do not need to agree with everything we say, and you do not need to approach every activity in exactly the same way.
+          body: `This programme is not a test. You do not need to agree with everything we say, and you do not need to approach every activity in exactly the same way. Some parts may feel incredibly relevant to your relationship. Others may not quite fit.
 
-Some parts may feel incredibly relevant to your relationship. Others may not quite fit. Take what is useful, remain curious and open about what you notice, and give yourselves time to think about what you are learning and what you would like to put into practice.`,
+Take what is useful, remain curious and open about what you notice, and give yourselves time to think about what you are learning and what you would like to put into practice.`,
         },
         {
           kind: "quote",
@@ -122,23 +217,33 @@ Some parts may feel incredibly relevant to your relationship. Others may not qui
           attribution: "Laura and Esther",
         },
         {
-          kind: "prose",
+          kind: "flow",
           heading: "Before Module One: Agree Your Ground Rules",
-          body: `Before starting Module One, spend some time discussing how you are going to complete this programme together. We have created a Ground Rules Worksheet — the next step in this Introduction — to help you do this.
+          intro:
+            "Spend some time discussing how you are going to complete this programme together. The Ground Rules Worksheet — your next step — walks you through it.",
+          steps: [
+            {
+              icon: "calendar-clock",
+              title: "When and where",
+              body: "Choose a time when you are not rushing, exhausted or likely to be distracted. We suggest approximately one module each week.",
+            },
+            {
+              icon: "pause-circle",
+              title: "How you will ask for a pause",
+              body: "Agree in advance how either of you can say “Time out.” A break is not avoidance — it is time to settle and regulate before returning.",
+            },
+            {
+              icon: "shield-check",
+              title: "How you will treat each other",
+              body: "Listen without interrupting. No sarcasm or dismissiveness. Allow a different experience. And never use what is shared vulnerably as ammunition later.",
+            },
+          ],
+        },
+        {
+          kind: "prose",
+          body: `Complete your Ground Rules Worksheet together and decide what your boundaries and agreements will be. Once you have done that, you are ready to begin Module One: Your Relationship Journey.
 
-Choose a time when you are not rushing, exhausted or likely to be distracted. Be realistic, but try to create some consistency. We suggest completing approximately one module each week.
-
-Some activities may bring up difficult, upsetting or confrontational conversations. Agree in advance how either of you can ask for a pause. You might simply use the words “Time out.” Depending on what has come up, you may need a ten-minute break or you may need to return to the activity the following day. Taking a break is not about avoiding something difficult. It is about allowing yourselves time to settle and regulate so you can return when you are both more able to talk and listen.
-
-Consider what you need from each other while completing the programme. Can you agree to listen without interrupting? To avoid sarcasm or dismissive comments? To allow your partner to have a different experience or opinion? To respect when your partner is not ready to answer something? To avoid demanding answers from each other?
-
-And one final ground rule that we consider particularly important — one we always discuss in our counselling room: do not use something your partner shares openly or vulnerably during this programme against them later. You both need to be able to speak honestly without worrying that something you have shared will become ammunition in a future disagreement.
-
-Complete your Ground Rules Worksheet together and decide what your boundaries and agreements will be. Once you have done that, you are ready to begin Module One: Your Relationship Journey.
-
-Enjoy!
-
-Laura & Esther, NewFuture Therapy`,
+Enjoy! — Laura & Esther, NewFuture Therapy`,
         },
       ],
     },

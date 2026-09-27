@@ -146,6 +146,78 @@ export type LessonBlock =
       revealNote?: string;
       closing?: { text: string };
     }
+  /* ---- Engagement blocks: the therapists' words, broken into things to
+     look at, open and tap rather than long columns of text. Icons are
+     lucide names resolved in src/components/course/blocks/courseIcons.ts. */
+  | {
+      /** Grid of icon + title + short body. */
+      kind: "iconCards";
+      heading?: string;
+      intro?: string;
+      columns?: 2 | 3 | 4;
+      items: { icon: string; title: string; body?: string }[];
+    }
+  | {
+      /** Click-to-open sections; body uses prose conventions (paragraphs, "- " lists). */
+      kind: "accordion";
+      heading?: string;
+      intro?: string;
+      items: { icon?: string; title: string; body: string }[];
+    }
+  | {
+      /** Two columns set against each other, e.g. "Instead of… / Try…". */
+      kind: "contrast";
+      heading?: string;
+      intro?: string;
+      columns: [
+        { label: string; icon?: string; items: string[]; tone?: "muted" | "sage" },
+        { label: string; icon?: string; items: string[]; tone?: "muted" | "sage" },
+      ];
+      note?: string;
+    }
+  | {
+      /** Cards that turn over on tap — one memory, two experiences. */
+      kind: "flipCards";
+      heading?: string;
+      intro?: string;
+      items: { frontLabel?: string; front: string; backLabel?: string; back: string }[];
+    }
+  | {
+      /** One-tap choice with a gentle written response. No right answers;
+         the choice is saved (as a quiz selection) so it is there on return. */
+      kind: "tapChoice";
+      exerciseId: string;
+      title: string;
+      intro?: string;
+      questions: {
+        id: string;
+        text: string;
+        options: { value: string; label: string; response: string }[];
+      }[];
+    }
+  | {
+      /** Numbered horizontal journey of steps. */
+      kind: "flow";
+      heading?: string;
+      intro?: string;
+      steps: { icon: string; title: string; body?: string }[];
+    }
+  | {
+      /** Short emphasised band. */
+      kind: "callout";
+      icon?: string;
+      title: string;
+      body: string;
+      tone?: "sage" | "dark";
+    }
+  | {
+      /** A real photo from public/photos, faces in the upper third. */
+      kind: "photo";
+      src: string;
+      alt: string;
+      caption?: string;
+      position?: string;
+    }
   | {
       /** Branded PDF worksheet, served via an entitlement-gated action. */
       kind: "download";

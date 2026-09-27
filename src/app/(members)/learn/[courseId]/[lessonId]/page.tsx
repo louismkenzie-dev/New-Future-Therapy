@@ -14,6 +14,14 @@ import JournalExercise, {
 } from "@/components/course/exercises/JournalExercise";
 import WorksheetExercise from "@/components/course/exercises/WorksheetExercise";
 import PairedReflection from "@/components/course/exercises/PairedReflection";
+import IconCards from "@/components/course/blocks/IconCards";
+import Accordion from "@/components/course/blocks/Accordion";
+import Contrast from "@/components/course/blocks/Contrast";
+import FlipCards from "@/components/course/blocks/FlipCards";
+import TapChoice from "@/components/course/blocks/TapChoice";
+import Flow from "@/components/course/blocks/Flow";
+import Callout from "@/components/course/blocks/Callout";
+import PhotoPlaceholder from "@/components/PhotoPlaceholder";
 import QuizExercise from "@/components/course/exercises/QuizExercise";
 import CheckinExercise from "@/components/course/exercises/CheckinExercise";
 import { getLesson, moduleLabel, type LessonBlock } from "@/lib/content/courses";
@@ -413,6 +421,73 @@ async function Block({
               : undefined
           }
           partnerName={partnerName}
+          interactive={interactive}
+        />
+      );
+    }
+
+    case "iconCards":
+      return (
+        <IconCards
+          heading={block.heading}
+          intro={block.intro}
+          columns={block.columns}
+          items={block.items}
+        />
+      );
+
+    case "accordion":
+      return <Accordion heading={block.heading} intro={block.intro} items={block.items} />;
+
+    case "contrast":
+      return (
+        <Contrast
+          heading={block.heading}
+          intro={block.intro}
+          columns={block.columns}
+          note={block.note}
+        />
+      );
+
+    case "flipCards":
+      return <FlipCards heading={block.heading} intro={block.intro} items={block.items} />;
+
+    case "flow":
+      return <Flow heading={block.heading} intro={block.intro} steps={block.steps} />;
+
+    case "callout":
+      return (
+        <Callout icon={block.icon} title={block.title} body={block.body} tone={block.tone} />
+      );
+
+    case "photo":
+      return (
+        <figure>
+          <PhotoPlaceholder
+            src={block.src}
+            alt={block.alt}
+            position={block.position}
+            className="aspect-[16/9] rounded-2xl shadow-sm"
+          />
+          {block.caption && (
+            <figcaption className="font-body text-sm text-muted text-center mt-3">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      );
+
+    case "tapChoice": {
+      const saved = responses.get(block.exerciseId);
+      return (
+        <TapChoice
+          courseId={courseId}
+          lessonId={lessonId}
+          exerciseId={block.exerciseId}
+          title={block.title}
+          intro={block.intro}
+          questions={block.questions}
+          saved={saved?.data.selections}
           interactive={interactive}
         />
       );

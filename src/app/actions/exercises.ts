@@ -7,6 +7,7 @@ import { findExercise } from "@/lib/content/courses";
 import { getCoupleState } from "@/lib/dal/couples";
 import {
   TOGETHER_SUFFIX,
+  getOwnResponse,
   saveCoupleResponse,
   saveResponse,
   type ResponseData,
@@ -82,11 +83,15 @@ export async function saveQuizResponse(
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
   const block = findExercise(courseId, lessonId, exerciseId);
-  if (!block || block.kind !== "quiz") return FAILED;
+  if (!block || (block.kind !== "quiz" && block.kind !== "tapChoice")) {
+    return FAILED;
+  }
 
   const selections: Record<string, string> = {};
   for (const question of block.questions) {
     const value = formData.get(`question-${question.id}`)?.toString() ?? "";
+    // A tap choice answers one question at a time; keep earlier answers.
+    if (block.kind === "tapChoice" && !value) continue;
     if (!question.options.some((o) => o.value === value)) {
       return {
         status: "error",
@@ -97,6 +102,10 @@ export async function saveQuizResponse(
   }
 
   try {
+    if (block.kind === "tapChoice") {
+      const existing = await getOwnResponse(user.id, courseId, exerciseId);
+      Object.assign(selections, { ...(existing?.data.selections ?? {}), ...selections });
+    }
     await saveResponse(user.id, courseId, lessonId, exerciseId, "quiz", {
       selections,
     });
