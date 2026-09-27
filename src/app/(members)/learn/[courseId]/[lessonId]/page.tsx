@@ -9,6 +9,7 @@ import {
   FileDown,
 } from "lucide-react";
 import LessonVideoPlayer from "@/components/course/LessonVideoPlayer";
+import LessonStepper, { type LessonStep } from "@/components/course/LessonStepper";
 import JournalExercise, {
   type ReceivedReaction,
 } from "@/components/course/exercises/JournalExercise";
@@ -147,100 +148,155 @@ export default async function LessonPage({
         </div>
       </section>
 
-      {/* Blocks */}
+      {/* One snippet at a time */}
       <section className="py-16 px-6 bg-cream">
-        <div className="max-w-3xl mx-auto space-y-12">
-          {lesson.blocks.map((block, index) => (
-            <Block
-              key={index}
-              block={block}
-              courseId={courseId}
-              lessonId={lessonId}
-              interactive={interactive}
-              viewer={user ? { id: user.id, name: user.profile.displayName } : null}
-              responses={responses}
-              partner={partner}
-              reactionsByResponse={reactionsByResponse}
-              startTime={progress?.videoPositionSeconds ?? undefined}
-              baselineCompare={baselineCompare}
-            />
-          ))}
-
-          {/* Completion + navigation */}
-          <div className="border-t border-grey-light pt-10">
-            {interactive && (
-              <form action={setLessonComplete} className="mb-10 text-center">
-                <input type="hidden" name="courseId" value={courseId} />
-                <input type="hidden" name="lessonId" value={lessonId} />
-                <input
-                  type="hidden"
-                  name="completed"
-                  value={completed ? "false" : "true"}
-                />
-                <button
-                  type="submit"
-                  className={`inline-flex items-center gap-2 font-body text-sm px-8 py-4 rounded-full transition-colors duration-200 ${
-                    completed
-                      ? "border border-grey-light text-muted hover:border-sage-light hover:text-sage-dark"
-                      : "bg-sage-dark text-cream hover:bg-charcoal"
-                  }`}
-                >
-                  <CheckCircle2 size={16} />
-                  {completed ? "Mark as Not Yet Finished" : "Mark Lesson Complete"}
-                </button>
-              </form>
+        <div className="max-w-3xl mx-auto">
+          <LessonStepper
+            lessonId={lessonId}
+            steps={lesson.blocks.map(
+              (block, index): LessonStep => ({
+                label: stepLabel(block, index),
+                node: (
+                  <Block
+                    key={index}
+                    block={block}
+                    courseId={courseId}
+                    lessonId={lessonId}
+                    interactive={interactive}
+                    viewer={user ? { id: user.id, name: user.profile.displayName } : null}
+                    responses={responses}
+                    partner={partner}
+                    reactionsByResponse={reactionsByResponse}
+                    startTime={progress?.videoPositionSeconds ?? undefined}
+                    baselineCompare={baselineCompare}
+                  />
+                ),
+              })
             )}
+            finish={
+              <div>
+                <div className="text-center mb-12">
+                  <span className="block w-8 h-0.5 bg-sage mx-auto mb-6" aria-hidden="true" />
+                  <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal leading-tight mb-4">
+                    {completed ? "Lesson Complete" : "You Have Reached the End of This Lesson"}
+                  </h2>
+                  <p className="font-body text-base text-muted leading-relaxed max-w-xl mx-auto">
+                    {completed
+                      ? "Well done. Everything you wrote is saved to your account — come back to it whenever you like."
+                      : "Take a breath. When you are ready, mark it complete and carry on — or come back another day. There is no pace to keep."}
+                  </p>
+                </div>
 
-            <div className="flex flex-col sm:flex-row justify-between gap-4">
-              {prev ? (
-                <Link
-                  href={`/learn/${courseId}/${prev.lesson.id}`}
-                  className="group flex-1 border border-grey-light rounded-2xl p-5 hover:border-sage-light transition-colors duration-200"
-                >
-                  <span className="inline-flex items-center gap-1.5 font-body text-xs text-muted uppercase tracking-widest mb-2">
-                    <ArrowLeft size={13} />
-                    Previous
-                  </span>
-                  <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
-                    {prev.lesson.title}
-                  </span>
-                </Link>
-              ) : (
-                <div className="flex-1" />
-              )}
-              {next ? (
-                <Link
-                  href={`/learn/${courseId}/${next.lesson.id}`}
-                  className="group flex-1 border border-grey-light rounded-2xl p-5 text-right hover:border-sage-light transition-colors duration-200"
-                >
-                  <span className="inline-flex items-center gap-1.5 font-body text-xs text-muted uppercase tracking-widest mb-2">
-                    Next
-                    <ArrowRight size={13} />
-                  </span>
-                  <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
-                    {next.lesson.title}
-                  </span>
-                </Link>
-              ) : (
-                <Link
-                  href={`/learn/${courseId}/certificate`}
-                  className="group flex-1 border border-sage-light bg-sage-pale rounded-2xl p-5 text-right transition-colors duration-200"
-                >
-                  <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-widest mb-2">
-                    Finish
-                    <ArrowRight size={13} />
-                  </span>
-                  <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
-                    Your Certificate
-                  </span>
-                </Link>
-              )}
-            </div>
-          </div>
+                {interactive && (
+                  <form action={setLessonComplete} className="mb-10 text-center">
+                    <input type="hidden" name="courseId" value={courseId} />
+                    <input type="hidden" name="lessonId" value={lessonId} />
+                    <input
+                      type="hidden"
+                      name="completed"
+                      value={completed ? "false" : "true"}
+                    />
+                    <button
+                      type="submit"
+                      className={`inline-flex items-center gap-2 font-body text-sm px-8 py-4 rounded-full transition-colors duration-200 ${
+                        completed
+                          ? "border border-grey-light text-muted hover:border-sage-light hover:text-sage-dark"
+                          : "bg-sage-dark text-cream hover:bg-charcoal"
+                      }`}
+                    >
+                      <CheckCircle2 size={16} />
+                      {completed ? "Mark as Not Yet Finished" : "Mark Lesson Complete"}
+                    </button>
+                  </form>
+                )}
+
+                <div className="flex flex-col sm:flex-row justify-between gap-4">
+                  {prev ? (
+                    <Link
+                      href={`/learn/${courseId}/${prev.lesson.id}`}
+                      className="group flex-1 border border-grey-light rounded-2xl p-5 hover:border-sage-light transition-colors duration-200"
+                    >
+                      <span className="inline-flex items-center gap-1.5 font-body text-xs text-muted uppercase tracking-widest mb-2">
+                        <ArrowLeft size={13} />
+                        Previous
+                      </span>
+                      <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
+                        {prev.lesson.title}
+                      </span>
+                    </Link>
+                  ) : (
+                    <div className="flex-1" />
+                  )}
+                  {next ? (
+                    <Link
+                      href={`/learn/${courseId}/${next.lesson.id}`}
+                      className="group flex-1 border border-sage-light bg-sage-pale rounded-2xl p-5 text-right transition-colors duration-200"
+                    >
+                      <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-widest mb-2">
+                        Next
+                        <ArrowRight size={13} />
+                      </span>
+                      <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
+                        {next.lesson.title}
+                      </span>
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`/learn/${courseId}/certificate`}
+                      className="group flex-1 border border-sage-light bg-sage-pale rounded-2xl p-5 text-right transition-colors duration-200"
+                    >
+                      <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-widest mb-2">
+                        Finish
+                        <ArrowRight size={13} />
+                      </span>
+                      <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
+                        Your Certificate
+                      </span>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            }
+          />
         </div>
       </section>
     </>
   );
+}
+
+/* Short label for the step list. */
+function stepLabel(block: LessonBlock, index: number): string {
+  switch (block.kind) {
+    case "video":
+      return block.title ? `Watch: ${block.title}` : "Watch";
+    case "audio":
+      return `Listen: ${block.title}`;
+    case "prose":
+      return block.heading ?? (index === 0 ? "Introduction" : "Read");
+    case "quote":
+      return "A thought to hold";
+    case "photo":
+      return block.caption ?? "Laura and Esther";
+    case "iconCards":
+    case "accordion":
+    case "contrast":
+    case "flipCards":
+    case "flow":
+      return block.heading ?? "Explore";
+    case "callout":
+      return block.title;
+    case "tapChoice":
+    case "journal":
+    case "sharedJournal":
+    case "quiz":
+    case "checkin":
+    case "worksheet":
+    case "pairedReflection":
+    case "download":
+      return block.title;
+    default:
+      return `Step ${index + 1}`;
+  }
 }
 
 async function Block({
