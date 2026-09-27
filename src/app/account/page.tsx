@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, CreditCard, LogOut } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import MemberNav from "@/components/course/MemberNav";
+import AppShell from "@/components/course/AppShell";
 import ProfileForm from "@/components/account/ProfileForm";
 import PartnerCard from "@/components/account/PartnerCard";
 import { requireUser } from "@/lib/auth/session";
@@ -37,6 +39,8 @@ export default async function AccountPage() {
 
   return (
     <>
+      <AppShell />
+      <MemberNav />
       <PageHeader
         eyebrow="Your Account"
         title="My Account"

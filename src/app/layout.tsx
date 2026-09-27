@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, DM_Sans } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import SiteFooter from "@/components/SiteFooter";
 import SmoothScroll from "@/components/SmoothScroll";
 import IntroScreen from "@/components/IntroScreen";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -78,6 +78,14 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: "#F5F3EF",
+  /* Edge to edge on phones with a notch; the member tab bar pads for it. */
+  viewportFit: "cover",
+  /* When the keyboard opens, shrink the layout rather than covering it. */
+  interactiveWidget: "resizes-content",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -89,7 +97,7 @@ export default function RootLayout({
           <ScrollProgress />
           <Header />
           <main className="flex-1">{children}</main>
-          <Footer />
+          <SiteFooter />
           <CookieBanner />
         </SmoothScroll>
       </body>

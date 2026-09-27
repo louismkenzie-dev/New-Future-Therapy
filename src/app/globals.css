@@ -75,6 +75,27 @@ html.lenis, html.lenis body {
   }
 }
 
+/* ——— Programme app shell ———
+   While the member area is mounted (html.member-app, see AppShell.tsx) the
+   document is pinned to the viewport and only <main> scrolls: no rubber-band
+   bounce, no address-bar jump mid-lesson, header and tab bar always in place. */
+html.member-app,
+html.member-app body {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+html.member-app body {
+  height: 100dvh;
+}
+html.member-app main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Bottom member tab bar on phones sits above the home indicator. */
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);

@@ -1,4 +1,5 @@
 import MemberNav from "@/components/course/MemberNav";
+import AppShell from "@/components/course/AppShell";
 
 /* Member shell — navigation only. Auth and entitlement are checked in each
    page via the DAL (layouts do not re-run on every navigation). */
@@ -9,6 +10,7 @@ export default function MembersLayout({
 }) {
   return (
     <>
+      <AppShell />
       <MemberNav />
       {children}
     </>

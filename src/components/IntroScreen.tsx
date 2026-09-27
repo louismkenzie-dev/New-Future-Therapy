@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight } from "lucide-react";
+import { isMemberRoute } from "@/lib/memberRoutes";
 
 /* Brand intro in two weights:
    — "full": leaf draws stroke by stroke, wordmark rises, tagline fades —
@@ -100,24 +101,7 @@ const QUICK_FADE_MS = 450;
 /* Should the new page never arrive (offline, hard error), lift anyway. */
 const NAV_SAFETY_MS = 8000;
 
-/* Routes where the full brand intro would only get in the way — signing
-   in, and couples working through the programme on their phones. */
-const MEMBER_PREFIXES = [
-  "/learn",
-  "/account",
-  "/login",
-  "/signup",
-  "/forgot-password",
-  "/reset-password",
-  "/invite",
-  "/auth",
-  "/admin",
-];
 const INTRO_SEEN_KEY = "nf-intro-seen";
-
-function isMemberRoute(path: string): boolean {
-  return MEMBER_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
-}
 
 function pathOnly(href: string): string {
   return href.split(/[?#]/)[0] || "/";

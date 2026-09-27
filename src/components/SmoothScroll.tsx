@@ -3,6 +3,7 @@
 import { useEffect, useRef, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import Lenis from "lenis";
+import { isAppRoute } from "@/lib/memberRoutes";
 
 /* Lenis smooth scrolling — the backbone of the Apple-like feel.
    Disabled automatically for users who prefer reduced motion. */
@@ -10,7 +11,12 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const lenisRef = useRef<Lenis | null>(null);
 
+  const inApp = isAppRoute(pathname);
+
+  /* Inside the programme the document is pinned and <main> scrolls
+     natively, so Lenis (which drives window scroll) is torn down there. */
   useEffect(() => {
+    if (inApp) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const lenis = new Lenis({
@@ -33,7 +39,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, []);
+  }, [inApp]);
 
   /* Always open a newly navigated page at the top. Lenis tracks its own scroll
      target, so without this it would animate the new page back to the previous
@@ -43,6 +49,7 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       lenisRef.current.scrollTo(0, { immediate: true, force: true });
     } else if (typeof window !== "undefined") {
       window.scrollTo(0, 0);
+      document.querySelector("main")?.scrollTo(0, 0);
     }
   }, [pathname]);
 
