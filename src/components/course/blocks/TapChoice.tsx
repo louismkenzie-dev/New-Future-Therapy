@@ -39,7 +39,7 @@ export default function TapChoice({
   const [chosen, setChosen] = useState<Record<string, string>>(saved ?? {});
 
   return (
-    <div className="bg-sage-pale rounded-2xl border border-sage-light/50 p-8 md:p-10">
+    <div className="bg-sage-pale rounded-2xl border border-sage-light/50 p-5 sm:p-5 sm:p-8 md:p-10">
       <p className="inline-flex items-center gap-2 font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3">
         <Sparkles size={14} />
         A Moment to Notice

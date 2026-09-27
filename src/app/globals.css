@@ -65,6 +65,21 @@ html.lenis, html.lenis body {
 }
 
 /* Reduced motion: kill every animation and transition site-wide */
+/* Phones: iOS Safari zooms the page when a focused field is under 16px.
+   Couples complete the programme on their phones, so fields are 16px there. */
+@media (max-width: 767px) {
+  input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* Bottom member tab bar on phones sits above the home indicator. */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

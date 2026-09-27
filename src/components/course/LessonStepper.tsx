@@ -67,7 +67,7 @@ export default function LessonStepper({
   return (
     <div ref={topRef} className="scroll-mt-28">
       {/* Progress */}
-      <div className="flex items-center gap-4 mb-10">
+      <div className="flex items-center gap-3 sm:gap-4 mb-8 md:mb-10">
         <div
           className="flex-1 h-2 rounded-full bg-sage-pale overflow-hidden"
           role="progressbar"
@@ -151,21 +151,22 @@ export default function LessonStepper({
       </AnimatePresence>
 
       {/* Controls */}
-      <div className="flex items-center justify-between gap-4 mt-12 pt-8 border-t border-grey-light">
+      <div className="flex items-center justify-between gap-3 mt-10 md:mt-12 pt-6 md:pt-8 border-t border-grey-light">
         <button
           type="button"
           onClick={() => go(index - 1)}
           disabled={index === 0}
-          className="inline-flex items-center gap-2 min-h-[44px] font-body text-sm text-muted px-5 py-3 rounded-full hover:text-sage-dark transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
+          aria-label="Back"
+          className="inline-flex items-center justify-center gap-2 min-h-[52px] min-w-[52px] font-body text-sm text-muted px-4 sm:px-5 py-3 rounded-full border border-grey-light sm:border-transparent hover:text-sage-dark transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <ArrowLeft size={16} />
-          Back
+          <span className="hidden sm:inline">Back</span>
         </button>
         {!isFinish && (
           <button
             type="button"
             onClick={() => go(index + 1)}
-            className="inline-flex items-center gap-2 min-h-[44px] font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center gap-2 min-h-[52px] font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200"
           >
             {index === steps.length - 1 ? "Finish" : "Continue"}
             <ArrowRight size={16} />

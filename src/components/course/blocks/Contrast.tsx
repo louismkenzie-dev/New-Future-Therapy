@@ -30,7 +30,7 @@ export default function Contrast({
           return (
             <div
               key={column.label}
-              className={`rounded-2xl p-7 border ${
+              className={`rounded-2xl p-5 sm:p-7 border ${
                 sage
                   ? "bg-sage-pale border-sage-light/50"
                   : "bg-white border-grey-light shadow-sm"

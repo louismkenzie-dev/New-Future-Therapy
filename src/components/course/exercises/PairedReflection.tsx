@@ -108,10 +108,7 @@ function ScaleInput({
   const [value, setValue] = useState(defaultValue ?? 5);
   return (
     <div className="mb-4">
-      <div className="flex items-center gap-4">
-        <span className="font-body text-xs text-grey-mid w-20 shrink-0">
-          {low}
-        </span>
+      <div className="flex items-center gap-3 sm:gap-4">
         <input
           id={id}
           type="range"
@@ -124,12 +121,13 @@ function ScaleInput({
           className="flex-1 accent-[#3A5A40] min-h-[44px]"
           aria-valuetext={`${value} of 10`}
         />
-        <span className="font-body text-xs text-grey-mid w-20 shrink-0 text-right">
-          {high}
-        </span>
         <span className="font-heading text-2xl font-light text-sage-dark w-8 text-right">
           {value}
         </span>
+      </div>
+      <div className="flex justify-between font-body text-xs text-grey-mid -mt-1 pr-11">
+        <span>{low}</span>
+        <span>{high}</span>
       </div>
     </div>
   );
@@ -217,7 +215,7 @@ export default function PairedReflection({
 
   /* ---- Individual half -------------------------------------------------- */
   const individualCard = (
-    <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-8 md:p-10">
+    <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-5 sm:p-5 sm:p-8 md:p-10">
       <div className="flex items-center gap-3 mb-2">
         <Lock size={16} className="text-sage-dark" />
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em]">
@@ -307,7 +305,7 @@ export default function PairedReflection({
 
   /* ---- Share + side by side ------------------------------------------- */
   const sharePanel = interactive && (
-    <div className="bg-sage-pale rounded-2xl border border-sage-light/50 p-8 md:p-10 print:hidden">
+    <div className="bg-sage-pale rounded-2xl border border-sage-light/50 p-5 sm:p-5 sm:p-8 md:p-10 print:hidden">
       <div className="flex items-center gap-3 mb-2">
         <Users size={16} className="text-sage-dark" />
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em]">
@@ -405,7 +403,7 @@ export default function PairedReflection({
                   return (
                     <div
                       key={q.id}
-                      className="bg-white rounded-2xl border border-sage-light/60 p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+                      className="bg-white rounded-2xl border border-sage-light/60 p-5 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6"
                     >
                       <div>
                         <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-1">
@@ -423,7 +421,7 @@ export default function PairedReflection({
                           )}
                         </p>
                       </div>
-                      <div className="md:border-l md:border-sage-light/60 md:pl-6">
+                      <div className="border-t border-sage-light/60 pt-5 md:border-t-0 md:pt-0 md:border-l md:pl-6">
                         <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-1">
                           {partnerFirst}
                         </p>
@@ -457,7 +455,7 @@ export default function PairedReflection({
 
   /* ---- Coming Back Together (joint) ------------------------------------ */
   const togetherCard = (
-    <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-8 md:p-10">
+    <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-5 sm:p-5 sm:p-8 md:p-10">
       <div className="flex items-center gap-3 mb-2">
         <HeartHandshake size={16} className="text-sage-dark" />
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em]">
@@ -582,7 +580,7 @@ export default function PairedReflection({
               {eyebrow}
             </p>
           )}
-          <h3 className="font-heading text-3xl md:text-4xl font-light text-charcoal leading-tight">
+          <h3 className="font-heading text-2xl sm:text-3xl md:text-4xl font-light text-charcoal leading-tight">
             {title}
           </h3>
           {intro && (

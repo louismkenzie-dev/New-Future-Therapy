@@ -125,12 +125,12 @@ export default async function LessonPage({
   return (
     <>
       {/* Lesson header */}
-      <section className="bg-sage-pale pt-12 pb-10 px-6">
+      <section className="bg-sage-pale pt-8 pb-7 md:pt-12 md:pb-10 px-5 md:px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-4">
+          <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3 md:mb-4">
             {moduleLabel(module)} · {module.title}
           </p>
-          <h1 className="font-heading text-4xl md:text-5xl font-light text-charcoal leading-tight">
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl font-light text-charcoal leading-tight">
             {lesson.title}
           </h1>
           <div className="flex flex-wrap items-center gap-5 mt-5">
@@ -149,7 +149,7 @@ export default async function LessonPage({
       </section>
 
       {/* One snippet at a time */}
-      <section className="py-16 px-6 bg-cream">
+      <section className="py-8 md:py-16 px-5 md:px-6 bg-cream">
         <div className="max-w-3xl mx-auto">
           <LessonStepper
             lessonId={lessonId}
@@ -353,7 +353,7 @@ async function Block({
       return (
         <div>
           {block.heading && (
-            <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal leading-tight mb-6">
+            <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl font-light text-charcoal leading-tight mb-5 md:mb-6">
               {block.heading}
             </h2>
           )}
@@ -365,7 +365,7 @@ async function Block({
                   {lines.map((line) => (
                     <li
                       key={line}
-                      className="flex gap-3 font-body text-lg text-muted leading-[1.7]"
+                      className="flex gap-3 font-body text-base sm:text-lg text-muted leading-[1.7]"
                     >
                       <span
                         className="mt-4 shrink-0 w-6 h-0.5 bg-sage"
@@ -380,7 +380,7 @@ async function Block({
             return (
               <p
                 key={i}
-                className="font-body text-lg text-muted leading-[1.9] mb-6 last:mb-0"
+                className="font-body text-base sm:text-lg text-muted leading-[1.8] sm:leading-[1.9] mb-5 sm:mb-6 last:mb-0"
               >
                 {para}
               </p>

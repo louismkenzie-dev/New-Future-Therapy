@@ -30,8 +30,8 @@ const TIMING = {
     veinDur: 0.5,
   },
   quick: {
-    exitAt: 1000,
-    doneAt: 1650,
+    exitAt: 800, // minimum time the leaf stays before lifting
+    doneAt: 1450,
     curtain: 0.65,
     draw: 0.6,
     fillDelay: 0.45,
@@ -97,6 +97,32 @@ function LeafDraw({ variant }: { variant: Variant }) {
    so the leaf screen is fully opaque before the page swaps underneath. */
 const QUICK_FADE_MS = 450;
 
+/* Should the new page never arrive (offline, hard error), lift anyway. */
+const NAV_SAFETY_MS = 8000;
+
+/* Routes where the full brand intro would only get in the way — signing
+   in, and couples working through the programme on their phones. */
+const MEMBER_PREFIXES = [
+  "/learn",
+  "/account",
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/reset-password",
+  "/invite",
+  "/auth",
+  "/admin",
+];
+const INTRO_SEEN_KEY = "nf-intro-seen";
+
+function isMemberRoute(path: string): boolean {
+  return MEMBER_PREFIXES.some((p) => path === p || path.startsWith(`${p}/`));
+}
+
+function pathOnly(href: string): string {
+  return href.split(/[?#]/)[0] || "/";
+}
+
 export default function IntroScreen() {
   const pathname = usePathname();
   const router = useRouter();
@@ -110,6 +136,8 @@ export default function IntroScreen() {
      remounts and re-runs its animation, even when the route stays mounted. */
   const [runId, setRunId] = useState(0);
   const timersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  /* The navigation the quick leaf is covering: where to, and when it began. */
+  const navRef = useRef<{ target: string; startedAt: number } | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fadeRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -168,10 +196,18 @@ export default function IntroScreen() {
     );
   };
 
-  /* Full intro once, on initial load / refresh */
+  /* Full intro once per browser session, and never on member or sign-in
+     routes — there it is a barrier, not a welcome. */
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
+    if (isMemberRoute(window.location.pathname)) return;
+    try {
+      if (window.sessionStorage.getItem(INTRO_SEEN_KEY)) return;
+      window.sessionStorage.setItem(INTRO_SEEN_KEY, "1");
+    } catch {
+      // Storage blocked — play it; it is only the once per load anyway.
+    }
 
     setVariant("full");
     setLeaving(false);
@@ -190,6 +226,30 @@ export default function IntroScreen() {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /* Lift the quick leaf, honouring a minimum on-screen time so it never
+     flickers on a fast navigation. */
+  const lift = (minShowMs: number) => {
+    const nav = navRef.current;
+    navRef.current = null;
+    const elapsed = nav ? performance.now() - nav.startedAt : minShowMs;
+    const wait = Math.max(0, minShowMs - elapsed);
+    timersRef.current.push(
+      setTimeout(() => setLeaving(true), wait),
+      setTimeout(() => {
+        setShow(false);
+        document.documentElement.style.overflow = "";
+      }, wait + TIMING.quick.curtain * 1000 + 50)
+    );
+  };
+
+  /* The new page has rendered: now, and only now, reveal it. */
+  useEffect(() => {
+    const nav = navRef.current;
+    if (!nav || variant !== "quick") return;
+    if (pathname === nav.target) lift(TIMING.quick.exitAt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   /* Quick intro on navigation: intercept internal link clicks, cover the
      screen with the leaf first, then push the route once fully opaque. */
@@ -214,9 +274,11 @@ export default function IntroScreen() {
       if (
         !href ||
         !href.startsWith("/") ||
+        href.startsWith("//") ||
         anchor.target === "_blank" ||
         anchor.hasAttribute("download") ||
-        href === pathname
+        /* Same page (anchor links, query changes): no curtain needed. */
+        pathOnly(href) === pathname
       )
         return;
 
@@ -233,14 +295,17 @@ export default function IntroScreen() {
       setRunId((n) => n + 1);
       document.documentElement.style.overflow = "hidden";
 
+      navRef.current = { target: pathOnly(href), startedAt: performance.now() };
+
       timersRef.current.push(
-        /* Navigate only once the leaf screen fully covers the old page */
+        /* Navigate only once the leaf screen fully covers the old page. The
+           curtain lifts when the NEW route has rendered (see the pathname
+           effect below), never on a fixed timer, so the page underneath has
+           always changed by the time it is revealed. */
         setTimeout(() => router.push(href), QUICK_FADE_MS),
-        setTimeout(() => setLeaving(true), t.exitAt),
         setTimeout(() => {
-          setShow(false);
-          document.documentElement.style.overflow = "";
-        }, t.doneAt)
+          if (navRef.current) lift(t.exitAt);
+        }, NAV_SAFETY_MS)
       );
     };
 
@@ -266,7 +331,7 @@ export default function IntroScreen() {
           }
           exit={variant === "quick" ? { opacity: 0 } : { y: "-100%" }}
           transition={{
-            duration: variant === "quick" ? 0.45 : TIMING.full.curtain,
+            duration: variant === "quick" ? TIMING.quick.curtain : TIMING.full.curtain,
             ease: variant === "quick" ? "easeInOut" : EASE_OUT,
           }}
         >

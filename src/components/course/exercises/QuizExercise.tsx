@@ -67,7 +67,7 @@ export default function QuizExercise({
   const results = saved ? leadingProfiles(saved.selections, profiles) : [];
 
   return (
-    <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-8 md:p-10">
+    <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-5 sm:p-5 sm:p-8 md:p-10">
       <div className="flex items-center gap-3 mb-2">
         <Compass size={18} className="text-sage-dark" />
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em]">

@@ -37,7 +37,7 @@ export default function FlipCards({
               type="button"
               onClick={() => toggle(i)}
               aria-pressed={isBack}
-              className={`text-left rounded-2xl border p-7 min-h-[180px] flex flex-col transition-all duration-500 ${
+              className={`text-left rounded-2xl border p-5 sm:p-7 min-h-[160px] sm:min-h-[180px] flex flex-col transition-all duration-500 ${
                 isBack
                   ? "bg-sage-dark border-sage-dark text-cream"
                   : "bg-white border-grey-light shadow-sm hover:border-sage-light"

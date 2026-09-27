@@ -16,7 +16,7 @@ export default function Callout({
   const dark = tone === "dark";
   return (
     <div
-      className={`rounded-2xl p-8 md:p-10 flex flex-col sm:flex-row gap-6 ${
+      className={`rounded-2xl p-5 sm:p-5 sm:p-8 md:p-10 flex flex-col sm:flex-row gap-6 ${
         dark ? "bg-sage-dark text-cream" : "bg-sage-pale border border-sage-light/50"
       }`}
     >

@@ -115,7 +115,7 @@ export default function WorksheetExercise({
 
   return (
     <div className="space-y-8">
-      <div className="bg-sage-pale/60 rounded-2xl border border-sage-light/40 p-8 print:border-none print:p-0">
+      <div className="bg-sage-pale/60 rounded-2xl border border-sage-light/40 p-5 sm:p-8 print:border-none print:p-0">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
           <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em]">
             Reflection Worksheet · Shareable
