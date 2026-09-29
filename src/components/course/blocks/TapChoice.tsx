@@ -59,7 +59,7 @@ export default function TapChoice({
               <legend className="font-body text-lg font-medium text-charcoal leading-snug mb-5">
                 {question.text}
               </legend>
-              <div className="flex flex-wrap gap-2.5">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5">
                 {question.options.map((option) => {
                   const active = current === option.value;
                   return (
@@ -72,7 +72,7 @@ export default function TapChoice({
                         setChosen((prev) => ({ ...prev, [question.id]: option.value }))
                       }
                       aria-pressed={active}
-                      className={`font-body text-sm rounded-full px-5 py-3 min-h-[44px] border transition-colors duration-200 ${
+                      className={`font-body text-sm text-left sm:text-center text-balance w-full sm:w-auto rounded-2xl sm:rounded-full px-5 py-3.5 sm:py-3 min-h-[48px] border transition-colors duration-200 ${
                         active
                           ? "bg-sage-dark text-cream border-sage-dark"
                           : "bg-white text-charcoal border-grey-light hover:border-sage-light hover:text-sage-dark"

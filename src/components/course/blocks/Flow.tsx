@@ -31,7 +31,7 @@ export default function Flow({
                 <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-1">
                   Step {i + 1}
                 </p>
-                <h3 className="font-body text-lg font-medium text-charcoal leading-snug mb-1.5">
+                <h3 className="font-body text-lg font-medium text-charcoal leading-snug text-balance mb-1.5">
                   {step.title}
                 </h3>
                 {step.body && (

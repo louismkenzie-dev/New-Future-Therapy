@@ -48,7 +48,7 @@ export default function Contrast({
                 {column.items.map((item) => (
                   <li
                     key={item}
-                    className={`font-heading text-xl md:text-2xl font-light leading-snug ${
+                    className={`font-heading text-xl md:text-2xl font-light leading-snug text-balance ${
                       sage ? "text-charcoal" : "text-muted italic"
                     }`}
                   >

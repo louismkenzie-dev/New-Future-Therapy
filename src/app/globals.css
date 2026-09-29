@@ -24,6 +24,13 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
+  /* Headings break into even lines rather than leaving one word behind. */
+  text-wrap: balance;
+}
+
+/* Body copy, labels and buttons avoid a lone word on the last line. */
+p, li, label, legend, blockquote, figcaption, button, a {
+  text-wrap: pretty;
 }
 
 /* ——— Luxury details ——— */

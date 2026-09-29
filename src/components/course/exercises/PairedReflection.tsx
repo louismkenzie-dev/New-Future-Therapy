@@ -76,7 +76,7 @@ interface PairedReflectionProps {
 }
 
 const questionLabelClass =
-  "block font-body text-base font-medium text-charcoal leading-relaxed";
+  "block font-body text-base font-medium text-charcoal leading-relaxed text-balance";
 const hintClass = "font-body text-sm text-muted leading-relaxed mt-1.5 mb-3";
 const textareaClass =
   "w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage min-h-[104px] resize-y placeholder:text-muted/70 disabled:bg-cream/60";

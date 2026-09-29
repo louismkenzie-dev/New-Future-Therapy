@@ -51,7 +51,7 @@ export default function FlipCards({
                 {isBack ? (item.backLabel ?? "Your partner") : (item.frontLabel ?? "You")}
               </span>
               <span
-                className={`font-heading text-2xl font-light leading-snug flex-1 ${
+                className={`font-heading text-2xl font-light leading-snug text-balance flex-1 ${
                   isBack ? "text-cream" : "text-charcoal"
                 }`}
               >

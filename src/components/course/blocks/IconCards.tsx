@@ -32,7 +32,7 @@ export default function IconCards({
               <span className="inline-flex items-center justify-center w-11 h-11 rounded-full bg-sage-pale text-sage-dark mb-4">
                 <Icon size={22} strokeWidth={1.75} />
               </span>
-              <h3 className="font-body text-lg font-medium text-charcoal leading-snug mb-2">
+              <h3 className="font-body text-lg font-medium text-charcoal leading-snug text-balance mb-2">
                 {item.title}
               </h3>
               {item.body && (

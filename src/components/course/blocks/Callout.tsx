@@ -29,7 +29,7 @@ export default function Callout({
       </span>
       <div>
         <h3
-          className={`font-heading text-2xl font-light leading-snug mb-3 ${
+          className={`font-heading text-2xl font-light leading-snug text-balance mb-3 ${
             dark ? "text-cream" : "text-charcoal"
           }`}
         >
