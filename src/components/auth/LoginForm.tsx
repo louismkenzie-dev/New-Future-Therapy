@@ -10,6 +10,7 @@ import {
   FormError,
   SubmitButton,
 } from "@/components/auth/FormParts";
+import PasswordInput from "@/components/auth/PasswordInput";
 
 const initialState: AuthFormState = { status: "idle" };
 
@@ -50,14 +51,7 @@ export default function LoginForm({
           Password
           <RequiredMark />
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          autoComplete="current-password"
-          className={inputClass}
-        />
+        <PasswordInput id="password" autoComplete="current-password" />
         <p className="font-body text-xs text-muted mt-2 text-right">
           <Link
             href="/forgot-password"

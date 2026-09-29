@@ -10,6 +10,7 @@ import {
   FormSuccess,
   SubmitButton,
 } from "@/components/auth/FormParts";
+import PasswordInput from "@/components/auth/PasswordInput";
 
 const initialState: AuthFormState = { status: "idle" };
 
@@ -73,15 +74,7 @@ export default function SignupForm({ next }: { next: string }) {
           Password
           <RequiredMark />
         </label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          required
-          minLength={8}
-          autoComplete="new-password"
-          className={inputClass}
-        />
+        <PasswordInput id="password" autoComplete="new-password" minLength={8} />
         <p className="font-body text-xs text-muted mt-2">
           At least eight characters.
         </p>

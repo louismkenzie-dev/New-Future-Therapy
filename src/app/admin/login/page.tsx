@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { motion } from "motion/react";
 import { AlertCircle, Lock, ArrowRight } from "lucide-react";
 import Logo from "@/components/Logo";
+import PasswordInput from "@/components/auth/PasswordInput";
 import { login, type LoginState } from "@/app/actions/admin";
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -47,15 +48,12 @@ export default function AdminLoginPage() {
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-grey-mid"
                 aria-hidden="true"
               />
-              <input
+              <PasswordInput
                 id="password"
-                name="password"
-                type="password"
-                required
-                autoFocus
                 autoComplete="current-password"
-                className="w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg pl-11 pr-4 py-3 focus:outline-none focus:border-sage transition-colors duration-200"
+                autoFocus
                 placeholder="Team password"
+                className="w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg pl-11 py-3 focus:outline-none focus:border-sage transition-colors duration-200"
               />
             </div>
           </div>
