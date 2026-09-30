@@ -7,7 +7,8 @@ import { requireEntitlement } from "@/lib/dal/entitlement";
 import { getProgressMap } from "@/lib/dal/progress";
 import { getActivePartner } from "@/lib/dal/couples";
 import { supabaseAdmin } from "@/lib/supabase";
-import { getCourse, countLessons } from "@/lib/content/courses";
+import { countLessons } from "@/lib/content/courses";
+import { loadCourse } from "@/lib/content/courses/live";
 import PrintButton from "@/components/course/PrintButton";
 
 export const dynamic = "force-dynamic";
@@ -23,7 +24,7 @@ export default async function CertificatePage({
   params: Promise<{ courseId: string }>;
 }) {
   const { courseId } = await params;
-  const course = getCourse(courseId);
+  const course = await loadCourse(courseId);
   if (!course) notFound();
 
   const { user } = await requireEntitlement(`/learn/${courseId}/certificate`);

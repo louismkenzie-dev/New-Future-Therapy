@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Inbox, Users, TrendingUp, Palette, Library } from "lucide-react";
+import { Inbox, Users, TrendingUp, Palette, Library, BookOpen } from "lucide-react";
 
 const tabs = [
   { href: "/admin", label: "Enquiries", icon: Inbox, exact: true },
   { href: "/admin/resources", label: "Resources", icon: Library },
+  { href: "/admin/course", label: "Course", icon: BookOpen },
   { href: "/admin/members", label: "Members", icon: Users },
   { href: "/admin/revenue", label: "Revenue", icon: TrendingUp },
   { href: "/admin/brand", label: "Brand", icon: Palette },

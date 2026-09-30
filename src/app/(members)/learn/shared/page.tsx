@@ -11,7 +11,8 @@ import { getCoupleState } from "@/lib/dal/couples";
 import { getSharedFromPartner } from "@/lib/dal/responses";
 import { getReactionsForResponses } from "@/lib/dal/reactions";
 import { getBookmarkedResponseIds } from "@/lib/dal/learningPath";
-import { findExercise, getLesson, moduleLabel } from "@/lib/content/courses";
+import { moduleLabel } from "@/lib/content/courses";
+import { findExerciseLive, getLessonLive } from "@/lib/content/courses/live";
 
 export const dynamic = "force-dynamic";
 
@@ -79,8 +80,8 @@ export default async function SharedWithYouPage() {
 
   const views: SharedResponseView[] = [];
   for (const response of shared) {
-    const lessonEntry = getLesson(response.courseId, response.lessonId);
-    const block = findExercise(
+    const lessonEntry = await getLessonLive(response.courseId, response.lessonId);
+    const block = await findExerciseLive(
       response.courseId,
       response.lessonId,
       response.exerciseId

@@ -14,7 +14,7 @@ export const MEMBER_PREFIXES = [
 ];
 
 /* The app shell proper — where the footer goes and the viewport is pinned. */
-export const APP_PREFIXES = ["/learn", "/account"];
+export const APP_PREFIXES = ["/learn", "/account", "/admin/course/preview"];
 
 function matches(path: string, prefixes: string[]): boolean {
   return prefixes.some((p) => path === p || path.startsWith(`${p}/`));

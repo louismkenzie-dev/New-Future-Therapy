@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
-import { findExercise } from "@/lib/content/courses";
+import { findExerciseLive } from "@/lib/content/courses/live";
 import { getCoupleState } from "@/lib/dal/couples";
 import {
   TOGETHER_SUFFIX,
@@ -42,7 +42,7 @@ export async function saveJournalResponse(
   const { courseId, lessonId, exerciseId } = fields(formData);
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!block || (block.kind !== "journal" && block.kind !== "sharedJournal")) {
     return FAILED;
   }
@@ -82,7 +82,7 @@ export async function saveQuizResponse(
   const { courseId, lessonId, exerciseId } = fields(formData);
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!block || (block.kind !== "quiz" && block.kind !== "tapChoice")) {
     return FAILED;
   }
@@ -125,7 +125,7 @@ export async function saveCheckinResponse(
   const { courseId, lessonId, exerciseId } = fields(formData);
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!block || block.kind !== "checkin") return FAILED;
 
   const data: ResponseData = { scales: {}, texts: {}, choices: {} };
@@ -165,7 +165,7 @@ export async function saveWorksheetResponse(
   const { courseId, lessonId, exerciseId } = fields(formData);
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!block || block.kind !== "worksheet") return FAILED;
 
   const data: ResponseData = { texts: {}, choices: {} };
@@ -221,7 +221,7 @@ export async function savePairedIndividual(
   const { courseId, lessonId, exerciseId } = fields(formData);
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!block || block.kind !== "pairedReflection") return FAILED;
 
   const data: ResponseData = { texts: {}, scales: {} };
@@ -274,7 +274,7 @@ export async function savePairedTogether(
   const { courseId, lessonId, exerciseId } = fields(formData);
   const user = await requireUser(`/learn/${courseId}/${lessonId}`);
 
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!block || block.kind !== "pairedReflection") return FAILED;
 
   const data: ResponseData = { texts: {} };

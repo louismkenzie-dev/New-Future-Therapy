@@ -21,7 +21,8 @@ import CourseModulesAccordion, {
 } from "@/components/course/CourseModulesAccordion";
 import PricingCards from "@/components/course/PricingCards";
 import TrailerPlayer from "@/components/course/TrailerPlayer";
-import { courses, getCourse, countLessons } from "@/lib/content/courses";
+import { courses, countLessons } from "@/lib/content/courses";
+import { loadCourse } from "@/lib/content/courses/live";
 import { PLAN_INFO } from "@/lib/billing/plans";
 
 const valueAddIcons: Record<string, LucideIcon> = {
@@ -43,7 +44,7 @@ export async function generateMetadata({
   params: Promise<{ courseId: string }>;
 }): Promise<Metadata> {
   const { courseId } = await params;
-  const course = getCourse(courseId);
+  const course = await loadCourse(courseId);
   if (!course) return {};
   return {
     title: `${course.title} — An Online Course`,
@@ -57,7 +58,7 @@ export default async function CourseSalesPage({
   params: Promise<{ courseId: string }>;
 }) {
   const { courseId } = await params;
-  const course = getCourse(courseId);
+  const course = await loadCourse(courseId);
   if (!course) notFound();
 
   const lessonCount = countLessons(course);

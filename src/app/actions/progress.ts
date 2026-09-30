@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/session";
-import { getLesson } from "@/lib/content/courses";
+import { getLessonLive } from "@/lib/content/courses/live";
 
 /* Lesson progress writes go through the RLS-enforced client — a member can
    only ever touch their own rows. Signed-out viewers of preview lessons are
@@ -15,7 +15,7 @@ export async function saveVideoPosition(
   seconds: number
 ): Promise<void> {
   const user = await getUser();
-  if (!user || !getLesson(courseId, lessonId)) return;
+  if (!user || !(await getLessonLive(courseId, lessonId))) return;
 
   const supabase = await createServerSupabase();
   await supabase.from("lesson_progress").upsert(
@@ -35,7 +35,7 @@ export async function setLessonComplete(formData: FormData): Promise<void> {
   const completed = formData.get("completed")?.toString() === "true";
 
   const user = await getUser();
-  if (!user || !getLesson(courseId, lessonId)) return;
+  if (!user || !(await getLessonLive(courseId, lessonId))) return;
 
   const supabase = await createServerSupabase();
   await supabase.from("lesson_progress").upsert(
@@ -59,7 +59,7 @@ export async function markLessonCompleteFromPlayer(
   lessonId: string
 ): Promise<void> {
   const user = await getUser();
-  if (!user || !getLesson(courseId, lessonId)) return;
+  if (!user || !(await getLessonLive(courseId, lessonId))) return;
 
   const supabase = await createServerSupabase();
   await supabase.from("lesson_progress").upsert(

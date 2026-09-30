@@ -3,7 +3,7 @@ import Anthropic from "@anthropic-ai/sdk";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/session";
 import { getEntitlement } from "@/lib/dal/entitlement";
-import { getLesson, findExercise } from "@/lib/content/courses";
+import { getLessonLive, findExerciseLive } from "@/lib/content/courses/live";
 import { getOwnResponse, getSharedFromPartner } from "@/lib/dal/responses";
 import { getActivePartner } from "@/lib/dal/couples";
 import {
@@ -102,8 +102,8 @@ async function loadExerciseContext(
   lessonId: string,
   exerciseId: string
 ): Promise<ExerciseContext | null> {
-  const entry = getLesson(courseId, lessonId);
-  const block = findExercise(courseId, lessonId, exerciseId);
+  const entry = await getLessonLive(courseId, lessonId);
+  const block = await findExerciseLive(courseId, lessonId, exerciseId);
   if (!entry || !block || !("title" in block)) return null;
 
   const own = await getOwnResponse(userId, courseId, exerciseId);

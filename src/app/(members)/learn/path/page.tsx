@@ -7,7 +7,7 @@ import AddNoteForm from "@/components/course/AddNoteForm";
 import { requireEntitlement } from "@/lib/dal/entitlement";
 import { getLearningPath } from "@/lib/dal/learningPath";
 import { removePathItem } from "@/app/actions/learningPath";
-import { getLesson } from "@/lib/content/courses";
+import { getLessonLive } from "@/lib/content/courses/live";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +19,13 @@ export const metadata: Metadata = {
 export default async function LearningPathPage() {
   await requireEntitlement("/learn/path");
   const items = await getLearningPath();
+  const lessonEntries = new Map(
+    await Promise.all(
+      items
+        .filter((i) => i.courseId && i.lessonId)
+        .map(async (i) => [i.id, await getLessonLive(i.courseId!, i.lessonId!)] as const)
+    )
+  );
 
   return (
     <>
@@ -47,10 +54,7 @@ export default async function LearningPathPage() {
             </Reveal>
           ) : (
             items.map((item, index) => {
-              const lessonEntry =
-                item.courseId && item.lessonId
-                  ? getLesson(item.courseId, item.lessonId)
-                  : undefined;
+              const lessonEntry = lessonEntries.get(item.id);
               return (
                 <Reveal key={item.id} delay={Math.min(index * 0.05, 0.2)}>
                   <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-8">

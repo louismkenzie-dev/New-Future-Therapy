@@ -9,6 +9,7 @@ import { requireEntitlement } from "@/lib/dal/entitlement";
 import { syncFromCheckoutSession } from "@/lib/dal/subscriptions";
 import { getProgressMap } from "@/lib/dal/progress";
 import { courses, flattenLessons, moduleLabel } from "@/lib/content/courses";
+import { loadCourse } from "@/lib/content/courses/live";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function LearnDashboard({
   }
 
   const { user } = await requireEntitlement("/learn");
-  const course = courses[0];
+  const course = (await loadCourse(courses[0].id)) ?? courses[0];
   const progress = await getProgressMap(course.id);
   const flat = flattenLessons(course);
 

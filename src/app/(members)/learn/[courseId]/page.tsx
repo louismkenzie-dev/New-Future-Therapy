@@ -6,7 +6,8 @@ import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
 import { requireEntitlement } from "@/lib/dal/entitlement";
 import { getProgressMap } from "@/lib/dal/progress";
-import { getCourse, moduleNumeral } from "@/lib/content/courses";
+import { moduleNumeral } from "@/lib/content/courses";
+import { loadCourse } from "@/lib/content/courses/live";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ export default async function CourseOverviewPage({
   params: Promise<{ courseId: string }>;
 }) {
   const { courseId } = await params;
-  const course = getCourse(courseId);
+  const course = await loadCourse(courseId);
   if (!course) notFound();
 
   await requireEntitlement(`/learn/${courseId}`);

@@ -1,7 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  experimental: {
+    serverActions: {
+      /* Course-editor uploads (Word documents and PDFs) travel through a
+         server action. */
+      bodySizeLimit: "25mb",
+    },
+  },
 };
 
 export default nextConfig;
