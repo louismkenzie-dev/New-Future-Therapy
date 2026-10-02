@@ -11,7 +11,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
   { href: "/our-approach", label: "Our Approach" },
-  { href: "/how-we-can-help", label: "How We Can Help" },
+  { href: "/how-we-can-help", label: "How We Help" },
   { href: "/articles", label: "Articles" },
   { href: "/resources", label: "Resources" },
   { href: "/contact", label: "Contact" },
@@ -52,12 +52,12 @@ export default function Header() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="shrink-0 mr-8">
+        <Link href="/" className="shrink-0 mr-6">
           <Logo />
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-5 xl:gap-7 whitespace-nowrap">
           {navLinks.map(({ href, label }) => {
             const active = isActive(pathname, href);
             return (
@@ -96,11 +96,11 @@ export default function Header() {
                 : "text-muted hover:text-charcoal"
             }`}
           >
-            {signedIn ? "My Programme" : "Programme Sign In"}
+            {signedIn ? "My Programme" : "Sign In"}
           </Link>
           <Link
             href="/contact"
-            className="font-body text-sm bg-sage text-cream px-5 py-2 rounded-full hover:bg-sage-dark transition-colors duration-200"
+            className="font-body text-sm bg-sage text-cream px-5 py-2 rounded-full hover:bg-sage-dark transition-colors duration-200 whitespace-nowrap"
           >
             Book a Consultation
           </Link>
@@ -108,7 +108,7 @@ export default function Header() {
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden text-charcoal p-1"
+          className="lg:hidden text-charcoal p-1"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
@@ -119,7 +119,7 @@ export default function Header() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="md:hidden bg-cream/98 backdrop-blur-sm border-t border-grey-light px-6 py-6 flex flex-col gap-5">
+        <div className="lg:hidden bg-cream/98 backdrop-blur-sm border-t border-grey-light px-6 py-6 flex flex-col gap-5">
           {navLinks.map(({ href, label }) => {
             const active = isActive(pathname, href);
             return (
