@@ -6,6 +6,7 @@ import { saveLessonBlocks, type EditorFormState } from "@/app/actions/courseEdit
 import { FormError, FormSuccess } from "@/components/auth/FormParts";
 import type { LessonBlock } from "@/lib/content/courses";
 import { inputClass, labelClass, primaryButton, secondaryButton } from "./formStyles";
+import VideoUploader from "./VideoUploader";
 
 /* Section-by-section editing: reorder, remove, and edit the common text of
    each block in place. Anything more structural is a plain-English request
@@ -151,11 +152,20 @@ export default function BlocksEditor({
                     {block.kind === "video" || block.kind === "audio" ? (
                       <>
                         <Field label="Title" value={String(b.title ?? "")} onChange={(v) => update(i, { title: v })} />
+                        <VideoUploader
+                          onReady={({ playbackId, durationSeconds }) =>
+                            update(i, { playbackId, durationSeconds })
+                          }
+                        />
                         <Field
-                          label="Mux playback ID (Signed)"
+                          label="Playback ID"
                           value={String(b.playbackId ?? "")}
                           onChange={(v) => update(i, { playbackId: v.trim() })}
-                          hint="Paste the Signed playback ID from the asset in Mux. Leave empty to show the “being prepared” placeholder."
+                          hint={
+                            b.playbackId
+                              ? "A video is attached. Upload another above to replace it, or clear this to show the “being prepared” placeholder."
+                              : "Filled in automatically when you upload above. (If you manage videos in Mux yourself, paste a Signed playback ID here.)"
+                          }
                           mono
                         />
                         <Field
