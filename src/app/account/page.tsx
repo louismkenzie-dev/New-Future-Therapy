@@ -142,6 +142,26 @@ export default async function AccountPage() {
 
             <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-8">
               <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3">
+                Participation Agreement
+              </p>
+              <h2 className="font-heading text-2xl font-light text-charcoal mb-4">
+                What We Each Agreed To
+              </h2>
+              <p className="font-body text-sm text-muted leading-relaxed mb-6">
+                The Couples Participation Agreement you accepted before starting — educational
+                not counselling, what stays private, and how we treat each other.
+              </p>
+              <Link
+                href="/learn/agreement"
+                className="inline-flex items-center gap-2 font-body text-sm border border-grey-light text-charcoal px-6 py-3 rounded-full hover:border-sage-light hover:text-sage-dark transition-colors duration-200"
+              >
+                Read the Agreement
+                <ArrowRight size={16} />
+              </Link>
+            </div>
+
+            <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-8">
+              <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3">
                 Signed In
               </p>
               <h2 className="font-heading text-2xl font-light text-charcoal mb-4">

@@ -495,14 +495,6 @@ export default function PairedReflection({
             <input type="hidden" name="lessonId" value={hidden.lessonId} />
             <input type="hidden" name="exerciseId" value={hidden.exerciseId} />
 
-            {partner && !bothShared && together.questions.length > 0 && (
-              <p className="font-body text-sm text-sage-dark bg-sage-pale border border-sage-light/50 rounded-lg p-4 leading-relaxed">
-                These questions are for once you have both shared your
-                individual answers and talked them through. They are here
-                whenever you are ready.
-              </p>
-            )}
-
             {together.questions.map((q) => (
               <div key={q.id}>
                 <label htmlFor={`${exerciseId}-together-${q.id}`} className={questionLabelClass}>

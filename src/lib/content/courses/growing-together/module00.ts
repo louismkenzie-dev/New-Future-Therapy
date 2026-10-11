@@ -278,12 +278,6 @@ Creating the right conditions can make it easier to be open, curious and respect
                   "Think realistically about when you are most likely to have the time and emotional capacity to engage. When would be a good time for us? Is there a particular day or time that would work? Are there times we should avoid — for example, when we are tired, rushing, drinking alcohol, looking after children or about to go to bed?",
               },
               {
-                id: "where",
-                label: "Where will we do it?",
-                hint:
-                  "Think about somewhere you can talk without being regularly interrupted or overheard. What environment would help us both feel comfortable and able to concentrate?",
-              },
-              {
                 id: "pause",
                 label: "How will we know when we need a pause?",
                 hint:
@@ -300,12 +294,6 @@ Creating the right conditions can make it easier to be open, curious and respect
                 label: "How do we want to treat each other? Three things we agree to do:",
                 hint:
                   "Discuss what respectful participation looks like in your relationship. For example: listening without interrupting; not mocking or dismissing an answer; not using something vulnerable that has been shared against each other later; not demanding an answer; allowing each other to remember events differently; trying to understand before responding.",
-              },
-              {
-                id: "private",
-                label: "What will remain private?",
-                hint:
-                  "You do not have to share every thought or every written reflection with your partner. Discuss what privacy means while completing this programme. How will we respect each other's personal reflections? What are we comfortable sharing? What would we prefer to keep to ourselves?",
               },
               {
                 id: "support",
@@ -337,14 +325,6 @@ Creating the right conditions can make it easier to be open, curious and respect
               {
                 id: "unhelpful",
                 label: "Something I do not find helpful when I am struggling is…",
-              },
-              {
-                id: "disagree",
-                label: "One thing I would like us both to remember when we disagree is…",
-              },
-              {
-                id: "bring",
-                label: "Something I want to bring to this programme is…",
               },
               {
                 id: "understand-self",

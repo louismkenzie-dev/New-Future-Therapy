@@ -5,6 +5,7 @@ import { supabaseAdmin } from "@/lib/supabase";
 import { requireUser, type SessionUser } from "@/lib/auth/session";
 import { isActiveStatus } from "@/lib/dal/subscriptions";
 import { courses } from "@/lib/content/courses";
+import { hasAcceptedAgreement } from "@/lib/dal/agreement";
 
 export interface Entitlement {
   active: boolean;
@@ -108,6 +109,10 @@ export async function requireEntitlement(
   );
   if (!entitlement.active) {
     redirect(`/courses/${courses[0].id}#pricing`);
+  }
+  // Every member accepts the Couples Participation Agreement before entering.
+  if (!(await hasAcceptedAgreement(user.id))) {
+    redirect(`/learn/agreement${next ? `?next=${encodeURIComponent(next)}` : ""}`);
   }
   return { user, entitlement };
 }
