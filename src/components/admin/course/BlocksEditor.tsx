@@ -7,6 +7,7 @@ import { FormError, FormSuccess } from "@/components/auth/FormParts";
 import type { LessonBlock } from "@/lib/content/courses";
 import { inputClass, labelClass, primaryButton, secondaryButton } from "./formStyles";
 import VideoUploader from "./VideoUploader";
+import SubtitlesButton from "./SubtitlesButton";
 
 /* Section-by-section editing: reorder, remove, and edit the common text of
    each block in place. Anything more structural is a plain-English request
@@ -168,6 +169,7 @@ export default function BlocksEditor({
                           }
                           mono
                         />
+                        {Boolean(b.playbackId) && <SubtitlesButton playbackId={String(b.playbackId)} />}
                         <Field
                           label="Length in seconds"
                           value={String(b.durationSeconds ?? 0)}

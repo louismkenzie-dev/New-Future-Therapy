@@ -1,8 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import MuxPlayer from "@mux/mux-player-react";
-import { PlayCircle, Headphones } from "lucide-react";
+import type MuxPlayerElement from "@mux/mux-player";
+import { PlayCircle, Headphones, Captions, CaptionsOff } from "lucide-react";
+import WordCaptions from "@/components/course/WordCaptions";
 import type { PlaybackTokens } from "@/lib/mux";
 import { useAnalyticsConsent } from "@/lib/consent";
 import {
@@ -35,6 +37,8 @@ export default function LessonVideoPlayer({
   audioOnly = false,
 }: LessonVideoPlayerProps) {
   const lastSavedRef = useRef(0);
+  const playerRef = useRef<MuxPlayerElement | null>(null);
+  const [captionsOn, setCaptionsOn] = useState(true);
   const analyticsAllowed = useAnalyticsConsent();
 
   if (!playbackId) {
@@ -59,9 +63,11 @@ export default function LessonVideoPlayer({
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-grey-light shadow-sm bg-charcoal">
+    <div className="relative rounded-2xl overflow-hidden border border-grey-light shadow-sm bg-charcoal">
       <MuxPlayer
+        ref={playerRef}
         playbackId={playbackId}
+        defaultHiddenCaptions
         tokens={tokens}
         streamType="on-demand"
         audio={audioOnly}
@@ -87,8 +93,27 @@ export default function LessonVideoPlayer({
           if (!canTrack) return;
           void markLessonCompleteFromPlayer(courseId, lessonId);
         }}
-        style={{ aspectRatio: audioOnly ? undefined : "16 / 9", width: "100%" }}
+        style={{
+          aspectRatio: audioOnly ? undefined : "16 / 9",
+          width: "100%",
+          /* Our word-by-word captions replace the player's own. */
+          ["--captions-button" as string]: "none",
+        }}
       />
+      {!audioOnly && (
+        <>
+          <WordCaptions playerRef={playerRef} enabled={captionsOn} />
+          <button
+            type="button"
+            onClick={() => setCaptionsOn((v) => !v)}
+            aria-pressed={captionsOn}
+            aria-label={captionsOn ? "Hide subtitles" : "Show subtitles"}
+            className="absolute top-3 right-3 inline-flex items-center justify-center w-11 h-11 rounded-full bg-charcoal/60 text-cream/90 hover:bg-charcoal/80 transition-colors duration-200"
+          >
+            {captionsOn ? <Captions size={18} /> : <CaptionsOff size={18} />}
+          </button>
+        </>
+      )}
     </div>
   );
 }

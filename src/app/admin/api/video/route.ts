@@ -29,7 +29,12 @@ export async function POST(request: Request): Promise<NextResponse> {
     const origin = request.headers.get("origin") ?? siteUrl();
     const upload = await mux().video.uploads.create({
       cors_origin: origin,
-      new_asset_settings: { playback_policies: ["signed"], video_quality: "basic" },
+      new_asset_settings: {
+        playback_policies: ["signed"],
+        video_quality: "basic",
+        /* Auto-generated English subtitles drive the word-by-word captions. */
+        input: [{ generated_subtitles: [{ language_code: "en", name: "English" }] }],
+      },
     });
     return NextResponse.json({ uploadId: upload.id, url: upload.url });
   } catch (err) {
