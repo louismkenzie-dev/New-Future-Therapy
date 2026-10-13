@@ -97,7 +97,7 @@ export default function HomePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(practiceSchema) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(practiceSchema).replace(/</g, "\\u003c") }}
       />
 
       <HomeHero />

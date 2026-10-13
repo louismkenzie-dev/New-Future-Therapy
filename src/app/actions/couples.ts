@@ -1,6 +1,8 @@
 "use server";
 
 import { createHash, randomBytes } from "node:crypto";
+import { MAX, clean } from "@/lib/limits";
+import { LIMITS, TOO_MANY, rateLimit, rateLimitByIp } from "@/lib/rateLimit";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -28,6 +30,9 @@ export async function createPartnerInvite(
 ): Promise<InviteFormState> {
   void formData;
   const user = await requireUser("/account");
+  if (!(await rateLimit(LIMITS.invite, user.id))) {
+    return { status: "error", message: TOO_MANY };
+  }
 
   const entitlement = await getEntitlement(
     user.id,
@@ -93,8 +98,11 @@ export async function acceptInvite(
   _prev: InviteFormState,
   formData: FormData
 ): Promise<InviteFormState> {
-  const token = formData.get("token")?.toString() ?? "";
-  const user = await requireUser(`/invite/${token}`);
+  const token = clean(formData.get("token"), MAX.shortText);
+  const user = await requireUser(`/invite/${encodeURIComponent(token)}`);
+  if (!(await rateLimitByIp(LIMITS.inviteAccept))) {
+    return { status: "error", message: TOO_MANY };
+  }
 
   const admin = supabaseAdmin();
   const { data: couple } = await admin

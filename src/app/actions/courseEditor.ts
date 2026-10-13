@@ -19,6 +19,7 @@ import {
 import { extractText } from "@/lib/courseEditor/extract";
 import { formatFromSource, refineDraft } from "@/lib/courseEditor/format";
 import { loadCourse } from "@/lib/content/courses/live";
+import { LIMITS, rateLimitByIp } from "@/lib/rateLimit";
 
 export interface EditorFormState {
   status: "idle" | "success" | "error";
@@ -29,6 +30,10 @@ const COURSE_ID = courses[0].id;
 
 async function guard(): Promise<void> {
   if (!(await isAdmin())) redirect("/admin/login");
+}
+
+async function formatAllowed(): Promise<boolean> {
+  return rateLimitByIp(LIMITS.courseFormat);
 }
 
 function revalidateCourse(lessonId?: string): void {
@@ -58,8 +63,11 @@ export async function createLessonFromUpload(
 ): Promise<EditorFormState> {
   await guard();
 
+  if (!(await formatAllowed())) {
+    return { status: "error", message: "The editor has formatted a lot of lessons in the last hour. Please try again shortly." };
+  }
   const moduleId = formData.get("moduleId")?.toString() ?? "";
-  const notes = formData.get("notes")?.toString().trim() ?? "";
+  const notes = formData.get("notes")?.toString().trim().slice(0, 4000) ?? "";
   const pasted = formData.get("pastedText")?.toString().trim() ?? "";
   const files = formData.getAll("files").filter((f): f is File => f instanceof File && f.size > 0);
 
@@ -122,7 +130,10 @@ export async function refineLesson(
 ): Promise<EditorFormState> {
   await guard();
   const lessonId = formData.get("lessonId")?.toString() ?? "";
-  const instruction = formData.get("instruction")?.toString().trim() ?? "";
+  if (!(await formatAllowed())) {
+    return { status: "error", message: "The editor has made a lot of changes in the last hour. Please try again shortly." };
+  }
+  const instruction = formData.get("instruction")?.toString().trim().slice(0, 4000) ?? "";
   if (!instruction) return { status: "error", message: "Tell the editor what you would like changed." };
 
   const lesson = await getEditorLesson(lessonId);

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import Mux from "@mux/mux-node";
 import { isAdmin } from "@/lib/adminAuth";
 import { siteUrl } from "@/lib/siteUrl";
+import { LIMITS, rateLimitByIp } from "@/lib/rateLimit";
 
 /* Direct video upload for the course editor. The browser PUTs the file
    straight to Mux (so a 700 MB recording never touches our servers); we
@@ -25,8 +26,13 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!(await isAdmin())) {
     return NextResponse.json({ error: "Not signed in" }, { status: 401 });
   }
+  if (!(await rateLimitByIp(LIMITS.videoUpload))) {
+    return NextResponse.json({ error: "Too many uploads started. Please wait a little while." }, { status: 429 });
+  }
   try {
-    const origin = request.headers.get("origin") ?? siteUrl();
+    const requested = request.headers.get("origin");
+    const allowed = [siteUrl(), "https://www.newfuturetherapy.co.uk", "https://newfuturetherapy.co.uk"];
+    const origin = requested && allowed.includes(requested) ? requested : siteUrl();
     const upload = await mux().video.uploads.create({
       cors_origin: origin,
       new_asset_settings: {

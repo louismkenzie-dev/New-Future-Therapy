@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/session";
+import { LIMITS, rateLimit } from "@/lib/rateLimit";
 import { getEntitlement } from "@/lib/dal/entitlement";
 import { getLessonLive, findExerciseLive } from "@/lib/content/courses/live";
 import { getOwnResponse, getSharedFromPartner } from "@/lib/dal/responses";
@@ -25,7 +26,6 @@ import {
    The crisis screen itself is fixed UI content — never model output. */
 
 export const maxDuration = 60;
-export const preferredRegion = "lhr1";
 
 const CHAT_MODEL = "claude-sonnet-5";
 const SAFETY_MODEL = "claude-haiku-4-5";
@@ -150,6 +150,15 @@ export async function POST(request: NextRequest): Promise<Response> {
   const client = anthropic();
   if (!client) {
     return NextResponse.json({ kind: "unavailable" }, { status: 503 });
+  }
+
+  // Cost and abuse protection: a generous per-member ceiling.
+  const [burstOk, dailyOk] = await Promise.all([
+    rateLimit(LIMITS.chat, user.id),
+    rateLimit(LIMITS.chatDaily, user.id),
+  ]);
+  if (!burstOk || !dailyOk) {
+    return NextResponse.json({ kind: "rate_limited" }, { status: 429 });
   }
 
   let body: ChatRequest;

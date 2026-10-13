@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AuthCard from "@/components/auth/AuthCard";
+import { safeNext as safeRedirectPath } from "@/lib/safeRedirect";
 import LoginForm from "@/components/auth/LoginForm";
 import { SIGNUPS_OPEN } from "@/lib/launch";
 
@@ -14,8 +15,7 @@ export default async function LoginPage({
   searchParams: Promise<{ next?: string; error?: string }>;
 }) {
   const { next, error } = await searchParams;
-  const safeNext =
-    next && next.startsWith("/") && !next.startsWith("//") ? next : "/learn";
+  const safeNext = safeRedirectPath(next, "/learn");
 
   return (
     <AuthCard

@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { MAX, clean } from "@/lib/limits";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
 
@@ -14,7 +15,7 @@ export async function addPathNote(
   formData: FormData
 ): Promise<PathFormState> {
   const user = await requireUser("/learn/path");
-  const note = formData.get("note")?.toString().trim() ?? "";
+  const note = clean(formData.get("note"), MAX.reply);
   const courseId = formData.get("courseId")?.toString() || null;
   const lessonId = formData.get("lessonId")?.toString() || null;
 
@@ -46,7 +47,7 @@ export async function addPartnerBookmark(
 ): Promise<PathFormState> {
   const user = await requireUser("/learn/shared");
   const sourceResponseId = formData.get("sourceResponseId")?.toString() ?? "";
-  const note = formData.get("note")?.toString().trim() ?? "";
+  const note = clean(formData.get("note"), MAX.reply);
   const courseId = formData.get("courseId")?.toString() || null;
   const lessonId = formData.get("lessonId")?.toString() || null;
 

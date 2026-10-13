@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import AuthCard from "@/components/auth/AuthCard";
+import { safeNext as safeRedirectPath } from "@/lib/safeRedirect";
 import SignupForm from "@/components/auth/SignupForm";
 import { SIGNUPS_OPEN } from "@/lib/launch";
 
@@ -16,8 +17,7 @@ export default async function SignupPage({
   searchParams: Promise<{ next?: string }>;
 }) {
   const { next } = await searchParams;
-  const safeNext =
-    next && next.startsWith("/") && !next.startsWith("//") ? next : "/learn";
+  const safeNext = safeRedirectPath(next, "/learn");
 
   if (!SIGNUPS_OPEN) {
     return (

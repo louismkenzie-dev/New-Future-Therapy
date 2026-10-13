@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { MAX, clean } from "@/lib/limits";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
 import { findExerciseLive } from "@/lib/content/courses/live";
@@ -48,7 +49,7 @@ export async function saveJournalResponse(
   }
 
   const answers = block.prompts.map(
-    (_prompt, i) => formData.get(`answer-${i}`)?.toString() ?? ""
+    (_prompt, i) => clean(formData.get(`answer-${i}`), MAX.reflection)
   );
   if (answers.every((a) => a.trim() === "")) {
     return {
@@ -136,7 +137,7 @@ export async function saveCheckinResponse(
         data.scales![field.id] = value;
       }
     } else if (field.type === "text") {
-      const value = formData.get(`text-${field.id}`)?.toString().trim() ?? "";
+      const value = clean(formData.get(`text-${field.id}`), MAX.reflection);
       if (value) data.texts![field.id] = value;
     } else {
       const chosen = formData
@@ -174,7 +175,7 @@ export async function saveWorksheetResponse(
     ...(block.coupleSection?.fields ?? []),
   ];
   for (const field of textFields) {
-    const value = formData.get(`text-${field.id}`)?.toString().trim() ?? "";
+    const value = clean(formData.get(`text-${field.id}`), MAX.reflection);
     if (value) data.texts![field.id] = value;
   }
   for (const field of block.fields) {
@@ -226,7 +227,7 @@ export async function savePairedIndividual(
 
   const data: ResponseData = { texts: {}, scales: {} };
   for (const question of block.individual.questions) {
-    const text = formData.get(`text-${question.id}`)?.toString().trim() ?? "";
+    const text = clean(formData.get(`text-${question.id}`), MAX.reflection);
     if (text) data.texts![question.id] = text;
     if (question.scale) {
       const value = Number(formData.get(`scale-${question.id}`));
@@ -279,7 +280,7 @@ export async function savePairedTogether(
 
   const data: ResponseData = { texts: {} };
   for (const question of block.together.questions) {
-    const text = formData.get(`together-${question.id}`)?.toString().trim() ?? "";
+    const text = clean(formData.get(`together-${question.id}`), MAX.reflection);
     if (text) data.texts![question.id] = text;
   }
   if (Object.keys(data.texts!).length === 0) {

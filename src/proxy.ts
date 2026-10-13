@@ -26,6 +26,22 @@ function isProtectedPath(pathname: string): boolean {
    the DAL (src/lib/auth/session.ts). */
 
 export async function proxy(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  /* Team area: optimistic gate before any page work. Every admin page,
+     action and API route still verifies the signed session itself. */
+  if (pathname.startsWith("/admin")) {
+    const isLogin = pathname === "/admin/login";
+    const isApi = pathname.startsWith("/admin/api/");
+    if (!isLogin && !isApi && !request.cookies.get("nf_admin")) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -70,6 +86,7 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/admin/:path*",
     "/learn/:path*",
     "/account/:path*",
     "/courses/:path*",

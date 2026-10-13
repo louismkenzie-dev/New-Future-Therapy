@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { MAX, clean } from "@/lib/limits";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/auth/session";
 
@@ -21,7 +22,7 @@ export async function setReaction(
   const user = await requireUser("/learn/shared");
   const responseId = formData.get("responseId")?.toString() ?? "";
   const reactionType = formData.get("reactionType")?.toString() ?? "";
-  const replyText = formData.get("replyText")?.toString().trim() ?? "";
+  const replyText = clean(formData.get("replyText"), MAX.reply);
 
   if (!responseId || !VALID_TYPES.includes(reactionType)) {
     return {

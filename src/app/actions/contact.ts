@@ -2,6 +2,8 @@
 
 import { saveSubmission } from "@/lib/submissions";
 import { sendEnquiryAlert } from "@/lib/alerts";
+import { LIMITS, rateLimitByIp } from "@/lib/rateLimit";
+import { MAX, clean } from "@/lib/limits";
 
 export interface ContactFormState {
   status: "idle" | "success" | "error";
@@ -12,12 +14,27 @@ export async function submitContactForm(
   _prevState: ContactFormState,
   formData: FormData
 ): Promise<ContactFormState> {
-  const name = formData.get("name")?.toString().trim() ?? "";
-  const email = formData.get("email")?.toString().trim() ?? "";
-  const message = formData.get("message")?.toString().trim() ?? "";
-  const pronouns = formData.get("pronouns")?.toString().trim() ?? "";
-  const phone = formData.get("phone")?.toString().trim() ?? "";
-  const referral = formData.get("referral")?.toString().trim() ?? "";
+  // Honeypot: a hidden field real visitors never fill in.
+  if (clean(formData.get("website"), MAX.shortText)) {
+    return {
+      status: "success",
+      message: "Thank you for getting in touch. We will be in contact with you within two working days.",
+    };
+  }
+  if (!(await rateLimitByIp(LIMITS.contact))) {
+    return {
+      status: "error",
+      message:
+        "We have received several messages from you in a short time. Please wait a little while, or email us directly.",
+    };
+  }
+
+  const name = clean(formData.get("name"), MAX.name);
+  const email = clean(formData.get("email"), MAX.email);
+  const message = clean(formData.get("message"), MAX.message);
+  const pronouns = clean(formData.get("pronouns"), MAX.pronouns);
+  const phone = clean(formData.get("phone"), MAX.phone);
+  const referral = clean(formData.get("referral"), MAX.shortText);
   const consent = formData.get("consent")?.toString() ?? "";
 
   if (!name || !email || !message) {

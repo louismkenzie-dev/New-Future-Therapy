@@ -99,6 +99,11 @@ export default function ContactPage() {
               </motion.div>
             ) : (
               <form action={formAction} className="space-y-6">
+                {/* Spam trap: hidden from people and screen readers; bots fill it in. */}
+                <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+                  <label htmlFor="website">Leave this field empty</label>
+                  <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label htmlFor="name" className="block font-body text-xs text-muted uppercase tracking-widest mb-2">

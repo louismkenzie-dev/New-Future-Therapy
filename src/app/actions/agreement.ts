@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { requireUser } from "@/lib/auth/session";
 import { supabaseAdmin } from "@/lib/supabase";
 import { AGREEMENT_VERSION } from "@/lib/content/participationAgreement";
+import { safeNext as safeRedirect } from "@/lib/safeRedirect";
 
 export interface AgreementFormState {
   status: "idle" | "error";
@@ -20,8 +21,7 @@ export async function acceptAgreement(
   if (formData.get("agree") !== "yes") {
     return { status: "error", message: "Please tick the box to confirm you agree." };
   }
-  const next = formData.get("next")?.toString() ?? "/learn";
-  const safeNext = next.startsWith("/") && !next.startsWith("//") ? next : "/learn";
+  const safeNext = safeRedirect(formData.get("next")?.toString(), "/learn");
 
   const { error } = await supabaseAdmin()
     .from("profiles")

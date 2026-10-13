@@ -79,6 +79,10 @@ export default function ReflectionsPanel({
         if (payload.sessionId) sessionRef.current = payload.sessionId;
         if (payload.kind === "crisis") {
           setCrisis(true);
+        } else if (payload.kind === "rate_limited") {
+          setNotice(
+            "You have written a lot to Reflections in a short time. Please take a pause and come back a little later."
+          );
         } else if (payload.kind === "unavailable") {
           setNotice(
             "Reflections is not switched on yet. Your course and worksheets work as normal in the meantime."

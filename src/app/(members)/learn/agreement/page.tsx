@@ -8,6 +8,7 @@ import {
   AGREEMENT_UPDATED,
 } from "@/lib/content/participationAgreement";
 import AgreementForm from "@/components/agreement/AgreementForm";
+import { safeNext } from "@/lib/safeRedirect";
 
 export const dynamic = "force-dynamic";
 
@@ -99,7 +100,7 @@ export default async function AgreementPage({
                 Thank you — this is already recorded against your account.
               </p>
             ) : (
-              <AgreementForm next={next ?? "/learn"} name={user.profile.displayName} />
+              <AgreementForm next={safeNext(next, "/learn")} name={user.profile.displayName} />
             )}
           </div>
         </div>

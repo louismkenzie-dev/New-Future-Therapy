@@ -13,6 +13,17 @@ export async function GET(
   const resource = await getPublishedResource(slug);
   if (!resource?.fileUrl) return new Response("Not found", { status: 404 });
 
+  // Only ever proxy files from our own blob store.
+  let host = "";
+  try {
+    host = new URL(resource.fileUrl).hostname;
+  } catch {
+    /* falls through to 404 */
+  }
+  if (!host.endsWith(".blob.vercel-storage.com")) {
+    return new Response("Not found", { status: 404 });
+  }
+
   const file = await fetch(resource.fileUrl);
   if (!file.ok || !file.body) {
     return new Response("This resource is temporarily unavailable.", {
