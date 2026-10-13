@@ -75,7 +75,7 @@ $$;
 revoke execute on function public.rate_limit_hit(text, integer, integer) from public, anon, authenticated;
 grant execute on function public.rate_limit_hit(text, integer, integer) to service_role;
 
--- 5. pg_net (installed in public for a one-off test, unused by the app) is
---    still installed: dropping it over the API times out on its background
---    worker. Switch it off from the Supabase dashboard (Database ->
---    Extensions -> pg_net) to clear advisor 0014.
+-- 5. pg_net (installed in public for a one-off test, unused by the app) was
+--    switched off from the Supabase dashboard on 13 Oct 2026 (dropping it
+--    over the API timed out on its background worker). Leaked-password
+--    protection was enabled in Auth settings the same day.
