@@ -6,6 +6,7 @@ import { submitContactForm, type ContactFormState } from "@/app/actions/contact"
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
 import { CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
+import { REFERRAL_SOURCES } from "@/lib/referralSources";
 
 const initialState: ContactFormState = { status: "idle" };
 
@@ -170,11 +171,11 @@ export default function ContactPage() {
                     className="w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage transition-colors duration-200"
                   >
                     <option value="">Please select…</option>
-                    <option value="google">Google search</option>
-                    <option value="social">Social media</option>
-                    <option value="recommendation">Personal recommendation</option>
-                    <option value="directory">Therapy directory</option>
-                    <option value="other">Other</option>
+                    {REFERRAL_SOURCES.map((source) => (
+                      <option key={source.value} value={source.value}>
+                        {source.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 

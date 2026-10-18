@@ -14,6 +14,7 @@ import { isAdmin } from "@/lib/adminAuth";
 import { listSubmissions, type Submission } from "@/lib/submissions";
 import { logout, toggleContacted } from "@/app/actions/admin";
 import AdminTabs from "@/components/admin/AdminTabs";
+import { referralLabel } from "@/lib/referralSources";
 import DeleteEnquiryButton from "@/components/admin/DeleteEnquiryButton";
 
 export const dynamic = "force-dynamic";
@@ -28,14 +29,6 @@ function formatDate(iso: string): string {
     minute: "2-digit",
   });
 }
-
-const REFERRAL_LABELS: Record<string, string> = {
-  google: "Google search",
-  social: "Social media",
-  recommendation: "Personal recommendation",
-  directory: "Therapy directory",
-  other: "Other",
-};
 
 function SubmissionCard({ submission }: { submission: Submission }) {
   const contacted = submission.contacted;
@@ -66,7 +59,7 @@ function SubmissionCard({ submission }: { submission: Submission }) {
         <div className="flex items-center gap-3">
           {submission.referral && (
             <span className="font-body text-xs text-muted bg-cream px-3 py-1.5 rounded-full border border-grey-light">
-              via {REFERRAL_LABELS[submission.referral] ?? submission.referral}
+              via {referralLabel(submission.referral)}
             </span>
           )}
 

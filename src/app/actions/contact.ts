@@ -4,6 +4,7 @@ import { saveSubmission } from "@/lib/submissions";
 import { sendEnquiryAlert } from "@/lib/alerts";
 import { LIMITS, rateLimitByIp } from "@/lib/rateLimit";
 import { MAX, clean } from "@/lib/limits";
+import { isReferralSource } from "@/lib/referralSources";
 
 export interface ContactFormState {
   status: "idle" | "success" | "error";
@@ -34,7 +35,9 @@ export async function submitContactForm(
   const message = clean(formData.get("message"), MAX.message);
   const pronouns = clean(formData.get("pronouns"), MAX.pronouns);
   const phone = clean(formData.get("phone"), MAX.phone);
-  const referral = clean(formData.get("referral"), MAX.shortText);
+  const referralRaw = clean(formData.get("referral"), MAX.shortText);
+  // Only accept one of the listed options.
+  const referral = isReferralSource(referralRaw) ? referralRaw : "";
   const consent = formData.get("consent")?.toString() ?? "";
 
   if (!name || !email || !message) {
