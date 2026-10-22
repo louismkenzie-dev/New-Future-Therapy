@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { Clock } from "lucide-react";
+import Link from "next/link";
+import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
 import { isAdmin } from "@/lib/adminAuth";
 import { courses, moduleLabel } from "@/lib/content/courses";
 import { getLessonLive } from "@/lib/content/courses/live";
@@ -17,14 +18,21 @@ export const metadata: Metadata = {
 };
 
 /* The lesson exactly as a member sees it — same renderer, same stepper —
-   but nothing interactive is saved and drafts are included. */
+   but nothing interactive is saved and drafts are included. Opened full
+   page it carries a way back to the editor; embedded (?embed=1) in the
+   editor's phone frame it does not, since that link would load inside the
+   frame. */
 export default async function LessonPreviewPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ lessonId: string }>;
+  searchParams: Promise<{ embed?: string }>;
 }) {
   if (!(await isAdmin())) redirect("/admin/login");
   const { lessonId } = await params;
+  const embedded = (await searchParams).embed === "1";
+  const editorHref = `/admin/course/${lessonId}`;
   const entry = await getLessonLive(courses[0].id, lessonId, { includeDrafts: true });
   if (!entry) notFound();
   const { lesson, module, course } = entry;
@@ -33,9 +41,26 @@ export default async function LessonPreviewPage({
   return (
     <>
       <AppShell />
-      <div className="bg-charcoal text-cream/80 text-center font-body text-xs uppercase tracking-[0.25em] py-2 px-4">
-        Preview · exercises are shown but nothing is saved
-      </div>
+      {embedded ? (
+        <div className="bg-charcoal text-cream/80 text-center font-body text-xs uppercase tracking-[0.25em] py-2 px-4">
+          Preview · exercises are shown but nothing is saved
+        </div>
+      ) : (
+        <div className="bg-charcoal px-4 py-2">
+          <div className="max-w-3xl mx-auto flex flex-wrap items-center justify-between gap-x-6 gap-y-1">
+            <Link
+              href={editorHref}
+              className="inline-flex items-center gap-2 min-h-[44px] font-body text-sm text-sage-light hover:text-cream transition-colors duration-200"
+            >
+              <ArrowLeft size={16} />
+              Back to Editor
+            </Link>
+            <p className="font-body text-xs text-cream/70 uppercase tracking-[0.25em]">
+              Preview · nothing is saved
+            </p>
+          </div>
+        </div>
+      )}
       <section className="bg-sage-pale pt-8 pb-7 md:pt-12 md:pb-10 px-5 md:px-6">
         <div className="max-w-3xl mx-auto">
           <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3 md:mb-4">
@@ -79,6 +104,15 @@ export default async function LessonPreviewPage({
                 <p className="font-body text-sm text-muted">
                   Members see “Mark Lesson Complete” and the next lesson here.
                 </p>
+                {!embedded && (
+                  <Link
+                    href={editorHref}
+                    className="inline-flex items-center gap-2 min-h-[44px] mt-8 font-body text-sm bg-sage-dark text-cream px-8 py-3 rounded-full hover:bg-charcoal transition-colors duration-200"
+                  >
+                    Back to Editor
+                    <ArrowRight size={16} />
+                  </Link>
+                )}
               </div>
             }
           />

@@ -56,7 +56,6 @@ export default async function EditLessonPage({
           <div className="flex flex-wrap gap-3">
             <Link
               href={`/admin/course/preview/${lesson.id}`}
-              target="_blank"
               className="inline-flex items-center gap-2 min-h-[44px] font-body text-sm border border-grey-light text-charcoal px-6 py-3 rounded-full hover:border-sage-light hover:text-sage-dark transition-colors duration-200"
             >
               <Eye size={15} />
@@ -118,7 +117,7 @@ export default async function EditLessonPage({
             <div className="rounded-[28px] border-[6px] border-charcoal bg-charcoal shadow-xl overflow-hidden mx-auto" style={{ width: 400, maxWidth: "100%" }}>
               <iframe
                 key={lesson.updatedAt}
-                src={`/admin/course/preview/${lesson.id}`}
+                src={`/admin/course/preview/${lesson.id}?embed=1`}
                 title="Lesson preview"
                 className="block w-full bg-cream"
                 style={{ height: 760 }}
