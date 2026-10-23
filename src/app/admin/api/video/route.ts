@@ -45,10 +45,18 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ uploadId: upload.id, url: upload.url });
   } catch (err) {
     console.error("Mux upload ticket failed:", err);
-    return NextResponse.json(
-      { error: err instanceof Error ? err.message : "Could not start the upload" },
-      { status: 500 }
-    );
+    const message = err instanceof Error ? err.message : "";
+    if (/limited to \d+ assets/i.test(message)) {
+      return NextResponse.json(
+        {
+          error:
+            "The video library is full. Open the Video Library from the course page, delete any videos marked “Not used”, then try this upload again.",
+          libraryFull: true,
+        },
+        { status: 409 }
+      );
+    }
+    return NextResponse.json({ error: "Could not start the upload. Please try again." }, { status: 500 });
   }
 }
 

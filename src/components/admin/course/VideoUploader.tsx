@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import { CheckCircle2, FileVideo, Upload } from "lucide-react";
 import { FormError } from "@/components/auth/FormParts";
 import { secondaryButton } from "./formStyles";
@@ -20,15 +21,21 @@ export default function VideoUploader({
   const [percent, setPercent] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState("");
+  const [libraryFull, setLibraryFull] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFile(file: File) {
     setError(null);
+    setLibraryFull(false);
     setFileName(file.name);
     setPhase("starting");
     try {
       const ticket = await fetch("/admin/api/video", { method: "POST" });
-      if (!ticket.ok) throw new Error((await ticket.json()).error ?? "Could not start the upload.");
+      if (!ticket.ok) {
+        const body = (await ticket.json().catch(() => ({}))) as { error?: string; libraryFull?: boolean };
+        setLibraryFull(Boolean(body.libraryFull));
+        throw new Error(body.error ?? "Could not start the upload.");
+      }
       const { uploadId, url } = (await ticket.json()) as { uploadId: string; url: string };
 
       setPhase("uploading");
@@ -88,6 +95,11 @@ export default function VideoUploader({
             to the video service and can take a few minutes. Keep this page open.
           </p>
           {error && <FormError message={error} />}
+          {libraryFull && (
+            <Link href="/admin/course/videos" target="_blank" className={secondaryButton}>
+              Open the Video Library
+            </Link>
+          )}
         </div>
       ) : phase === "done" ? (
         <p className="inline-flex items-center gap-2 font-body text-sm text-sage-dark">

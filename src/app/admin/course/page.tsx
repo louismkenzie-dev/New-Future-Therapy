@@ -9,6 +9,7 @@ import {
   Lock,
   Sparkles,
   Clock,
+  Film,
 } from "lucide-react";
 import { isAdmin } from "@/lib/adminAuth";
 import { logout } from "@/app/actions/admin";
@@ -75,6 +76,13 @@ export default async function AdminCoursePage() {
             Add a Lesson From Your Files
           </Link>
           <ModuleForm nextNumber={nextNumber} />
+          <Link
+            href="/admin/course/videos"
+            className="inline-flex items-center gap-2 min-h-[44px] font-body text-sm border border-grey-light text-charcoal px-6 py-3 rounded-full hover:border-sage hover:text-sage-dark transition-colors duration-200"
+          >
+            <Film size={15} />
+            Video Library
+          </Link>
           <Link
             href={`/learn/${courseId}`}
             className="inline-flex items-center gap-2 min-h-[44px] font-body text-sm border border-grey-light text-muted px-6 py-3 rounded-full hover:border-sage hover:text-sage-dark transition-colors duration-200"
