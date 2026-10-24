@@ -14,12 +14,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/* Mux's free plan holds ten videos. */
-const FREE_PLAN_LIMIT = 10;
+/* The video account currently holds ten videos. */
+const VIDEO_LIMIT = 10;
 
 const RESULTS: Record<string, { ok: boolean; text: string }> = {
-  deleted: { ok: true, text: "Video deleted. That space is free for a new upload." },
-  "in-use": { ok: false, text: "That video is used in a lesson, so it was not deleted." },
+  deleted: {
+    ok: true,
+    text: "Video deleted. That space is free for a new upload. Any lesson that used it now shows “video coming soon” until you upload a replacement.",
+  },
   processing: { ok: false, text: "That video is still being prepared. Try again in a few minutes." },
   error: { ok: false, text: "The video could not be deleted. Please try again." },
 };
@@ -72,15 +74,16 @@ export default async function VideoLibraryPage({
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3">Course Editor</p>
         <h1 className="font-heading text-4xl md:text-5xl font-light text-charcoal mb-4">Video Library</h1>
         <p className="font-body text-base text-muted leading-relaxed max-w-2xl mb-8">
-          Every video stored with the video service, and the lesson each one appears in. The current
-          plan holds {FREE_PLAN_LIMIT} videos, and earlier attempts or replaced recordings count
-          towards that, so delete any marked “Not used” to make room for new uploads.
+          Every video stored with the video service, and the lesson each one appears in. The library
+          currently holds {VIDEO_LIMIT} videos, and earlier attempts or replaced recordings count
+          towards that. Delete anything marked “Not used” to make room, or delete a video that is
+          wrong and upload the right one in its lesson.
         </p>
 
         {!loadError && (
           <div className="flex flex-wrap gap-3 mb-8">
             <span className="inline-flex items-center min-h-[44px] font-body text-sm bg-white border border-grey-light rounded-full px-5">
-              {videos.length} of {FREE_PLAN_LIMIT} spaces used
+              {videos.length} of {VIDEO_LIMIT} spaces used
             </span>
             <span className="inline-flex items-center min-h-[44px] font-body text-sm bg-sage-pale border border-sage-light/50 text-sage-dark rounded-full px-5">
               {unused} not used in any lesson
@@ -136,8 +139,11 @@ export default async function VideoLibraryPage({
                     {video.status === "errored" && " · could not be processed"}
                   </p>
                 </div>
-                {video.usedIn.length === 0 && video.status !== "preparing" && (
-                  <DeleteVideoButton assetId={video.assetId} />
+                {video.status !== "preparing" && (
+                  <DeleteVideoButton
+                    assetId={video.assetId}
+                    usedIn={video.usedIn.map((u) => u.lessonTitle)}
+                  />
                 )}
               </li>
             ))}
