@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { createServerSupabase } from "@/lib/supabase/server";
 import { getUser } from "@/lib/auth/session";
 import { getLessonLive } from "@/lib/content/courses/live";
@@ -75,4 +76,37 @@ export async function markLessonCompleteFromPlayer(
 
   revalidatePath("/learn");
   revalidatePath(`/learn/${courseId}`);
+}
+
+/* The end-of-lesson primary action: mark complete and go straight on to
+   the next lesson (or the certificate after the last one). The destination
+   is worked out here, never taken from the form. */
+export async function completeAndContinue(formData: FormData): Promise<void> {
+  const courseId = formData.get("courseId")?.toString() ?? "";
+  const lessonId = formData.get("lessonId")?.toString() ?? "";
+
+  const user = await getUser();
+  const entry = await getLessonLive(courseId, lessonId);
+  if (!entry) redirect("/learn");
+  if (user) {
+    const supabase = await createServerSupabase();
+    await supabase.from("lesson_progress").upsert(
+      {
+        user_id: user.id,
+        course_id: courseId,
+        lesson_id: lessonId,
+        status: "completed",
+        completed_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id,course_id,lesson_id" }
+    );
+    revalidatePath("/learn");
+    revalidatePath(`/learn/${courseId}`);
+    revalidatePath(`/learn/${courseId}/${lessonId}`);
+  }
+  redirect(
+    entry.next
+      ? `/learn/${courseId}/${entry.next.lesson.id}`
+      : `/learn/${courseId}/certificate`
+  );
 }

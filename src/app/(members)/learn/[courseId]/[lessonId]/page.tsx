@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight, CheckCircle2, Clock } from "lucide-react";
+import { CheckCircle2, Clock } from "lucide-react";
+import LessonFinish from "@/components/course/LessonFinish";
 import LessonStepper, { type LessonStep } from "@/components/course/LessonStepper";
 import {
   Block,
@@ -20,7 +20,6 @@ import {
 } from "@/lib/dal/responses";
 import { getActivePartner } from "@/lib/dal/couples";
 import { getReactionsForResponses } from "@/lib/dal/reactions";
-import { setLessonComplete } from "@/app/actions/progress";
 
 export const dynamic = "force-dynamic";
 
@@ -153,88 +152,15 @@ export default async function LessonPage({
               })
             )}
             finish={
-              <div>
-                <div className="text-center mb-12">
-                  <span className="block w-8 h-0.5 bg-sage mx-auto mb-6" aria-hidden="true" />
-                  <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal leading-tight mb-4">
-                    {completed ? "Lesson Complete" : "You Have Reached the End of This Lesson"}
-                  </h2>
-                  <p className="font-body text-base text-muted leading-relaxed max-w-xl mx-auto">
-                    {completed
-                      ? "Well done. Everything you wrote is saved to your account — come back to it whenever you like."
-                      : "Take a breath. When you are ready, mark it complete and carry on — or come back another day. There is no pace to keep."}
-                  </p>
-                </div>
-
-                {interactive && (
-                  <form action={setLessonComplete} className="mb-10 text-center">
-                    <input type="hidden" name="courseId" value={courseId} />
-                    <input type="hidden" name="lessonId" value={lessonId} />
-                    <input
-                      type="hidden"
-                      name="completed"
-                      value={completed ? "false" : "true"}
-                    />
-                    <button
-                      type="submit"
-                      className={`inline-flex items-center gap-2 font-body text-sm px-8 py-4 rounded-full transition-colors duration-200 ${
-                        completed
-                          ? "border border-grey-light text-muted hover:border-sage-light hover:text-sage-dark"
-                          : "bg-sage-dark text-cream hover:bg-charcoal"
-                      }`}
-                    >
-                      <CheckCircle2 size={16} />
-                      {completed ? "Mark as Not Yet Finished" : "Mark Lesson Complete"}
-                    </button>
-                  </form>
-                )}
-
-                <div className="flex flex-col sm:flex-row justify-between gap-4">
-                  {prev ? (
-                    <Link
-                      href={`/learn/${courseId}/${prev.lesson.id}`}
-                      className="group flex-1 border border-grey-light rounded-2xl p-5 hover:border-sage-light transition-colors duration-200"
-                    >
-                      <span className="inline-flex items-center gap-1.5 font-body text-xs text-muted uppercase tracking-widest mb-2">
-                        <ArrowLeft size={13} />
-                        Previous
-                      </span>
-                      <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
-                        {prev.lesson.title}
-                      </span>
-                    </Link>
-                  ) : (
-                    <div className="flex-1" />
-                  )}
-                  {next ? (
-                    <Link
-                      href={`/learn/${courseId}/${next.lesson.id}`}
-                      className="group flex-1 border border-sage-light bg-sage-pale rounded-2xl p-5 text-right transition-colors duration-200"
-                    >
-                      <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-widest mb-2">
-                        Next
-                        <ArrowRight size={13} />
-                      </span>
-                      <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
-                        {next.lesson.title}
-                      </span>
-                    </Link>
-                  ) : (
-                    <Link
-                      href={`/learn/${courseId}/certificate`}
-                      className="group flex-1 border border-sage-light bg-sage-pale rounded-2xl p-5 text-right transition-colors duration-200"
-                    >
-                      <span className="inline-flex items-center gap-1.5 font-body text-xs text-sage-dark uppercase tracking-widest mb-2">
-                        Finish
-                        <ArrowRight size={13} />
-                      </span>
-                      <span className="block font-body text-sm text-charcoal group-hover:text-sage-dark transition-colors duration-200">
-                        Your Certificate
-                      </span>
-                    </Link>
-                  )}
-                </div>
-              </div>
+              <LessonFinish
+                courseId={courseId}
+                lessonId={lessonId}
+                module={module}
+                prev={prev}
+                next={next}
+                completed={completed}
+                interactive={interactive}
+              />
             }
           />
         </div>

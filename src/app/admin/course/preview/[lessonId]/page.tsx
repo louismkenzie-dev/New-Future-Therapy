@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "lucide-react";
+import LessonFinish from "@/components/course/LessonFinish";
 import { isAdmin } from "@/lib/adminAuth";
 import { courses, moduleLabel } from "@/lib/content/courses";
 import { getLessonLive } from "@/lib/content/courses/live";
@@ -35,7 +36,7 @@ export default async function LessonPreviewPage({
   const editorHref = `/admin/course/${lessonId}`;
   const entry = await getLessonLive(courses[0].id, lessonId, { includeDrafts: true });
   if (!entry) notFound();
-  const { lesson, module, course } = entry;
+  const { lesson, module, course, prev, next } = entry;
   const responses = new Map<string, ResponseRecord>();
 
   return (
@@ -98,22 +99,16 @@ export default async function LessonPreviewPage({
               })
             )}
             finish={
-              <div className="text-center py-8">
-                <span className="block w-8 h-0.5 bg-sage mx-auto mb-6" aria-hidden="true" />
-                <h2 className="font-heading text-3xl font-light text-charcoal mb-3">End of Preview</h2>
-                <p className="font-body text-sm text-muted">
-                  Members see “Mark Lesson Complete” and the next lesson here.
-                </p>
-                {!embedded && (
-                  <Link
-                    href={editorHref}
-                    className="inline-flex items-center gap-2 min-h-[44px] mt-8 font-body text-sm bg-sage-dark text-cream px-8 py-3 rounded-full hover:bg-charcoal transition-colors duration-200"
-                  >
-                    Back to Editor
-                    <ArrowRight size={16} />
-                  </Link>
-                )}
-              </div>
+              <LessonFinish
+                courseId={course.id}
+                lessonId={lesson.id}
+                module={module}
+                prev={prev}
+                next={next}
+                completed={false}
+                interactive={false}
+                preview={{ embedded }}
+              />
             }
           />
         </div>
