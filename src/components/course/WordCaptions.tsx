@@ -9,7 +9,11 @@ import type MuxPlayerElement from "@mux/mux-player";
    spoken — the timing is spread evenly across the cue, which tracks
    natural speech closely enough to feel live.
 
-   The native caption rendering is kept hidden so nothing doubles up. */
+   The native caption rendering is kept hidden so nothing doubles up.
+
+   Sized small and sat at the very bottom of the frame so they never cover
+   faces; they lift just clear of the control bar only while the controls
+   are showing (media-chrome's userinactivechange event). */
 
 interface Cue {
   start: number;
@@ -40,6 +44,15 @@ export default function WordCaptions({
   const [wordIndex, setWordIndex] = useState(-1);
   const [available, setAvailable] = useState(false);
   const trackRef = useRef<TextTrack | null>(null);
+  const [controlsShowing, setControlsShowing] = useState(true);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    const onChange = (e: Event) => setControlsShowing(!(e as CustomEvent<boolean>).detail);
+    player.addEventListener("userinactivechange", onChange);
+    return () => player.removeEventListener("userinactivechange", onChange);
+  }, [playerRef]);
 
   // Attach to the subtitle track once the player has loaded its manifest.
   useEffect(() => {
@@ -101,10 +114,12 @@ export default function WordCaptions({
 
   return (
     <div
-      className="pointer-events-none absolute inset-x-0 bottom-14 sm:bottom-16 flex justify-center px-4"
+      className={`pointer-events-none absolute inset-x-0 flex justify-center px-3 transition-[bottom] duration-300 ${
+        controlsShowing ? "bottom-11 sm:bottom-14" : "bottom-1.5 sm:bottom-3"
+      }`}
       aria-live="off"
     >
-      <p className="max-w-[92%] text-center font-body text-base sm:text-xl leading-snug text-cream/45 bg-charcoal/70 backdrop-blur-sm rounded-2xl px-4 py-2.5 text-balance">
+      <p className="max-w-[90%] text-center font-body text-[11px] sm:text-sm md:text-base leading-snug text-cream/45 bg-charcoal/65 rounded-lg sm:rounded-xl px-2 py-0.5 sm:px-3 sm:py-1.5 text-balance">
         {cue.words.map((word, i) => (
           <span
             key={`${cue.start}-${i}`}
