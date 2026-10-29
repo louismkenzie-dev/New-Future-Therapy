@@ -9,7 +9,12 @@ import type MuxPlayerElement from "@mux/mux-player";
    spoken — the timing is spread evenly across the cue, which tracks
    natural speech closely enough to feel live.
 
-   The native caption rendering is kept hidden so nothing doubles up.
+   The native caption rendering is kept hidden so nothing doubles up. On
+   desktop Chrome, Edge and Firefox the player streams through hls.js, and
+   Mux's playback core only loads a subtitle track's cues once that track
+   is set to "showing" — so the track is shown for a moment to select it,
+   then hidden. Full screen moves the picture outside this overlay, so
+   there the browser's own captions take over.
 
    Sized small and sat at the very bottom of the frame so they never cover
    faces; they lift just clear of the control bar only while the controls
@@ -45,6 +50,18 @@ export default function WordCaptions({
   const [available, setAvailable] = useState(false);
   const trackRef = useRef<TextTrack | null>(null);
   const [controlsShowing, setControlsShowing] = useState(true);
+  const [fullscreen, setFullscreen] = useState(false);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!player) return;
+    const onFullscreen = () => {
+      const el = document.fullscreenElement;
+      setFullscreen(Boolean(el && (el === player || el.contains(player))));
+    };
+    document.addEventListener("fullscreenchange", onFullscreen);
+    return () => document.removeEventListener("fullscreenchange", onFullscreen);
+  }, [playerRef]);
 
   useEffect(() => {
     const player = playerRef.current;
@@ -63,7 +80,6 @@ export default function WordCaptions({
       const track = pickTrack(player);
       if (!track || trackRef.current === track) return;
       trackRef.current = track;
-      track.mode = "hidden";
       setAvailable(true);
       const onCueChange = () => {
         const active = track.activeCues?.[0] as VTTCue | undefined;
@@ -87,11 +103,22 @@ export default function WordCaptions({
     };
   }, [playerRef]);
 
-  // Keep the native rendering off while ours is on.
+  // Off: no captions at all. Full screen: the browser draws them. Otherwise
+  // select the track (so its cues load) and keep the native drawing hidden.
   useEffect(() => {
     const track = trackRef.current;
-    if (track) track.mode = enabled ? "hidden" : "showing";
-  }, [enabled, available]);
+    if (!track) return;
+    if (!enabled) {
+      track.mode = "disabled";
+      return;
+    }
+    track.mode = "showing";
+    if (fullscreen) return;
+    const timer = window.setTimeout(() => {
+      track.mode = "hidden";
+    }, 0);
+    return () => window.clearTimeout(timer);
+  }, [enabled, available, fullscreen]);
 
   // Advance the highlighted word with the playhead.
   useEffect(() => {
@@ -110,7 +137,7 @@ export default function WordCaptions({
     return () => cancelAnimationFrame(raf);
   }, [cue, enabled, playerRef]);
 
-  if (!enabled || !cue) return null;
+  if (!enabled || !cue || fullscreen) return null;
 
   return (
     <div
