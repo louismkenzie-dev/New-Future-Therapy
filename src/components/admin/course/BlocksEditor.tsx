@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, Trash2 } from "lucide-react";
 import { saveLessonBlocks, type EditorFormState } from "@/app/actions/courseEditor";
 import { FormError, FormSuccess } from "@/components/auth/FormParts";
@@ -61,6 +61,33 @@ export default function BlocksEditor({
   const [jsonText, setJsonText] = useState(() => JSON.stringify(initialBlocks, null, 2));
   const [jsonError, setJsonError] = useState<string | null>(null);
   const [state, formAction, pending] = useActionState(saveLessonBlocks, initialState);
+  const [uploading, setUploading] = useState(0);
+
+  /* Leaving mid-upload would lose the video. */
+  useEffect(() => {
+    if (uploading === 0) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [uploading]);
+
+  /* A finished upload saves the lesson at once, so the video cannot be
+     lost by forgetting to press Save. Saving re-mounts this editor, so it
+     waits while any other upload is still running. */
+  const latest = useRef({ blocks, uploading, jsonMode });
+  latest.current = { blocks, uploading, jsonMode };
+  const attachVideo = (i: number, playbackId: string, durationSeconds: number) => {
+    const now = latest.current;
+    const next = now.blocks.map((b, j) =>
+      j === i ? ({ ...b, playbackId, durationSeconds } as LessonBlock) : b
+    );
+    setBlocks(next);
+    if (now.uploading > 1 || now.jsonMode) return;
+    const data = new FormData();
+    data.set("lessonId", lessonId);
+    data.set("blocks", JSON.stringify(next));
+    startTransition(() => formAction(data));
+  };
 
   const update = (i: number, patch: Record<string, unknown>) =>
     setBlocks((prev) => prev.map((b, j) => (j === i ? ({ ...b, ...patch } as LessonBlock) : b)));
@@ -148,15 +175,16 @@ export default function BlocksEditor({
                   </div>
                 </div>
 
-                {isOpen && (
-                  <div className="border-t border-grey-light px-5 py-5 space-y-4">
+                {/* Kept mounted while closed so an upload survives collapsing it. */}
+                <div hidden={!isOpen} className="border-t border-grey-light px-5 py-5 space-y-4">
                     {block.kind === "video" || block.kind === "audio" ? (
                       <>
                         <Field label="Title" value={String(b.title ?? "")} onChange={(v) => update(i, { title: v })} />
                         <VideoUploader
                           onReady={({ playbackId, durationSeconds }) =>
-                            update(i, { playbackId, durationSeconds })
+                            attachVideo(i, playbackId, durationSeconds)
                           }
+                          onBusyChange={(busy) => setUploading((n) => Math.max(0, n + (busy ? 1 : -1)))}
                         />
                         <Field
                           label="Playback ID"
@@ -194,8 +222,7 @@ export default function BlocksEditor({
                     ) : (
                       <JsonField block={block} onChange={(next) => setBlocks((prev) => prev.map((x, j) => (j === i ? next : x)))} />
                     )}
-                  </div>
-                )}
+                </div>
               </li>
             );
           })}
@@ -206,8 +233,8 @@ export default function BlocksEditor({
       {state.status === "success" && <FormSuccess message={state.message} />}
 
       <div className="flex flex-wrap items-center gap-3">
-        <button type="submit" disabled={pending} className={primaryButton}>
-          {pending ? "Saving…" : "Save Sections"}
+        <button type="submit" disabled={pending || uploading > 0} className={primaryButton}>
+          {pending ? "Saving…" : uploading > 0 ? "Waiting for the Video to Finish…" : "Save Sections"}
         </button>
         <button type="button" onClick={toggleJson} className={secondaryButton}>
           {jsonMode ? "Back to the Section List" : "Edit as JSON (advanced)"}

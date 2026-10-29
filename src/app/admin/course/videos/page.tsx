@@ -14,9 +14,6 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-/* The video account currently holds ten videos. */
-const VIDEO_LIMIT = 10;
-
 const RESULTS: Record<string, { ok: boolean; text: string }> = {
   deleted: {
     ok: true,
@@ -74,16 +71,15 @@ export default async function VideoLibraryPage({
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3">Course Editor</p>
         <h1 className="font-heading text-4xl md:text-5xl font-light text-charcoal mb-4">Video Library</h1>
         <p className="font-body text-base text-muted leading-relaxed max-w-2xl mb-8">
-          Every video stored with the video service, and the lesson each one appears in. The library
-          currently holds {VIDEO_LIMIT} videos, and earlier attempts or replaced recordings count
-          towards that. Delete anything marked “Not used” to make room, or delete a video that is
-          wrong and upload the right one in its lesson.
+          Every video stored with the video service, and the lesson each one appears in. Delete
+          anything marked “Not used” to keep the library tidy, or delete a video that is wrong and
+          upload the right one in its lesson.
         </p>
 
         {!loadError && (
           <div className="flex flex-wrap gap-3 mb-8">
             <span className="inline-flex items-center min-h-[44px] font-body text-sm bg-white border border-grey-light rounded-full px-5">
-              {videos.length} of {VIDEO_LIMIT} spaces used
+              {videos.length} {videos.length === 1 ? "video" : "videos"} stored
             </span>
             <span className="inline-flex items-center min-h-[44px] font-body text-sm bg-sage-pale border border-sage-light/50 text-sage-dark rounded-full px-5">
               {unused} not used in any lesson

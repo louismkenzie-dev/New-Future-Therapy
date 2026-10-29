@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2, FileVideo, Upload } from "lucide-react";
 import { FormError } from "@/components/auth/FormParts";
@@ -8,14 +8,18 @@ import { secondaryButton } from "./formStyles";
 
 /* Upload a recording straight from the browser to Mux. Reports progress,
    waits for Mux to finish processing, then hands back the Signed playback
-   ID and duration for the video section. */
+   ID and duration for the video section, which the editor saves straight
+   away. Tells the editor while it is busy so nothing re-mounts it (which
+   would abandon the upload) until it has finished. */
 
 type Phase = "idle" | "starting" | "uploading" | "processing" | "done" | "error";
 
 export default function VideoUploader({
   onReady,
+  onBusyChange,
 }: {
   onReady: (result: { playbackId: string; durationSeconds: number }) => void;
+  onBusyChange?: (busy: boolean) => void;
 }) {
   const [phase, setPhase] = useState<Phase>("idle");
   const [percent, setPercent] = useState(0);
@@ -23,6 +27,9 @@ export default function VideoUploader({
   const [fileName, setFileName] = useState("");
   const [libraryFull, setLibraryFull] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  /* An upload can run for minutes; always report to the latest handler. */
+  const readyRef = useRef(onReady);
+  readyRef.current = onReady;
 
   async function handleFile(file: File) {
     setError(null);
@@ -57,7 +64,7 @@ export default function VideoUploader({
         const data = (await res.json()) as { status: string; playbackId?: string | null; durationSeconds?: number };
         if (data.status === "errored") throw new Error("Mux could not process that file. Please check it plays on your computer and try again.");
         if (data.status === "ready" && data.playbackId) {
-          onReady({ playbackId: data.playbackId, durationSeconds: data.durationSeconds ?? 0 });
+          readyRef.current({ playbackId: data.playbackId, durationSeconds: data.durationSeconds ?? 0 });
           setPhase("done");
           return;
         }
@@ -70,6 +77,14 @@ export default function VideoUploader({
   }
 
   const busy = phase === "starting" || phase === "uploading" || phase === "processing";
+
+  const busyChange = useRef(onBusyChange);
+  busyChange.current = onBusyChange;
+  useEffect(() => {
+    if (!busy) return;
+    busyChange.current?.(true);
+    return () => busyChange.current?.(false);
+  }, [busy]);
 
   return (
     <div className="rounded-xl border border-dashed border-sage-light bg-sage-pale/50 p-5">
@@ -104,7 +119,7 @@ export default function VideoUploader({
       ) : phase === "done" ? (
         <p className="inline-flex items-center gap-2 font-body text-sm text-sage-dark">
           <CheckCircle2 size={16} />
-          {fileName} is ready — press <strong>Save Sections</strong> below to keep it.
+          {fileName} is ready and has been added to this lesson.
         </p>
       ) : (
         <div className="space-y-3">
@@ -120,7 +135,11 @@ export default function VideoUploader({
             {phase === "uploading" && `Uploading… ${percent}%`}
             {phase === "processing" && "Uploaded. The video service is now preparing it for playback — usually a minute or two."}
           </p>
-          {busy && <p className="font-body text-xs text-muted">Please keep this page open.</p>}
+          {busy && (
+            <p className="font-body text-xs text-muted">
+              Please keep this page open. The lesson saves automatically when the video is ready.
+            </p>
+          )}
         </div>
       )}
     </div>
