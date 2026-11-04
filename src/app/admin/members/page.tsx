@@ -5,6 +5,7 @@ import { isAdmin } from "@/lib/adminAuth";
 import { listMembers, type MemberListRow } from "@/lib/dal/adminMembers";
 import { logout } from "@/app/actions/admin";
 import AdminTabs from "@/components/admin/AdminTabs";
+import InviteMembersForm from "@/components/admin/InviteMembersForm";
 
 export const dynamic = "force-dynamic";
 
@@ -51,6 +52,10 @@ export default async function AdminMembersPage() {
         </div>
 
         <AdminTabs />
+
+        <div className="mb-10">
+          <InviteMembersForm />
+        </div>
 
         {members.length === 0 ? (
           <div className="bg-white rounded-2xl border border-grey-light p-16 text-center">

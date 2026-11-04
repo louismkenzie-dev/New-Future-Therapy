@@ -9,6 +9,7 @@ export const MEMBER_PREFIXES = [
   "/forgot-password",
   "/reset-password",
   "/invite",
+  "/welcome",
   "/auth",
   "/admin",
 ];
