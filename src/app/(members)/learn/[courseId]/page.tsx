@@ -44,7 +44,10 @@ export default async function CourseOverviewPage({
             ).length;
             return (
               <Reveal key={module.id} delay={Math.min(index * 0.05, 0.3)}>
-                <div className="bg-white rounded-2xl border border-grey-light shadow-sm overflow-hidden">
+                <div
+                  id={module.id}
+                  className="scroll-mt-28 bg-white rounded-2xl border border-grey-light shadow-sm overflow-hidden"
+                >
                   <div className="p-6 md:p-8 flex items-start gap-5">
                     <span
                       className={`font-heading font-light text-sage shrink-0 w-10 text-center ${

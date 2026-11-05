@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CheckCircle2, Clock } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock } from "lucide-react";
 import LessonFinish from "@/components/course/LessonFinish";
 import LessonStepper, { type LessonStep } from "@/components/course/LessonStepper";
 import {
@@ -103,8 +104,16 @@ export default async function LessonPage({
   return (
     <>
       {/* Lesson header */}
-      <section className="bg-sage-pale pt-8 pb-7 md:pt-12 md:pb-10 px-5 md:px-6">
+      <section className="bg-sage-pale pt-3 pb-7 md:pt-6 md:pb-10 px-5 md:px-6">
         <div className="max-w-3xl mx-auto">
+          {/* Back to the full module list, landing on this lesson's module. */}
+          <Link
+            href={`/learn/${courseId}#${module.id}`}
+            className="inline-flex items-center gap-2 min-h-[44px] -ml-1 mb-2 md:mb-4 px-1 font-body text-sm text-sage-dark hover:text-charcoal transition-colors duration-200"
+          >
+            <ArrowLeft size={16} />
+            All Modules
+          </Link>
           <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-3 md:mb-4">
             {moduleLabel(module)} · {module.title}
           </p>
