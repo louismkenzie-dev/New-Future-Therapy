@@ -127,6 +127,7 @@ export async function sendEnquiryAlert(enquirerName: string): Promise<void> {
   try {
     const response = await fetch("https://api.resend.com/emails", {
       method: "POST",
+      signal: AbortSignal.timeout(10_000),
       headers: {
         Authorization: `Bearer ${config.apiKey}`,
         "Content-Type": "application/json",

@@ -38,7 +38,7 @@ export default function LogoDiagrams() {
   const img = (variant: VariantKey, style: React.CSSProperties) =>
     ready ? (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={renderDataURL(variant, "sage", 1600)} alt="" className="block object-contain" style={style} />
+      <img src={renderDataURL(variant, "sage", 1600)} alt="" loading="lazy" decoding="async" className="block object-contain" style={style} />
     ) : null;
 
   const minItems: { variant: VariantKey; style: React.CSSProperties; label: React.ReactNode }[] = [

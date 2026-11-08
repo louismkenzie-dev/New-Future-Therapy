@@ -114,7 +114,8 @@ function client(): Anthropic {
   if (!process.env.ANTHROPIC_API_KEY) {
     throw new Error("The formatter is not configured (ANTHROPIC_API_KEY is missing).");
   }
-  return new Anthropic();
+  // Formatting a long lesson can take minutes; stay inside the 300-second route limit.
+  return new Anthropic({ timeout: 270_000, maxRetries: 1 });
 }
 
 async function callFormatter(userMessage: string): Promise<LessonDraft> {

@@ -130,16 +130,21 @@ export default function IntroScreen() {
     timersRef.current = [];
   };
 
-  /* Preload the quiet singing-bowl chime played when Explore is pressed. */
-  useEffect(() => {
+  /* The quiet singing-bowl chime played when Explore is pressed. It is
+     fetched only when the full intro is actually shown, not on every page. */
+  const prepareChime = () => {
+    if (audioRef.current) return;
     const a = new Audio("/audio/uichime.mp3");
     a.preload = "auto";
     a.volume = CHIME_VOLUME;
     audioRef.current = a;
-    return () => {
+  };
+  useEffect(
+    () => () => {
       if (fadeRef.current) clearInterval(fadeRef.current);
-    };
-  }, []);
+    },
+    []
+  );
 
   /* Dismiss the first-entry intro: play the chime, then lift the curtain. */
   const handleExplore = () => {
@@ -193,6 +198,7 @@ export default function IntroScreen() {
       // Storage blocked — play it; it is only the once per load anyway.
     }
 
+    prepareChime();
     setVariant("full");
     setLeaving(false);
     setReady(false);

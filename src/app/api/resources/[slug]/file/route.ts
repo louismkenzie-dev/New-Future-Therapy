@@ -24,7 +24,7 @@ export async function GET(
     return new Response("Not found", { status: 404 });
   }
 
-  const file = await fetch(resource.fileUrl);
+  const file = await fetch(resource.fileUrl, { signal: AbortSignal.timeout(20_000) });
   if (!file.ok || !file.body) {
     return new Response("This resource is temporarily unavailable.", {
       status: 404,

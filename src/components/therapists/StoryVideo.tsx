@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
-import MuxPlayer from "@mux/mux-player-react";
+import dynamic from "next/dynamic";
 import { Play, X } from "lucide-react";
 import type { TherapistStory } from "@/lib/content/therapists";
 import { useAnalyticsConsent } from "@/lib/consent";
@@ -23,6 +23,15 @@ const VEINS = [
   { x1: 90, y1: 100, x2: 125, y2: 70, w: 2.5 },
 ];
 const INTRO_MS = 2200;
+
+/* The Mux player is about 300 KB compressed, so it loads only when a story
+   is opened (and starts downloading when the pointer or a finger reaches
+   the play button), never with the page. The leaf intro covers the wait. */
+const loadPlayer = () => import("@mux/mux-player-react");
+const MuxPlayer = dynamic(loadPlayer, { ssr: false });
+const warmPlayer = () => {
+  void loadPlayer();
+};
 
 /* The leaf, drawing itself in — sage-light on dark, matching the site intro. */
 function LeafDraw() {
@@ -107,6 +116,9 @@ export default function StoryVideo({
       <button
         type="button"
         onClick={() => setOpen(true)}
+        onPointerEnter={warmPlayer}
+        onFocus={warmPlayer}
+        onTouchStart={warmPlayer}
         className={`inline-flex items-center gap-2 font-body text-sm bg-sage-dark text-cream px-6 py-3 rounded-full hover:bg-charcoal transition-colors duration-200 ${className}`}
       >
         <Play size={15} className="fill-current" />
@@ -116,6 +128,9 @@ export default function StoryVideo({
       <button
         type="button"
         onClick={() => setOpen(true)}
+        onPointerEnter={warmPlayer}
+        onFocus={warmPlayer}
+        onTouchStart={warmPlayer}
         aria-label={`Watch ${name}'s story`}
         className={`group/play inline-flex items-center justify-center ${className}`}
       >

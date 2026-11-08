@@ -16,6 +16,7 @@ function mux(): Mux {
         process.env.MUX_SIGNING_KEY_ID ?? process.env.MUX_SIGNING_KEY,
       jwtPrivateKey:
         process.env.MUX_SIGNING_KEY_PRIVATE_KEY ?? process.env.MUX_PRIVATE_KEY,
+      timeout: 20_000,
     });
   }
   return singleton;

@@ -50,6 +50,12 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   // Never ship readable source to browsers.
   productionBrowserSourceMaps: false,
+  images: {
+    // AVIF first (smallest), WebP for browsers without it.
+    formats: ["image/avif", "image/webp"],
+    // Optimised photos are reused for a week before being re-generated.
+    minimumCacheTTL: 604800,
+  },
   experimental: {
     serverActions: {
       /* Course-editor uploads (Word documents and PDFs) travel through a
@@ -62,8 +68,16 @@ const nextConfig: NextConfig = {
       { source: "/:path*", headers: securityHeaders },
       // Member, account and admin pages hold personal data: never cache them.
       {
-        source: "/(learn|account|admin|invite)/:path*",
+        source: "/(learn|account|admin|invite|welcome)/:path*",
         headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+      // Photos and audio in public/ rarely change: let browsers keep them a
+      // week and refresh quietly in the background for a month after.
+      {
+        source: "/(photos|audio)/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=604800, stale-while-revalidate=2592000" },
+        ],
       },
     ];
   },

@@ -43,7 +43,8 @@ export default async function LessonPage({
   params: Promise<{ courseId: string; lessonId: string }>;
 }) {
   const { courseId, lessonId } = await params;
-  const entry = await getLessonLive(courseId, lessonId);
+  // Start the (cached) session lookup alongside the lesson load.
+  const [entry] = await Promise.all([getLessonLive(courseId, lessonId), getUser()]);
   if (!entry) notFound();
   const { lesson, module, course, prev, next } = entry;
   const path = `/learn/${courseId}/${lessonId}`;

@@ -28,13 +28,13 @@ export default function LogoMisuse() {
   const primary = (style?: CSSProperties) =>
     src ? (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={src.primary} alt="" className="block h-[62px] w-auto object-contain" style={style} />
+      <img src={src.primary} alt="" loading="lazy" decoding="async" className="block h-[62px] w-auto object-contain" style={style} />
     ) : null;
 
   const leaf = (h: number) =>
     src ? (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={src.leaf} alt="" className="block w-auto object-contain" style={{ height: h }} />
+      <img src={src.leaf} alt="" loading="lazy" decoding="async" className="block w-auto object-contain" style={{ height: h }} />
     ) : null;
 
   const items: { cap: ReactNode; demo: ReactNode; bg?: string }[] = [

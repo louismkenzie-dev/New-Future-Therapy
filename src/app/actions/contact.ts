@@ -1,6 +1,7 @@
 "use server";
 
 import { saveSubmission } from "@/lib/submissions";
+import { after } from "next/server";
 import { sendEnquiryAlert } from "@/lib/alerts";
 import { LIMITS, rateLimitByIp } from "@/lib/rateLimit";
 import { MAX, clean } from "@/lib/limits";
@@ -61,8 +62,9 @@ export async function submitContactForm(
 
   try {
     await saveSubmission({ name, email, phone, pronouns, referral, message });
-    // Alert the team; never let a notification failure break the enquiry.
-    await sendEnquiryAlert(name);
+    // Alert the team once the visitor has their confirmation; a slow or
+    // failed notification must never hold up or break the enquiry.
+    after(() => sendEnquiryAlert(name).catch((err) => console.error("Enquiry alert failed:", err)));
   } catch (error) {
     console.error("Failed to store contact submission:", error);
     return {

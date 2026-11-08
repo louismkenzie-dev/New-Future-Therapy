@@ -63,6 +63,8 @@ function LogoCard({
             src={src}
             alt={`NewFuture Therapy ${variant.name}, ${colourway.label} colourway`}
             className={`w-full object-contain ${feature ? "h-[232px]" : "h-[190px]"}`}
+            loading="lazy"
+            decoding="async"
           />
         )}
       </div>

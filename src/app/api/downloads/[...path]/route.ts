@@ -54,7 +54,7 @@ export async function GET(
 
   try {
     const blob = await head(blobPath);
-    const file = await fetch(blob.url);
+    const file = await fetch(blob.url, { signal: AbortSignal.timeout(20_000) });
     if (!file.ok || !file.body) throw new Error(`Blob fetch ${file.status}`);
 
     const filename = blobPath.split("/").pop() ?? "download.pdf";

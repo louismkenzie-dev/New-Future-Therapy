@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import dynamic from "next/dynamic";
+import Hero3D from "@/components/Hero3DLazy";
+import { riseStyle } from "@/lib/rise";
 import { motion, AnimatePresence, useScroll, useTransform } from "motion/react";
 import {
   ArrowRight,
@@ -21,7 +22,6 @@ import Reveal, { StaggerGroup, StaggerItem } from "@/components/motion/Reveal";
 import StoryVideo from "@/components/therapists/StoryVideo";
 import { therapistStories } from "@/lib/content/therapists";
 
-const Hero3D = dynamic(() => import("@/components/Hero3D"), { ssr: false });
 
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
@@ -430,40 +430,32 @@ export default function AboutExperience() {
           className="relative z-10 max-w-3xl mx-auto px-6 text-center"
           style={{ y: heroY, opacity: heroOpacity }}
         >
-          <motion.p
-            className="font-body text-xs sm:text-sm text-sage-dark uppercase tracking-[0.3em] mb-6"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: EASE_OUT }}
+          {/* CSS entrances (.nf-rise / .nf-word) so the hero shows at first paint. */}
+          <p
+            className="nf-rise font-body text-xs sm:text-sm text-sage-dark uppercase tracking-[0.3em] mb-6"
+            style={riseStyle(0.1, 16, 0.8)}
           >
             Our Story
-          </motion.p>
+          </p>
 
           <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl font-light text-charcoal leading-tight mb-8">
             {HEADLINE.map((word, i) => (
               <span key={i} className="inline-block overflow-hidden align-bottom">
-                <motion.span
-                  className="inline-block"
-                  initial={{ y: "110%", filter: "blur(6px)" }}
-                  animate={{ y: 0, filter: "blur(0px)" }}
-                  transition={{ duration: 0.9, delay: 0.2 + i * 0.08, ease: EASE_OUT }}
-                >
+                <span className="nf-word inline-block" style={riseStyle(0.2 + i * 0.08)}>
                   {word}
                   {i < HEADLINE.length - 1 && " "}
-                </motion.span>
+                </span>
               </span>
             ))}
           </h1>
 
-          <motion.p
-            className="font-body text-base md:text-lg text-muted leading-relaxed max-w-md mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.9, ease: EASE_OUT }}
+          <p
+            className="nf-rise font-body text-base md:text-lg text-muted leading-relaxed max-w-md mx-auto"
+            style={riseStyle(0.9)}
           >
             Identical twins. Two careers. One purpose. Scroll to walk the path
             with us.
-          </motion.p>
+          </p>
         </motion.div>
 
         {/* Scroll cue */}

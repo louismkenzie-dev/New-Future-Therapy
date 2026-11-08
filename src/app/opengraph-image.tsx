@@ -36,10 +36,10 @@ async function loadFont(
     const url = `https://fonts.googleapis.com/css2?family=${family}:wght@${weight}&text=${encodeURIComponent(
       text
     )}`;
-    const css = await (await fetch(url)).text();
+    const css = await (await fetch(url, { signal: AbortSignal.timeout(5_000) })).text();
     const src = css.match(/src: url\((.+?)\) format\('(opentype|truetype)'\)/);
     if (!src) return null;
-    return await (await fetch(src[1])).arrayBuffer();
+    return await (await fetch(src[1], { signal: AbortSignal.timeout(5_000) })).arrayBuffer();
   } catch {
     return null;
   }

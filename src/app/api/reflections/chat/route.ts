@@ -41,7 +41,8 @@ interface ChatRequest {
 
 function anthropic(): Anthropic | null {
   if (!process.env.ANTHROPIC_API_KEY) return null;
-  return new Anthropic();
+  // Inside the route's 60-second limit, with one retry at most.
+  return new Anthropic({ timeout: 50_000, maxRetries: 1 });
 }
 
 /* Three-way tier on the raw inbound message only, so the classification can

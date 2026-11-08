@@ -132,3 +132,32 @@ html.member-app main {
     background: #fff;
   }
 }
+
+/* Above-the-fold entrances (Home hero). Pure CSS so they begin at first
+   paint instead of waiting for JavaScript — the same "slow exhale" fade and
+   rise as the motion reveals: 0.9s, ease [0.22, 1, 0.36, 1]. Values come
+   from per-element custom properties. */
+@keyframes nf-rise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise-y, 20px)) scale(var(--rise-scale, 1));
+  }
+}
+@keyframes nf-word {
+  from {
+    transform: translateY(110%);
+    filter: blur(6px);
+  }
+}
+.nf-rise {
+  animation: nf-rise var(--rise-dur, 0.9s) cubic-bezier(0.22, 1, 0.36, 1) var(--rise-delay, 0s) backwards;
+}
+.nf-word {
+  animation: nf-word var(--rise-dur, 0.9s) cubic-bezier(0.22, 1, 0.36, 1) var(--rise-delay, 0s) backwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nf-rise,
+  .nf-word {
+    animation: none !important;
+  }
+}

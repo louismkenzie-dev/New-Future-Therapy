@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -130,6 +130,8 @@ export default function ResourceLibrary({
   resources: LibraryResource[];
 }) {
   const [query, setQuery] = useState("");
+  // Typing stays instant; the list catches up a beat behind.
+  const deferredQuery = useDeferredValue(query);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const namesById = useMemo(
@@ -143,7 +145,7 @@ export default function ResourceLibrary({
   );
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = deferredQuery.trim().toLowerCase();
     return resources.filter((resource) => {
       if (activeCategory && !resource.categoryIds.includes(activeCategory)) {
         return false;
@@ -159,7 +161,7 @@ export default function ResourceLibrary({
         .toLowerCase();
       return q.split(/\s+/).every((word) => haystack.includes(word));
     });
-  }, [resources, query, activeCategory, namesById]);
+  }, [resources, deferredQuery, activeCategory, namesById]);
 
   const browsing = query.trim() === "" && activeCategory === null;
   const newest = resources.slice(0, NEWEST_COUNT);

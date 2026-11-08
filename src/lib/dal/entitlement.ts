@@ -103,15 +103,16 @@ export async function requireEntitlement(
   next?: string
 ): Promise<{ user: SessionUser; entitlement: Entitlement }> {
   const user = await requireUser(next);
-  const entitlement = await getEntitlement(
-    user.id,
-    user.profile.complimentaryAccess
-  );
+  // Independent lookups: run them together rather than one after another.
+  const [entitlement, agreed] = await Promise.all([
+    getEntitlement(user.id, user.profile.complimentaryAccess),
+    hasAcceptedAgreement(user.id),
+  ]);
   if (!entitlement.active) {
     redirect(`/courses/${courses[0].id}#pricing`);
   }
   // Every member accepts the Couples Participation Agreement before entering.
-  if (!(await hasAcceptedAgreement(user.id))) {
+  if (!agreed) {
     redirect(`/learn/agreement${next ? `?next=${encodeURIComponent(next)}` : ""}`);
   }
   return { user, entitlement };

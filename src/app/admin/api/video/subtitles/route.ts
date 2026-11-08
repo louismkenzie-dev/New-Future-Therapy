@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   }
 
   try {
-    const mux = new Mux({ tokenId: process.env.MUX_TOKEN_ID, tokenSecret: process.env.MUX_TOKEN_SECRET });
+    const mux = new Mux({ tokenId: process.env.MUX_TOKEN_ID, tokenSecret: process.env.MUX_TOKEN_SECRET, timeout: 20_000 });
     const lookup = await mux.video.playbackIds.retrieve(playbackId);
     const asset = await mux.video.assets.retrieve(lookup.object.id);
     const tracks = asset.tracks ?? [];

@@ -19,6 +19,7 @@ export function muxClient(): Mux {
   return new Mux({
     tokenId: process.env.MUX_TOKEN_ID,
     tokenSecret: process.env.MUX_TOKEN_SECRET,
+    timeout: 20_000,
   });
 }
 
