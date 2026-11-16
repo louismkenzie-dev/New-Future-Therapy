@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FileDown } from "lucide-react";
 import LessonVideoPlayer from "@/components/course/LessonVideoPlayer";
+import { videoPosterFor } from "@/lib/content/courses/thumbnails";
 import JournalExercise, {
   type ReceivedReaction,
 } from "@/components/course/exercises/JournalExercise";
@@ -112,6 +113,7 @@ export async function Block({
             startTime={block.kind === "video" ? startTime : undefined}
             canTrack={interactive && block.kind === "video"}
             audioOnly={block.kind === "audio"}
+            poster={block.kind === "video" ? videoPosterFor(lessonId) : undefined}
           />
         </div>
       );

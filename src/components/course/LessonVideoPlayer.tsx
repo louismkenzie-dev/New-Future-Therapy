@@ -24,6 +24,8 @@ interface LessonVideoPlayerProps {
   /** Only signed-in members get their position saved. */
   canTrack: boolean;
   audioOnly?: boolean;
+  /** Branded thumbnail shown before playback; Mux's own still otherwise. */
+  poster?: string;
 }
 
 export default function LessonVideoPlayer({
@@ -35,6 +37,7 @@ export default function LessonVideoPlayer({
   startTime,
   canTrack,
   audioOnly = false,
+  poster,
 }: LessonVideoPlayerProps) {
   const lastSavedRef = useRef(0);
   const playerRef = useRef<MuxPlayerElement | null>(null);
@@ -71,6 +74,7 @@ export default function LessonVideoPlayer({
         tokens={tokens}
         streamType="on-demand"
         audio={audioOnly}
+        poster={audioOnly ? undefined : poster}
         startTime={startTime && startTime > 5 ? startTime : undefined}
         accentColor="#6B8C6F"
         envKey={analyticsAllowed ? process.env.NEXT_PUBLIC_MUX_DATA_ENV_KEY : undefined}
