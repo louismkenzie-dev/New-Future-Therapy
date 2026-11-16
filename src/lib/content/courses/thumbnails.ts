@@ -21,3 +21,8 @@ export function videoPosterFor(lessonId: string): string | undefined {
   if (!LESSONS_WITH_THUMBNAILS.has(lessonId)) return undefined;
   return `/_next/image?url=${encodeURIComponent(`/thumbnails/${lessonId}.jpg`)}&w=1920&q=75`;
 }
+
+/** The original JPG, for next/image to size (e.g. the lesson rows). */
+export function lessonThumbnailSrc(lessonId: string): string | undefined {
+  return LESSONS_WITH_THUMBNAILS.has(lessonId) ? `/thumbnails/${lessonId}.jpg` : undefined;
+}
