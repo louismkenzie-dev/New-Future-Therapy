@@ -104,19 +104,20 @@ export default function Footer() {
             Cookie Policy
           </Link>
           <CookieSettingsLink className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200" />
-        </div>
-
-        <p className="font-body text-xs text-cream/30 text-center mt-8">
-          Developed by{" "}
           <a
             href="https://nullshift.co.uk"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-cream/50 hover:text-sage-light transition-colors duration-200"
+            className="inline-flex items-center gap-1 pointer-coarse:min-h-11 font-body text-xs text-cream/40 underline-offset-2 hover:text-sage-light hover:underline focus-visible:underline transition-colors duration-200"
           >
+            Website by
+            <svg width="11" height="14" viewBox="0 0 44 56" fill="currentColor" aria-hidden="true">
+              <rect x="2" y="0" width="17" height="52" rx="4.5" />
+              <rect x="25" y="6" width="17" height="50" rx="4.5" />
+            </svg>
             Nullshift
           </a>
-        </p>
+        </div>
       </div>
     </footer>
   );
