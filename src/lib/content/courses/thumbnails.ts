@@ -5,6 +5,7 @@
  */
 const LESSONS_WITH_THUMBNAILS = new Set([
   "welcome-to-the-programme",
+  "our-ground-rules",
   "in-the-beginning",
   "building-our-relationship",
   "looking-at-us-today",
