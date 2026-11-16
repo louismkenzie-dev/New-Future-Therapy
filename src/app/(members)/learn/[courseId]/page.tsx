@@ -41,6 +41,7 @@ export default async function CourseOverviewPage({
               <ModuleCard
                 module={module}
                 courseId={course.id}
+                lessonThumbnails
                 statusOf={(id) => {
                   const entry = progress.get(id);
                   if (!entry) return undefined;
