@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase";
 import { syncSubscriptionFromStripe } from "@/lib/dal/subscriptions";
+import { sendPurchaseConfirmation } from "@/lib/emails/purchaseConfirmation";
 
 /* Stripe webhook — the billing source of truth. Signature-verified, and
    idempotent via the stripe_events table (event id is the primary key). */
@@ -49,6 +50,9 @@ export async function POST(request: Request): Promise<Response> {
               : session.subscription.id;
           const sub = await stripe().subscriptions.retrieve(subId);
           await syncSubscriptionFromStripe(sub);
+          // Welcome + the written record of the 14-day waiver. Best-effort:
+          // it never throws, so a mail outage cannot trigger a resend loop.
+          await sendPurchaseConfirmation(session);
         }
         break;
       }

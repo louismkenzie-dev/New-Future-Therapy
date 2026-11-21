@@ -116,7 +116,8 @@ export default function RefundPolicyPage() {
             </p>
             <p>
               We keep a record of your confirmation, and the date of this
-              policy, with your purchase.
+              policy, with your purchase, and we repeat it in the order
+              confirmation email we send you.
             </p>
           </Section>
 
