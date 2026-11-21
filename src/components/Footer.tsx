@@ -98,6 +98,12 @@ export default function Footer() {
             Terms &amp; Conditions
           </Link>
           <Link
+            href="/refund-policy"
+            className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200"
+          >
+            Refund Policy
+          </Link>
+          <Link
             href="/cookie-policy"
             className="font-body text-xs text-cream/40 hover:text-sage-light transition-colors duration-200"
           >
