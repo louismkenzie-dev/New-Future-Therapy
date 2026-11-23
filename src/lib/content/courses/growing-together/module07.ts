@@ -1,197 +1,169 @@
 import type { CourseModule } from "../types";
 
+/* Module 7 — Bringing It All Together, the final module of the programme.
+   One part: Laura and Esther's closing video, then the summary broken into
+   small screens, then a closing reflection that looks back across the
+   whole programme. Copy is the therapists' own: Esther's "Final Module
+   Written Version" (Drive folder "Module 7 Final") is the primary wording,
+   with the "Final Module Script" used for the video length and speaker
+   attribution. The documents carry no separate activity, so the closing
+   reflection's prompts are drawn directly from the summary's own wording.
+   Lightly edited to house style: British English, no contractions, "your
+   partner" throughout. The site shows the certificate after this lesson. */
+
 export const module07: CourseModule = {
-  id: "intimacy-and-connection",
+  id: "bringing-it-all-together",
   number: 7,
-  title: "Intimacy and Connection",
-  lede: "Intimacy is more than one thing — emotional, physical, intellectual, everyday. This module explores all of them, at whatever pace feels right.",
-  essence: "Closeness is built from being truly seen — and staying.",
+  title: "Bringing It All Together",
+  lede: "Throughout this programme, we have explored lots of different aspects of your relationship, hopefully helping you develop a deeper understanding of yourselves, each other and the patterns that shape how you connect.",
+  essence: "Building a healthy, fulfilling relationship is something you continue to create together.",
   lessons: [
     {
-      id: "forms-of-intimacy",
-      title: "The Many Forms of Intimacy",
+      id: "final-part-1",
+      title: "Final Module Summary: Your Relationship Journey",
       summary:
-        "Emotional, physical, intellectual, playful, everyday — mapping the kinds of closeness that make up a connected life.",
+        "A look back at everything the programme has explored, from your relationship journey to privacy and secrecy, and what we hope you will take with you. Then a closing reflection, on your own and together.",
       estimatedMinutes: 20,
       blocks: [
         {
           kind: "video",
-          title: "More than one kind of close",
+          title: "Bringing It All Together — Final Module Summary",
           playbackId: "",
-          durationSeconds: 480,
+          durationSeconds: 230,
         },
         {
           kind: "prose",
-          body: `Ask people about intimacy and most will think first of sex. But intimacy is a much wider country. There is emotional intimacy — being known, including the unflattering parts, and staying. Intellectual intimacy — minds that enjoy meeting. Playful intimacy — private jokes, shared silliness, the lightness that keeps love breathable. Physical intimacy in all its forms, sexual and not: the hand on the back, the head on the shoulder. And everyday intimacy — the unglamorous closeness of parallel lives, cooking while the other reads, comfortable silence in the same room.
+          heading: "Bringing It All Together",
+          body: `Throughout this programme, we have explored lots of different aspects of your relationship, hopefully helping you develop a deeper understanding of yourselves, each other and the patterns that shape how you connect.
 
-Relationships rarely lack intimacy entirely; more often they are strong in some forms and thin in others — plenty of everyday closeness, say, but little real emotional disclosure. Mapping which is which turns a vague ache of distance into something specific you can actually tend.`,
+So, let us remind ourselves of some of the things we have covered.`,
         },
         {
-          kind: "checkin",
-          exerciseId: "intimacy-map",
-          title: "Your Intimacy Map",
+          kind: "flow",
+          heading: "Your Relationship Journey Through the Programme",
+          steps: [
+            {
+              icon: "route",
+              title: "Your Relationship Journey",
+              body: "Reflecting on how your relationship began, the experiences that have shaped you and where you find yourselves today.",
+            },
+            {
+              icon: "activity",
+              title: "Your Nervous Systems",
+              body: "Understanding how they respond to stress, recognise safety and influence the way you interact with each other.",
+            },
+            {
+              icon: "anchor",
+              title: "Attachment",
+              body: "Exploring how your early experiences and attachment strategies can influence your needs for closeness, reassurance and independence.",
+            },
+            {
+              icon: "messages-square",
+              title: "Communication",
+              body: "Recognising unhelpful communication habits, learning to listen with curiosity, express your needs and repair after disagreements. And the cycles you can become caught in during conflict, and how you can learn to work together against the pattern, rather than against each other.",
+            },
+            {
+              icon: "flame",
+              title: "Intimacy and Desire",
+              body: "Looking at emotional and physical intimacy, understanding different experiences of desire and learning to communicate about touch, pleasure and connection without pressure or expectation.",
+            },
+            {
+              icon: "shield",
+              title: "Boundaries",
+              body: "Recognising your individual needs and limits, communicating them clearly and respecting each other's differences.",
+            },
+            {
+              icon: "lock",
+              title: "Privacy and Secrecy",
+              body: "Understanding the importance of personal autonomy, honesty and transparency, and developing shared relationship agreements that support trust and respect.",
+            },
+          ],
+        },
+        {
+          kind: "contrast",
+          heading: "What We Hope You Will Take Away",
           intro:
-            "Rate where your closest relationship feels rich and where it feels thin. If you are taking this course solo, answer for connection in your life as a whole.",
-          fields: [
-            { id: "emotional", label: "Emotional intimacy — being truly known", type: "scale" },
-            { id: "physical", label: "Physical closeness — affection and touch", type: "scale" },
-            { id: "intellectual", label: "Intellectual connection — minds meeting", type: "scale" },
-            { id: "playful", label: "Playfulness — laughter and lightness", type: "scale" },
-            { id: "everyday", label: "Everyday companionship — life lived alongside", type: "scale" },
+            "One of the most important things we hope you will take away from this programme is this.",
+          columns: [
             {
-              id: "richest",
-              label: "Which form is richest for you right now — and which do you miss most?",
-              type: "text",
+              label: "Healthy relationships are not about",
+              icon: "shield-alert",
+              items: [
+                "Getting everything right",
+                "Never experiencing difficulties",
+                "Becoming the perfect couple",
+              ],
+            },
+            {
+              label: "They are about",
+              icon: "sprout",
+              tone: "sage",
+              items: [
+                "Developing a greater awareness of yourselves and each other",
+                "Recognising when old patterns are showing up",
+                "Being willing to respond differently",
+                "Becoming more aware, more intentional and better able to navigate life's challenges together",
+              ],
             },
           ],
-        },
-      ],
-    },
-    {
-      id: "desire-and-its-seasons",
-      title: "Desire and Its Seasons",
-      summary:
-        "Desire ebbs, flows and changes across a life. Understanding its seasons replaces panic with curiosity.",
-      estimatedMinutes: 25,
-      blocks: [
-        {
-          kind: "video",
-          title: "Ebb, flow and change",
-          playbackId: "",
-          durationSeconds: 540,
+          note: "The aim was never to become the perfect couple.",
         },
         {
-          kind: "prose",
-          body: `Few subjects carry as much silent worry as desire. We absorb the idea that desire should be constant and spontaneous, and that anything else signals a failing relationship. The truth is kinder and more interesting: desire has seasons. It shifts with stress, health, medication, grief, new parenthood, menopause, age, and the simple settling of long love. For many people — especially in long relationships — desire is more often responsive than spontaneous: it follows connection and context rather than arriving unprompted. Discovering this is usually a relief.
+          kind: "callout",
+          icon: "heart-handshake",
+          title: "When Difficult Moments Come",
+          body: `We are sure there will still be disagreements, misunderstandings and times when you feel disconnected. That is part of being in a relationship.
 
-It is also true that people simply differ — in how much desire they feel, for whom, and whether they feel it at all. Asexuality is a real and valid way of being, not a problem to solve. Mismatched levels of desire between partners are among the most common experiences in long relationships and are not, by themselves, a verdict on anyone.
-
-What turns desire differences into wounds is rarely the difference itself — it is the meanings silently attached to it: you do not want me, something is wrong with me. The antidote is the same as everywhere else in this course: honest, kind conversation in place of silent interpretation.`,
+But hopefully, you now have a range of tools to help you navigate those moments with greater understanding, compassion and curiosity.`,
         },
         {
-          kind: "journal",
-          exerciseId: "desire-seasons",
-          title: "Your Seasons",
-          prompts: [
-            "How has desire — its presence, absence, or shape — changed across your life so far?",
-            "What meanings have you attached to those changes? Are they true?",
-            "What would you want a partner to understand about your current season?",
-          ],
-        },
-      ],
-    },
-    {
-      id: "talking-about-sex-and-touch",
-      title: "Talking About Sex and Touch",
-      summary:
-        "The conversation many couples never quite have — made approachable, at whatever depth you choose.",
-      estimatedMinutes: 25,
-      blocks: [
-        {
-          kind: "video",
-          title: "Finding the words",
-          playbackId: "",
-          durationSeconds: 510,
-        },
-        {
-          kind: "prose",
-          body: `Many people find it easier to be physically intimate with a partner than to talk about physical intimacy with that same partner. The silence is understandable — these conversations risk embarrassment, rejection, and the fear of hurting someone we love. But the cost of silence is high: guesswork where there could be knowledge, and small dissatisfactions compounding quietly for years.
-
-You do not have to begin with the hardest conversation. Begin with appreciation — what you enjoy, what feels good, what you would like more of. Appreciation opens the same door that criticism slams shut. Use plain words at whatever level of explicitness feels natural to you both; clinical distance and forced boldness are both ways of hiding.
-
-And remember that this conversation includes non-sexual touch, which for many people is the truest currency of closeness. Being held, hand-holding, the goodnight kiss that does not ask for anything — these are worth talking about with the same care.`,
-        },
-        {
-          kind: "checkin",
-          exerciseId: "comfort-and-curiosity",
-          title: "Comfort and Curiosity",
+          kind: "iconCards",
+          heading: "Keep Growing Together",
           intro:
-            "A private reflection on physical closeness — at whatever depth feels right. Honesty here is for your benefit, not anyone else's eyes.",
-          fields: [
+            "Remember, your relationship will continue to grow and change, just as you both will.",
+          columns: 4,
+          items: [
+            { icon: "message-circle", title: "Keep talking" },
+            { icon: "ear", title: "Keep listening" },
+            { icon: "search", title: "Keep being curious about each other" },
             {
-              id: "ease",
-              label: "How at ease do you feel talking about physical intimacy with a partner?",
-              type: "scale",
-            },
-            {
-              id: "appreciate",
-              label: "What forms of touch or closeness do you most appreciate?",
-              type: "text",
-            },
-            {
-              id: "more-of",
-              label: "What would you like more of — and what has stopped you asking?",
-              type: "text",
-            },
-            {
-              id: "opener",
-              label: "If you were to open this conversation with a partner, what might your first sentence be?",
-              type: "text",
+              icon: "calendar-clock",
+              title: "Keep making time for your relationship",
+              body: "Perhaps most importantly of all.",
             },
           ],
         },
-      ],
-    },
-    {
-      id: "affection-in-everyday-life",
-      title: "Affection in Everyday Life",
-      summary:
-        "Grand gestures are rare by definition. Connection lives in the small, repeatable acts — your connection menu.",
-      estimatedMinutes: 20,
-      blocks: [
         {
-          kind: "video",
-          title: "The small repeatable acts",
-          playbackId: "",
-          durationSeconds: 420,
-        },
-        {
-          kind: "prose",
-          body: `Long relationships are not sustained by anniversaries. They are sustained by Tuesday afternoons — the cup of tea made unasked, the six-second hug, the "text me when you land", the genuine question about the meeting they were dreading. Small acts, endlessly repeatable, each one a thread in the rope.
-
-People differ — sometimes comically — in which acts land as love. One person feels cherished by words; another by help with the heavy task; another by undivided attention; another by touch. Mismatches here are a classic source of quiet hurt: you can be sending love fluently in your language while your partner waits for it in theirs.
-
-The exercise below builds your connection menu — the specific, small, repeatable acts that reach you. Concrete enough that someone could actually do them this week.`,
-        },
-        {
-          kind: "journal",
-          exerciseId: "connection-menu",
-          title: "Your Connection Menu",
-          prompts: [
-            "List eight to ten small, specific acts that make you feel loved. (Not \"be supportive\" — \"sit with me for ten minutes when I get home\".)",
-            "Which languages of care do you send most fluently? Is that the language the people you love receive best?",
-            "Which item on your menu would you most like someone to know about — and could you tell them this week?",
-          ],
-        },
-      ],
-    },
-    {
-      id: "what-closeness-means-to-me",
-      title: "What Closeness Means to Me",
-      summary:
-        "Bringing the module together — your own definition of intimacy, and the chance to let your partner truly see it.",
-      estimatedMinutes: 20,
-      blocks: [
-        {
-          kind: "prose",
-          body: `You have mapped the forms of intimacy, made peace with the seasons of desire, found words for the conversation about touch, and written your connection menu. This final reflection draws it into one place: what closeness actually means to you — not in general, but specifically, in this season of your life.
-
-If you are linked with a partner, this is one of the most valuable reflections you can share. Most couples have never actually exchanged their definitions of closeness — they have inferred them, often inaccurately, for years.`,
+          kind: "quote",
+          text: "Building a healthy, fulfilling relationship is not something you achieve once. It is something you continue to create together.",
+          attribution: "Laura & Esther",
         },
         {
           kind: "sharedJournal",
-          exerciseId: "closeness-means",
-          title: "What Closeness Means to Me",
+          exerciseId: "m7-closing-reflection",
+          title: "Closing Reflection: Looking Back Across the Programme",
           intro:
-            "Write your honest, current definition — not the one you think you should have.",
+            "Before you finish, take a moment to look back over the whole programme, first on your own and then, if you would like to, together. There are no right answers. The aim is not to have got everything right, but to notice what you now understand about yourselves, each other and your relationship.",
           prompts: [
-            "I feel closest to you when…",
-            "A form of intimacy I treasure, that we rarely name, is…",
-            "In this season of my life, what I most need from our physical closeness is…",
-            "One small thing from my connection menu I would love you to know about is…",
+            "Looking back across the programme, from our relationship journey through to privacy and secrecy, what is the most important thing I will take away?",
+            "What have I come to understand about myself, my partner and the patterns that shape how we connect?",
+            "Which old patterns do I now recognise when they show up, and how would I like to respond differently?",
+            "When disagreements, misunderstandings or times of disconnection come, which tools from the programme would I most like us to reach for?",
+            "How will we keep talking, keep listening, keep being curious about each other and keep making time for our relationship?",
           ],
           partnerNote:
-            "Your partner has shared their map of closeness — what actually reaches them. This is rare information; most people never say it aloud. Perhaps choose one thing from it to act on this week, quietly.",
+            "Your partner has shared what they will take with them from the programme, in their own words. Read it with curiosity, and perhaps choose one thing you will keep creating together.",
+        },
+        {
+          kind: "callout",
+          icon: "leaf",
+          tone: "dark",
+          title: "Thank You for Joining Us on This Journey",
+          body: `We really hope you have enjoyed this programme and that it has given you a greater understanding of yourselves, each other and your relationship.
+
+And we hope you will continue to use what you have learnt, keep having those conversations and keep investing in your relationship.
+
+Growth begins with understanding.`,
         },
       ],
     },
