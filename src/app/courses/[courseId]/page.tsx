@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import {
   ArrowRight,
   Award,
+  ClipboardCheck,
   FileDown,
   Headphones,
   PenLine,
@@ -31,6 +32,7 @@ const valueAddIcons: Record<string, LucideIcon> = {
   users: Users,
   "file-down": FileDown,
   headphones: Headphones,
+  "clipboard-check": ClipboardCheck,
   award: Award,
 };
 
@@ -194,12 +196,12 @@ export default async function CourseSalesPage({
               The Journey
             </p>
             <h2 className="font-heading text-4xl md:text-5xl font-light text-charcoal mb-4">
-              Ten Modules, One Path
+              Seven Modules, One Path
             </h2>
             <p className="font-body text-base text-muted max-w-xl mx-auto">
-              Each module builds on the last — from understanding yourself, to
-              communicating and repairing, to designing the relationship you
-              want to live in.
+              Each module builds on the last — from your relationship story and
+              your nervous system, through attachment and communication, to
+              intimacy, boundaries and the future you build together.
             </p>
           </Reveal>
           <CourseModulesAccordion modules={moduleSummaries} />

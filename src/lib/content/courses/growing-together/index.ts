@@ -7,9 +7,6 @@ import { module04 } from "./module04";
 import { module05 } from "./module05";
 import { module06 } from "./module06";
 import { module07 } from "./module07";
-import { module08 } from "./module08";
-import { module09 } from "./module09";
-import { module10 } from "./module10";
 
 export const growingTogether: Course = {
   id: "growing-together",
@@ -17,7 +14,7 @@ export const growingTogether: Course = {
   strapline:
     "Growth begins with understanding — of yourself, of each other, and of the patterns that shape how you love.",
   description:
-    "A ten-module course in building healthier, closer relationships — created by Esther and Laura, BACP-registered therapists. Video lessons, guided reflections, gentle self-assessments and printable practices, for individuals and for partners learning side by side. Whatever shape your relationship takes, and whatever season of life you are in, this course meets you there.",
+    "A seven-module course in building healthier, closer relationships — created by Esther and Laura, BACP-registered therapists. Video lessons, guided reflections, gentle self-assessments and printable practices, for individuals and for partners learning side by side. Whatever shape your relationship takes, and whatever season of life you are in, this course meets you there.",
   audience:
     "For adults of all ages, 18 to 70 and beyond — single, partnered, monogamous, non-monogamous or polyamorous, LGBTQIA+ and questioning. Take it on your own, or alongside a partner with linked accounts and optional sharing.",
   trailerPlaybackId: "7jguOU5tUIEvyjKTrScNomWIq00d00Xw6M9SMgwpcbGoY",
@@ -30,16 +27,13 @@ export const growingTogether: Course = {
     module05,
     module06,
     module07,
-    module08,
-    module09,
-    module10,
   ],
   valueAdds: [
     {
       icon: "video",
       title: "Guided Video Lessons",
       description:
-        "An introduction and ten modules of video lessons from Laura and Esther, paced for real life — about one module a week, pause whenever you need, return any time.",
+        "An introduction and seven modules of video lessons from Laura and Esther, paced for real life — about one module a week, pause whenever you need, return any time.",
     },
     {
       icon: "pen-line",
@@ -57,13 +51,13 @@ export const growingTogether: Course = {
       icon: "file-down",
       title: "Printable Worksheets and Practices",
       description:
-        "Branded worksheets for every stage — a needs and values map, a repair ritual card, the Agreements Canvas — yours to download and keep.",
+        "Worksheets and guided reflections for every module — your relationship story, your regulation and reconnection plan, your attachment cycle — saved to your account and yours to print.",
     },
     {
-      icon: "headphones",
-      title: "Guided Audio Practices",
+      icon: "clipboard-check",
+      title: "Gentle Self-Assessments",
       description:
-        "Short audio practices for self-compassion and cooling down after conflict, recorded for the moments you need them most.",
+        "Short quizzes and check-ins, such as your Relationship Check-In and the attachment quiz, to help you notice patterns and see how things change.",
     },
     {
       icon: "award",
@@ -96,7 +90,7 @@ export const growingTogether: Course = {
     {
       question: "How long does the course take?",
       answer:
-        "There is an introduction and ten modules. Laura and Esther suggest completing approximately one module each week, but there is no schedule and no pressure — your subscription gives you access to everything, and your progress is saved as you go.",
+        "There is an introduction and seven modules. Laura and Esther suggest completing approximately one module each week, but there is no schedule and no pressure — your subscription gives you access to everything, and your progress is saved as you go.",
     },
     {
       question: "Who can see what I write?",

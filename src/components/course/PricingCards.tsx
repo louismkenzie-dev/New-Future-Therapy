@@ -14,9 +14,9 @@ import {
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const individualFeatures = [
-  "The introduction and all ten modules",
+  "The introduction and all seven modules",
   "Private, encrypted reflective journalling",
-  "Every worksheet, audio practice and download",
+  "Every worksheet, reflection and check-in",
   "Your personal learning path",
   "Completion certificate and therapy discount",
 ];
