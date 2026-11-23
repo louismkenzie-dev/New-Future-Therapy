@@ -1,15 +1,12 @@
 import {
   Activity,
-  Compass,
   Heart,
-  HeartHandshake,
   Leaf,
   Link,
   MessagesSquare,
   Route,
-  ScrollText,
   ShieldCheck,
-  Sunrise,
+  Sprout,
   type LucideIcon,
 } from "lucide-react";
 
@@ -22,12 +19,9 @@ const MODULE_ICONS: Record<string, LucideIcon> = {
   "nervous-system": Activity,
   attachment: Link,
   communication: MessagesSquare,
-  "conflict-and-repair": HeartHandshake,
-  "trust-and-boundaries": ShieldCheck,
-  "intimacy-and-connection": Heart,
-  "navigating-change": Compass,
-  "relationship-agreements": ScrollText,
-  "a-new-future": Sunrise,
+  "sex-and-intimacy": Heart,
+  "boundaries-privacy-and-secrecy": ShieldCheck,
+  "bringing-it-all-together": Sprout,
 };
 
 export default function ModuleEmblem({ moduleId }: { moduleId: string }) {

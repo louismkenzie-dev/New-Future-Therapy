@@ -15,6 +15,9 @@ const LESSONS_WITH_THUMBNAILS = new Set([
   "regulation-and-reconnection-plan",
   ...Array.from({ length: 8 }, (_, i) => `attachment-part-${i + 1}`),
   ...Array.from({ length: 7 }, (_, i) => `communication-part-${i + 1}`),
+  ...Array.from({ length: 7 }, (_, i) => `intimacy-part-${i + 1}`),
+  ...Array.from({ length: 3 }, (_, i) => `boundaries-part-${i + 1}`),
+  "final-part-1",
 ]);
 
 /** The poster for a lesson's video, served as AVIF/WebP by the image optimiser. */

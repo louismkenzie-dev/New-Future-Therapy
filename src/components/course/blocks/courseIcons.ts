@@ -17,6 +17,10 @@ import {
   Scale,
   Smartphone,
   Wallet,
+  Globe,
+  Pill,
+  Stethoscope,
+  Tv,
   BookOpenText,
   CalendarClock,
   Compass,
@@ -105,6 +109,10 @@ export const COURSE_ICONS: Record<string, LucideIcon> = {
   scale: Scale,
   smartphone: Smartphone,
   wallet: Wallet,
+  globe: Globe,
+  pill: Pill,
+  stethoscope: Stethoscope,
+  tv: Tv,
 };
 
 export function courseIcon(name?: string): LucideIcon {
