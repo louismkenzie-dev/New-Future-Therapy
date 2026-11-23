@@ -13,6 +13,10 @@ import {
   Smile,
   Snowflake,
   Zap,
+  EyeOff,
+  Scale,
+  Smartphone,
+  Wallet,
   BookOpenText,
   CalendarClock,
   Compass,
@@ -97,6 +101,10 @@ export const COURSE_ICONS: Record<string, LucideIcon> = {
   smile: Smile,
   snowflake: Snowflake,
   zap: Zap,
+  "eye-off": EyeOff,
+  scale: Scale,
+  smartphone: Smartphone,
+  wallet: Wallet,
 };
 
 export function courseIcon(name?: string): LucideIcon {
