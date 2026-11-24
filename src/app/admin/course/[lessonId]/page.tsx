@@ -101,7 +101,7 @@ export default async function EditLessonPage({
               <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-4">
                 Sections · {lesson.blocks.length}
               </p>
-              <BlocksEditor key={lesson.updatedAt} lessonId={lesson.id} initialBlocks={lesson.blocks} />
+              <BlocksEditor key={lesson.updatedAt} lessonId={lesson.id} initialBlocks={lesson.blocks} savedAt={lesson.updatedAt} />
             </div>
 
             <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-6 md:p-8">
@@ -124,7 +124,7 @@ export default async function EditLessonPage({
               />
             </div>
             <p className="font-body text-xs text-muted text-center mt-3">
-              Updates after each save. Tap through with Continue, just as a member would.
+              Updates each time you press Save Changes. Tap through with Continue, just as a member would.
             </p>
           </div>
         </div>

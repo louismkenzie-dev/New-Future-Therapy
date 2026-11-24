@@ -108,6 +108,13 @@ html.member-app main {
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
+/* Lesson content: a line break typed in the course editor shows as a line
+   break for members, in every kind of section (headings, intros, cards,
+   questions, answers). Blank lines still separate paragraphs. */
+.lesson-text {
+  white-space: pre-line;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

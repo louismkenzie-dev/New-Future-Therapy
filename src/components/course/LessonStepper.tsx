@@ -145,6 +145,7 @@ export default function LessonStepper({
           animate={{ opacity: 1, y: 0 }}
           exit={reduceMotion ? undefined : { opacity: 0, y: -12 }}
           transition={{ duration: 0.6, ease: EASE_OUT }}
+          className={isFinish ? undefined : "lesson-text"}
         >
           {isFinish ? finish : steps[index].node}
         </motion.div>
