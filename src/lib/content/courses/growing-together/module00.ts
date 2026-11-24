@@ -67,7 +67,7 @@ We have created this programme to help you understand why you can get stuck in t
           exerciseId: "welcome-where-you-are",
           title: "Who Is This Programme For?",
           intro:
-            "This programme is designed for couples over the age of 18 who want to understand more about their relationship and feel more fulfilled and connected. Which sounds most like you right now? There is no wrong answer.",
+            "This programme is designed for couples over the age of 18 who want to understand more about their relationship and feel more fulfilled and connected.\n\nWhich sounds most like you right now?\n\nThere is no wrong answer.",
           questions: [
             {
               id: "where",
