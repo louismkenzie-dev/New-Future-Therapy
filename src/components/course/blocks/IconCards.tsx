@@ -36,7 +36,7 @@ export default function IconCards({
                 {item.title}
               </h3>
               {item.body && (
-                <p className="font-body text-sm text-muted leading-relaxed">{item.body}</p>
+                <p className="font-body text-base text-muted leading-relaxed">{item.body}</p>
               )}
             </div>
           );

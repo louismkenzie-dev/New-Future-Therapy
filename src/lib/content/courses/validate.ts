@@ -1,4 +1,4 @@
-import type { LessonBlock } from "./types";
+import type { LessonBlock, LessonFinishText } from "./types";
 
 /* Turns untrusted JSON (from the editor, or from the AI formatter) into a
    list of well-formed lesson blocks. Anything it cannot make sense of is
@@ -289,4 +289,30 @@ export function normaliseBlocks(raw: unknown): LessonBlock[] {
     out.push(block);
   });
   return out;
+}
+
+/* The end-of-lesson screen's wording travels with the blocks as one
+   {kind:"finish"} entry. normaliseBlocks skips it (it is not a step);
+   these two read it back out and put it in. */
+
+export function normaliseFinish(raw: unknown): LessonFinishText | undefined {
+  if (!isObj(raw)) return undefined;
+  const finish: LessonFinishText = {
+    heading: optStr(raw.heading)?.trim(),
+    message: optStr(raw.message)?.trim(),
+    buttonLabel: optStr(raw.buttonLabel)?.trim(),
+  };
+  return finish.heading || finish.message || finish.buttonLabel ? finish : undefined;
+}
+
+export function readFinish(rawBlocks: unknown): LessonFinishText | undefined {
+  if (!Array.isArray(rawBlocks)) return undefined;
+  const entry = rawBlocks.find((b) => isObj(b) && b.kind === "finish");
+  return normaliseFinish(entry);
+}
+
+/** The blocks as stored: the lesson's sections, then the finish wording if any. */
+export function storeBlocks(blocks: LessonBlock[], finish?: LessonFinishText | null): unknown[] {
+  const clean = normaliseFinish(finish);
+  return clean ? [...blocks, { kind: "finish", ...clean }] : blocks;
 }

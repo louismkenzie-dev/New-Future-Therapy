@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Award, CheckCircle2, LayoutGrid } from "lucide-react";
-import { moduleLabel, type FlatLesson } from "@/lib/content/courses";
+import { moduleLabel, type FlatLesson, type LessonFinishText } from "@/lib/content/courses";
 import type { CourseModule } from "@/lib/content/courses";
+import { finishWording } from "@/lib/content/courses/finish";
 import { completeAndContinue, setLessonComplete } from "@/app/actions/progress";
 
 /* The last step of every lesson. One clear way forward: a single
@@ -22,6 +23,7 @@ export default function LessonFinish({
   completed,
   interactive,
   preview,
+  text,
 }: {
   courseId: string;
   lessonId: string;
@@ -32,6 +34,8 @@ export default function LessonFinish({
   interactive: boolean;
   /** Editor preview: link between previews, never save. */
   preview?: { embedded: boolean };
+  /** The lesson's own wording from the course editor, if any. */
+  text?: LessonFinishText;
 }) {
   const crossesModule = Boolean(next && next.module.id !== module.id);
   const isLast = !next;
@@ -40,25 +44,9 @@ export default function LessonFinish({
   const nextHref = next ? lessonHref(next.lesson.id) : `/learn/${courseId}/certificate`;
   const overviewHref = preview ? "/admin/course" : `/learn/${courseId}`;
 
-  const heading = isLast
-    ? "You Have Completed the Programme"
-    : crossesModule
-      ? `${moduleLabel(module)} Complete`
-      : completed
-        ? "Lesson Complete"
-        : "Well Done";
-  const lede = isLast
-    ? "Take a moment together to notice how far you have come. Your certificate is ready."
-    : crossesModule
-      ? "Take a breath before moving on. Everything you wrote is saved, and you can come back to it whenever you like."
-      : "Everything you wrote is saved. Carry on when you are ready, or come back another day. There is no pace to keep.";
-
-  const buttonLabel = isLast
-    ? "View Your Certificate"
-    : crossesModule
-      ? `Start ${moduleLabel(next!.module)}`
-      : "Continue to the Next Lesson";
-  const primaryLabel = completed || !interactive || preview ? buttonLabel : isLast ? "Complete and Finish" : crossesModule ? `Complete and Start ${moduleLabel(next!.module)}` : "Complete and Continue";
+  const wording = finishWording({ module, next, completed }, text);
+  const { heading, message: lede } = wording;
+  const primaryLabel = completed || !interactive || preview ? wording.returnButton : wording.firstButton;
   const primaryClass =
     "w-full sm:w-auto inline-flex items-center justify-center gap-2 min-h-[52px] font-body text-sm bg-sage-dark text-cream px-8 py-4 rounded-full hover:bg-charcoal transition-colors duration-200";
 
@@ -69,7 +57,7 @@ export default function LessonFinish({
           {isLast ? <Award size={26} strokeWidth={1.75} /> : <CheckCircle2 size={26} strokeWidth={1.75} />}
         </span>
         <h2 className="font-heading text-3xl md:text-4xl font-light text-charcoal leading-tight mb-4">{heading}</h2>
-        <p className="font-body text-base text-muted leading-relaxed max-w-xl mx-auto">{lede}</p>
+        <p className="font-body text-base text-muted leading-relaxed max-w-xl mx-auto whitespace-pre-line">{lede}</p>
       </div>
 
       {/* What comes next */}

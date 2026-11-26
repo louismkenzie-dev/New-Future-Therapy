@@ -3,7 +3,8 @@ import { notFound, redirect } from "next/navigation";
 import { ArrowLeft, ExternalLink, Eye, Sparkles } from "lucide-react";
 import { isAdmin } from "@/lib/adminAuth";
 import { courses, getLesson, moduleLabel } from "@/lib/content/courses";
-import { loadCourse } from "@/lib/content/courses/live";
+import { getLessonLive, loadCourse } from "@/lib/content/courses/live";
+import { standardFinish } from "@/lib/content/courses/finish";
 import { getEditorLesson } from "@/lib/dal/courseEditor";
 import LessonDetailsForm from "@/components/admin/course/LessonDetailsForm";
 import RefineForm from "@/components/admin/course/RefineForm";
@@ -25,11 +26,21 @@ export default async function EditLessonPage({
   const { lessonId } = await params;
   const { created } = await searchParams;
 
-  const [lesson, course] = await Promise.all([
+  const [lesson, course, live] = await Promise.all([
     getEditorLesson(lessonId),
     loadCourse(courses[0].id, { includeDrafts: true }),
+    getLessonLive(courses[0].id, lessonId, { includeDrafts: true }),
   ]);
   if (!lesson || !course) notFound();
+  /* What the end-of-lesson screen says when nothing custom is set. */
+  const finishDefaults = live
+    ? standardFinish({ module: live.module, next: live.next })
+    : standardFinish({ module: course.modules[0], next: { lesson: course.modules[0].lessons[0], module: course.modules[0], index: 0 } });
+  const nextTitle = live?.next
+    ? live.next.module.id === live.module.id
+      ? live.next.lesson.title
+      : live.next.module.title
+    : undefined;
 
   const modules = course.modules.map((m) => ({ id: m.id, label: `${moduleLabel(m)} · ${m.title}` }));
   const replacesBuiltIn = Boolean(getLesson(courses[0].id, lessonId));
@@ -101,7 +112,12 @@ export default async function EditLessonPage({
               <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em] mb-4">
                 Sections · {lesson.blocks.length}
               </p>
-              <BlocksEditor key={lesson.updatedAt} lessonId={lesson.id} initialBlocks={lesson.blocks} savedAt={lesson.updatedAt} />
+              <BlocksEditor key={lesson.updatedAt} lessonId={lesson.id} initialBlocks={lesson.blocks} savedAt={lesson.updatedAt}
+                initialFinish={lesson.finish}
+                finishDefaults={finishDefaults}
+                nextTitle={nextTitle}
+                nextCrossesModule={Boolean(live?.next && live.next.module.id !== live.module.id)}
+              />
             </div>
 
             <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-6 md:p-8">

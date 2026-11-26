@@ -87,7 +87,7 @@ function Hint({ text }: { text?: string }) {
 }
 
 /** A text box that grows as you type, so every line stays in view. */
-function GrowingArea({
+export function GrowingArea({
   id,
   value,
   onChange,

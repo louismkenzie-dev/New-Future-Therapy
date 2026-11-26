@@ -108,6 +108,7 @@ export default async function LessonPreviewPage({
                 completed={false}
                 interactive={false}
                 preview={{ embedded }}
+                text={lesson.finish}
               />
             }
           />

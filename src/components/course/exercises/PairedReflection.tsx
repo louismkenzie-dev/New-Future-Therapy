@@ -77,9 +77,9 @@ interface PairedReflectionProps {
 
 const questionLabelClass =
   "block font-body text-base font-medium text-charcoal leading-relaxed text-balance";
-const hintClass = "font-body text-sm text-muted leading-relaxed mt-1.5 mb-3";
+const hintClass = "font-body text-base text-muted leading-relaxed mt-1.5 mb-3";
 const textareaClass =
-  "w-full font-body text-sm text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage min-h-[104px] resize-y placeholder:text-muted/70 disabled:bg-cream/60";
+  "w-full font-body text-base text-charcoal bg-white border border-grey-light rounded-lg px-4 py-3 focus:outline-none focus:border-sage min-h-[104px] resize-y placeholder:text-muted/70 disabled:bg-cream/60";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("en-GB", {
@@ -213,18 +213,28 @@ export default function PairedReflection({
   const partnerFirst = partner?.name.split(" ")[0];
   const hidden = { courseId, lessonId, exerciseId };
 
+  /* "Private until you choose to share." is always shown, in italics, under
+     the label. If the intro also opens with it (as the founders wrote it),
+     that copy is left out so it does not appear twice. */
+  const individualIntro = individual.intro
+    ?.replace(/^\s*private until you choose to share\.?\s*/i, "")
+    .trim();
+
   /* ---- Individual half -------------------------------------------------- */
   const individualCard = (
     <div className="bg-white rounded-2xl border border-grey-light shadow-sm p-5 sm:p-5 sm:p-8 md:p-10">
       <div className="flex items-center gap-3 mb-2">
         <Lock size={16} className="text-sage-dark" />
         <p className="font-body text-xs text-sage-dark uppercase tracking-[0.25em]">
-          {individual.title} · Private until you choose to share
+          {individual.title}
         </p>
       </div>
-      {individual.intro && (
-        <p className="font-body text-sm text-muted leading-relaxed mb-8">
-          {individual.intro}
+      <p className="font-body text-base text-muted italic leading-relaxed mb-4">
+        Private until you choose to share.
+      </p>
+      {individualIntro && (
+        <p className="font-body text-base text-muted leading-relaxed mb-8">
+          {individualIntro}
         </p>
       )}
 
@@ -233,8 +243,8 @@ export default function PairedReflection({
           <ol className="space-y-5 mb-8">
             {individual.questions.map((q) => (
               <li key={q.id} className="border-l-2 border-sage-light pl-4">
-                <p className="font-body text-sm text-charcoal font-medium">{q.label}</p>
-                {q.hint && <p className="font-body text-xs text-muted mt-1">{q.hint}</p>}
+                <p className="font-body text-base text-charcoal font-medium">{q.label}</p>
+                {q.hint && <p className="font-body text-sm text-muted mt-1">{q.hint}</p>}
               </li>
             ))}
           </ol>
@@ -314,7 +324,7 @@ export default function PairedReflection({
       </div>
 
       {!partner ? (
-        <p className="font-body text-sm text-muted leading-relaxed">
+        <p className="font-body text-base text-muted leading-relaxed">
           This activity is designed for two. When you link accounts with a
           partner, you will each be able to share your answers and see them
           side by side here. Until then, everything you write stays private to
@@ -332,7 +342,7 @@ export default function PairedReflection({
           </div>
 
           {!saved ? (
-            <p className="font-body text-sm text-muted leading-relaxed">
+            <p className="font-body text-base text-muted leading-relaxed">
               Save your own answers first. Sharing is always your choice — you
               do not automatically have to share an individual reflection with{" "}
               {partnerFirst}.
@@ -358,7 +368,7 @@ export default function PairedReflection({
             </div>
           ) : (
             <div>
-              <p className="font-body text-sm text-muted leading-relaxed mb-4">
+              <p className="font-body text-base text-muted leading-relaxed mb-4">
                 When you are ready, share your answers with {partnerFirst}. You
                 will see each other&rsquo;s answers side by side only once you
                 have both chosen to share — so neither of you reads the other
@@ -381,7 +391,7 @@ export default function PairedReflection({
           )}
 
           {saved?.isShared && !partner.shared && (
-            <p className="font-body text-sm text-muted leading-relaxed mt-6">
+            <p className="font-body text-base text-muted leading-relaxed mt-6">
               {partner.saved
                 ? `${partnerFirst} has saved their answers but has not shared them yet. Their answers will appear here, beside yours, when they choose to.`
                 : `${partnerFirst} has not saved their answers yet. When they have saved and shared, both sets will appear here side by side.`}
@@ -409,7 +419,7 @@ export default function PairedReflection({
                         <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-1">
                           {viewerFirst}
                         </p>
-                        <p className="font-body text-sm font-medium text-charcoal mb-3">
+                        <p className="font-body text-base font-medium text-charcoal mb-3">
                           {q.label}
                         </p>
                         {mine.scales[q.id] !== undefined && (
@@ -425,7 +435,7 @@ export default function PairedReflection({
                         <p className="font-body text-xs text-sage-dark uppercase tracking-widest mb-1">
                           {partnerFirst}
                         </p>
-                        <p className="font-body text-sm font-medium text-charcoal mb-3">
+                        <p className="font-body text-base font-medium text-charcoal mb-3">
                           {partnerQuestion.label}
                         </p>
                         {theirs.scales[partnerQuestionId] !== undefined && (
@@ -464,14 +474,14 @@ export default function PairedReflection({
         </p>
       </div>
       {together.intro && (
-        <p className="font-body text-sm text-muted leading-relaxed mb-6">
+        <p className="font-body text-base text-muted leading-relaxed mb-6">
           {together.intro}
         </p>
       )}
       {together.steps && together.steps.length > 0 && (
         <ol className="space-y-2.5 mb-8">
           {together.steps.map((step, i) => (
-            <li key={step} className="flex gap-3 font-body text-sm text-charcoal leading-relaxed">
+            <li key={step} className="flex gap-3 font-body text-base text-charcoal leading-relaxed">
               <span className="font-heading text-lg text-sage shrink-0 w-5">{i + 1}</span>
               {step}
             </li>
@@ -484,8 +494,8 @@ export default function PairedReflection({
           <ul className="space-y-4">
             {together.questions.map((q) => (
               <li key={q.id} className="border-l-2 border-sage-light pl-4">
-                <p className="font-body text-sm text-charcoal font-medium">{q.label}</p>
-                {q.hint && <p className="font-body text-xs text-muted mt-1">{q.hint}</p>}
+                <p className="font-body text-base text-charcoal font-medium">{q.label}</p>
+                {q.hint && <p className="font-body text-sm text-muted mt-1">{q.hint}</p>}
               </li>
             ))}
           </ul>

@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/lib/adminAuth";
 import { courses, getLesson } from "@/lib/content/courses";
-import { normaliseBlocks, slugify } from "@/lib/content/courses/validate";
+import { normaliseBlocks, normaliseFinish, slugify } from "@/lib/content/courses/validate";
 import type { LessonBlock } from "@/lib/content/courses";
 import {
   deleteEditorLesson,
@@ -209,7 +209,17 @@ export async function saveLessonBlocks(
   }
   const blocks: LessonBlock[] = normaliseBlocks(parsed);
   if (blocks.length === 0) return { status: "error", message: "A lesson needs at least one section." };
-  await updateEditorLessonFields(lessonId, { blocks });
+  /* The end-of-lesson screen's wording, when the editor sent it. */
+  let finish: ReturnType<typeof normaliseFinish> | null | undefined;
+  const finishField = formData.get("finish");
+  if (finishField !== null) {
+    try {
+      finish = normaliseFinish(JSON.parse(finishField.toString())) ?? null;
+    } catch {
+      finish = undefined;
+    }
+  }
+  await updateEditorLessonFields(lessonId, { blocks, finish });
   revalidateCourse(lessonId);
   return { status: "success", message: "Sections saved." };
 }
