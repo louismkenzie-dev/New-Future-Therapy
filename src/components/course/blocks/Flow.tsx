@@ -35,7 +35,7 @@ export default function Flow({
                   {step.title}
                 </h3>
                 {step.body && (
-                  <p className="font-body text-sm text-muted leading-relaxed max-w-xs md:mx-auto">
+                  <p className="font-body text-base text-muted leading-relaxed max-w-xs md:mx-auto">
                     {step.body}
                   </p>
                 )}

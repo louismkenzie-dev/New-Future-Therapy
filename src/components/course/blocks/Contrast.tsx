@@ -62,7 +62,7 @@ export default function Contrast({
       </div>
       {note && (
         <div className="mt-6 max-w-2xl">
-          <RichText body={note} className="font-body text-sm text-muted leading-relaxed" />
+          <RichText body={note} className="font-body text-base text-muted leading-relaxed" />
         </div>
       )}
     </div>

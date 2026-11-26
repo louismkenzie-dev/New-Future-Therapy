@@ -72,7 +72,7 @@ export default function TapChoice({
                         setChosen((prev) => ({ ...prev, [question.id]: option.value }))
                       }
                       aria-pressed={active}
-                      className={`font-body text-sm text-left sm:text-center text-balance w-full sm:w-auto rounded-2xl sm:rounded-full px-5 py-3.5 sm:py-3 min-h-[48px] border transition-colors duration-200 ${
+                      className={`font-body text-base text-left sm:text-center text-balance w-full sm:w-auto rounded-2xl sm:rounded-full px-5 py-3.5 sm:py-3 min-h-[48px] border transition-colors duration-200 ${
                         active
                           ? "bg-sage-dark text-cream border-sage-dark"
                           : "bg-white text-charcoal border-grey-light hover:border-sage-light hover:text-sage-dark"
