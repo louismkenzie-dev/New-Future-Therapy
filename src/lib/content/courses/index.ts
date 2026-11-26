@@ -6,6 +6,7 @@ export type {
   CourseModule,
   Lesson,
   LessonBlock,
+  LessonFinishText,
   PairedQuestion,
 } from "./types";
 

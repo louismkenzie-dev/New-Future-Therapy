@@ -4,10 +4,11 @@ import { startTransition, useActionState, useEffect, useMemo, useRef, useState, 
 import { ArrowDown, ArrowUp, ChevronDown, Plus, Trash2, Undo2 } from "lucide-react";
 import { saveLessonBlocks, type EditorFormState } from "@/app/actions/courseEditor";
 import { FormError, FormSuccess } from "@/components/auth/FormParts";
-import type { LessonBlock } from "@/lib/content/courses";
+import type { LessonBlock, LessonFinishText } from "@/lib/content/courses";
+import type { FinishWording } from "@/lib/content/courses/finish";
 import { normaliseBlocks } from "@/lib/content/courses/validate";
 import { inputClass, labelClass, primaryButton, secondaryButton } from "./formStyles";
-import { SectionForm } from "./SectionFields";
+import { GrowingArea, SectionForm } from "./SectionFields";
 import { PRACTICE_PHOTOS, SECTION_SPECS, newSection, sectionLabel } from "./sectionSchemas";
 import VideoUploader from "./VideoUploader";
 import SubtitlesButton from "./SubtitlesButton";
@@ -73,11 +74,22 @@ export default function BlocksEditor({
   lessonId,
   initialBlocks,
   savedAt,
+  initialFinish,
+  finishDefaults,
+  nextTitle,
+  nextCrossesModule,
 }: {
   lessonId: string;
   initialBlocks: LessonBlock[];
   /** When the lesson was last saved, for the save bar. */
   savedAt?: string;
+  /** The lesson's own wording for the end-of-lesson screen, if any. */
+  initialFinish?: LessonFinishText;
+  /** The standard wording, shown in grey when a box is left empty. */
+  finishDefaults: FinishWording;
+  /** What the "Up Next" card on that screen points to. */
+  nextTitle?: string;
+  nextCrossesModule?: boolean;
 }) {
   const [blocks, setBlocks] = useState<LessonBlock[]>(initialBlocks);
   const [open, setOpen] = useState<number | null>(null);
@@ -90,11 +102,17 @@ export default function BlocksEditor({
   const [addKind, setAddKind] = useState("prose");
   const [problems, setProblems] = useState<number[]>([]);
   const [savedLabel, setSavedLabel] = useState<string | null>(null);
+  const [finish, setFinish] = useState<LessonFinishText>(initialFinish ?? {});
+  const [finishOpen, setFinishOpen] = useState(false);
 
   /* Saving reloads the page, which re-creates this editor with the saved
      sections, so "unsaved" means "different from what we started with". */
   const initialJson = useMemo(() => JSON.stringify(initialBlocks), [initialBlocks]);
-  const dirty = jsonMode ? jsonText.trim() !== JSON.stringify(initialBlocks, null, 2).trim() : JSON.stringify(blocks) !== initialJson;
+  const finishJson = JSON.stringify(cleanFinish(finish));
+  const finishDirty = finishJson !== JSON.stringify(cleanFinish(initialFinish ?? {}));
+  const dirty =
+    finishDirty ||
+    (jsonMode ? jsonText.trim() !== JSON.stringify(initialBlocks, null, 2).trim() : JSON.stringify(blocks) !== initialJson);
 
   /* Local time only once on the client, so server and client agree. */
   useEffect(() => setSavedLabel(savedAtLabel(savedAt)), [savedAt]);
@@ -110,8 +128,8 @@ export default function BlocksEditor({
   /* A finished upload saves the lesson at once, so the video cannot be
      lost by forgetting to press Save. Saving re-mounts this editor, so it
      waits while any other upload is still running. */
-  const latest = useRef({ blocks, uploading, jsonMode });
-  latest.current = { blocks, uploading, jsonMode };
+  const latest = useRef({ blocks, uploading, jsonMode, finishJson });
+  latest.current = { blocks, uploading, jsonMode, finishJson };
   const attachVideo = (i: number, playbackId: string, durationSeconds: number) => {
     const now = latest.current;
     const next = now.blocks.map((b, j) =>
@@ -122,6 +140,7 @@ export default function BlocksEditor({
     const data = new FormData();
     data.set("lessonId", lessonId);
     data.set("blocks", JSON.stringify(next));
+    data.set("finish", now.finishJson);
     startTransition(() => formAction(data));
   };
 
@@ -200,6 +219,7 @@ export default function BlocksEditor({
     <form action={formAction} onSubmit={checkBeforeSave} className="space-y-6">
       <input type="hidden" name="lessonId" value={lessonId} />
       <input type="hidden" name="blocks" value={serialised} />
+      <input type="hidden" name="finish" value={finishJson} />
 
       {jsonMode ? (
         <div>
@@ -329,6 +349,16 @@ export default function BlocksEditor({
             </div>
           )}
 
+          <FinishPanel
+            open={finishOpen}
+            onToggle={() => setFinishOpen((o) => !o)}
+            value={finish}
+            onChange={setFinish}
+            defaults={finishDefaults}
+            nextTitle={nextTitle}
+            nextCrossesModule={nextCrossesModule}
+          />
+
           <div className="rounded-2xl border border-dashed border-sage-light bg-sage-pale/50 p-5">
             <label htmlFor="add-section" className={labelClass}>Add a Section</label>
             <div className="flex flex-col sm:flex-row gap-3">
@@ -397,6 +427,108 @@ function SmallField({ label, value, onChange, hint, mono }: { label: string; val
       <label className={labelClass}>{label}</label>
       <input value={value} onChange={(e) => onChange(e.target.value)} className={`${inputClass} ${mono ? "font-mono text-xs" : ""}`} />
       {hint && <p className="font-body text-xs text-muted mt-1.5">{hint}</p>}
+    </div>
+  );
+}
+
+function cleanFinish(f: LessonFinishText): LessonFinishText {
+  const out: LessonFinishText = {};
+  if (f.heading?.trim()) out.heading = f.heading.trim();
+  if (f.message?.trim()) out.message = f.message.trim();
+  if (f.buttonLabel?.trim()) out.buttonLabel = f.buttonLabel.trim();
+  return out;
+}
+
+/* The screen members see after the last section ("Well Done"). It is not a
+   section, so it sits on its own under the list, always last. */
+function FinishPanel({
+  open,
+  onToggle,
+  value,
+  onChange,
+  defaults,
+  nextTitle,
+  nextCrossesModule,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  value: LessonFinishText;
+  onChange: (next: LessonFinishText) => void;
+  defaults: FinishWording;
+  nextTitle?: string;
+  nextCrossesModule?: boolean;
+}) {
+  const set = (key: keyof LessonFinishText, v: string) => onChange({ ...value, [key]: v });
+  const custom = Boolean(value.heading?.trim() || value.message?.trim() || value.buttonLabel?.trim());
+  return (
+    <div className={`bg-white rounded-2xl border shadow-sm ${open ? "border-sage-light" : "border-grey-light"}`}>
+      <div className="flex items-center gap-3 px-5 py-4">
+        <span className="w-7 shrink-0" aria-hidden="true" />
+        <button type="button" onClick={onToggle} aria-expanded={open} className="flex-1 min-w-0 text-left min-h-[44px]">
+          <span className="block font-body text-xs text-sage-dark uppercase tracking-widest">End of Lesson Screen</span>
+          <span className="block font-body text-sm text-charcoal truncate">
+            {value.heading?.trim() || defaults.heading}
+            {!custom && <span className="text-muted"> (standard wording)</span>}
+          </span>
+        </button>
+        <button type="button" onClick={onToggle} aria-label={open ? "Close end of lesson screen" : "Edit end of lesson screen"} title={open ? "Close" : "Edit"} className="w-10 h-10 inline-flex items-center justify-center rounded-full text-muted hover:text-sage-dark shrink-0">
+          <ChevronDown size={16} className={`transition-transform duration-300 ${open ? "rotate-180" : ""}`} />
+        </button>
+      </div>
+      <div hidden={!open} className="border-t border-grey-light px-5 py-5 space-y-5">
+        <p className="font-body text-sm text-muted leading-relaxed">
+          Members see this after the last section of the lesson. Leave a box empty to keep the standard wording,
+          shown in grey.
+        </p>
+        <div>
+          <label htmlFor="finish-heading" className={labelClass}>Heading</label>
+          <input
+            id="finish-heading"
+            value={value.heading ?? ""}
+            placeholder={defaults.heading}
+            onChange={(e) => set("heading", e.target.value)}
+            className={`${inputClass} text-base`}
+          />
+        </div>
+        <div>
+          <label htmlFor="finish-message" className={labelClass}>Message</label>
+          <GrowingArea
+            id="finish-message"
+            value={value.message ?? ""}
+            placeholder={defaults.message}
+            onChange={(v) => set("message", v)}
+            rows={3}
+          />
+        </div>
+        <div>
+          <label htmlFor="finish-button" className={labelClass}>Button text</label>
+          <input
+            id="finish-button"
+            value={value.buttonLabel ?? ""}
+            placeholder={defaults.firstButton}
+            onChange={(e) => set("buttonLabel", e.target.value)}
+            className={`${inputClass} text-base`}
+          />
+          <p className="font-body text-xs text-muted mt-1.5 leading-relaxed">
+            As standard, the button says “{defaults.firstButton}” the first time, and “{defaults.returnButton}” when
+            someone comes back to a lesson they have finished. Anything you type here is used both times.
+          </p>
+        </div>
+        {nextTitle && (
+          <p className="font-body text-sm text-muted leading-relaxed rounded-xl bg-sage-pale/60 border border-sage-light/50 px-4 py-3">
+            The “Up Next” card shows {nextCrossesModule ? "the next module" : "the next lesson"}, “{nextTitle}”, with its{" "}
+            {nextCrossesModule ? "introduction" : "one-line summary"}. To change that wording, open{" "}
+            {nextCrossesModule ? "that module" : "that lesson"} in the course editor and edit its{" "}
+            {nextCrossesModule ? "details" : "Details box"}.
+          </p>
+        )}
+        {custom && (
+          <button type="button" onClick={() => onChange({})} className={secondaryButton}>
+            <Undo2 size={16} />
+            Go Back to the Standard Wording
+          </button>
+        )}
+      </div>
     </div>
   );
 }

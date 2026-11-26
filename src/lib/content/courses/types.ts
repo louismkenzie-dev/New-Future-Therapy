@@ -227,6 +227,16 @@ export type LessonBlock =
       fileLabel: string;
     };
 
+/** Wording for the screen at the end of a lesson ("Well Done"). Any box
+   left empty falls back to the standard wording in finish.ts. Stored in
+   the editor as a {kind:"finish"} entry at the end of the lesson's blocks,
+   so no extra database column is needed. */
+export interface LessonFinishText {
+  heading?: string;
+  message?: string;
+  buttonLabel?: string;
+}
+
 export interface Lesson {
   /** Globally unique across the course (used as the URL segment). */
   id: string;
@@ -236,6 +246,8 @@ export interface Lesson {
   /** Free-preview lessons render for signed-out visitors too. */
   preview?: boolean;
   blocks: LessonBlock[];
+  /** Custom wording for the end-of-lesson screen. */
+  finish?: LessonFinishText;
 }
 
 export interface CourseModule {

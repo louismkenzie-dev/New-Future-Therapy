@@ -3,7 +3,7 @@ import { cache } from "react";
 import { supabaseAdmin } from "@/lib/supabase";
 import { getCourse, flattenLessons, type FlatLesson } from "./index";
 import type { Course, CourseModule, Lesson, LessonBlock } from "./types";
-import { normaliseBlocks } from "./validate";
+import { normaliseBlocks, readFinish } from "./validate";
 
 /* The live course: built-in content (in code) merged with what the
    therapists have added or changed in the course editor (in the database).
@@ -85,6 +85,7 @@ function toLesson(row: LessonRow): LiveLesson {
     summary: row.summary,
     estimatedMinutes: row.estimated_minutes,
     blocks: normaliseBlocks(row.blocks) as LessonBlock[],
+    finish: readFinish(row.blocks),
     source: "editor",
     status: row.status,
     moduleId: row.module_id,

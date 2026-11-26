@@ -1,7 +1,7 @@
 import "server-only";
 import { supabaseAdmin } from "@/lib/supabase";
-import type { LessonBlock } from "@/lib/content/courses";
-import { normaliseBlocks } from "@/lib/content/courses/validate";
+import type { LessonBlock, LessonFinishText } from "@/lib/content/courses";
+import { normaliseBlocks, readFinish, storeBlocks } from "@/lib/content/courses/validate";
 
 /* Course editor data access — service-role only; every caller is guarded by
    isAdmin(). */
@@ -24,6 +24,8 @@ export interface EditorLesson {
   summary: string;
   estimatedMinutes: number;
   blocks: LessonBlock[];
+  /** Custom wording for the end-of-lesson screen. */
+  finish?: LessonFinishText;
   status: "draft" | "published";
   sortOrder: number;
   sourceText: string | null;
@@ -44,6 +46,7 @@ function mapLesson(row: Record<string, unknown>): EditorLesson {
     summary: (row.summary as string) ?? "",
     estimatedMinutes: (row.estimated_minutes as number) ?? 20,
     blocks: normaliseBlocks(row.blocks),
+    finish: readFinish(row.blocks),
     status: row.status as "draft" | "published",
     sortOrder: (row.sort_order as number) ?? 100,
     sourceText: (row.source_text as string | null) ?? null,
@@ -104,6 +107,7 @@ export async function upsertEditorLesson(input: {
   summary: string;
   estimatedMinutes: number;
   blocks: LessonBlock[];
+  finish?: LessonFinishText;
   status?: "draft" | "published";
   sortOrder?: number;
   sourceText?: string | null;
@@ -117,7 +121,7 @@ export async function upsertEditorLesson(input: {
     title: input.title,
     summary: input.summary,
     estimated_minutes: input.estimatedMinutes,
-    blocks: input.blocks,
+    blocks: storeBlocks(input.blocks, input.finish),
   };
   if (input.status) row.status = input.status;
   if (input.sortOrder !== undefined) row.sort_order = input.sortOrder;
@@ -137,6 +141,8 @@ export async function updateEditorLessonFields(
     summary: string;
     estimatedMinutes: number;
     blocks: LessonBlock[];
+    /** null clears it; left out, the saved wording is kept when blocks change. */
+    finish: LessonFinishText | null;
     status: "draft" | "published";
     sortOrder: number;
     notes: string | null;
@@ -147,7 +153,19 @@ export async function updateEditorLessonFields(
   if (fields.title !== undefined) row.title = fields.title;
   if (fields.summary !== undefined) row.summary = fields.summary;
   if (fields.estimatedMinutes !== undefined) row.estimated_minutes = fields.estimatedMinutes;
-  if (fields.blocks !== undefined) row.blocks = fields.blocks;
+  if (fields.blocks !== undefined || fields.finish !== undefined) {
+    /* Blocks and the finish wording share one column, so changing either
+       keeps the other as it is. */
+    let blocks = fields.blocks;
+    let finish = fields.finish;
+    if (blocks === undefined || finish === undefined) {
+      const { data, error } = await supabaseAdmin().from("course_lessons").select("blocks").eq("id", lessonId).maybeSingle();
+      if (error) throw new Error(error.message);
+      if (blocks === undefined) blocks = normaliseBlocks(data?.blocks);
+      if (finish === undefined) finish = readFinish(data?.blocks) ?? null;
+    }
+    row.blocks = storeBlocks(blocks, finish);
+  }
   if (fields.status !== undefined) row.status = fields.status;
   if (fields.sortOrder !== undefined) row.sort_order = fields.sortOrder;
   if (fields.notes !== undefined) row.notes = fields.notes;

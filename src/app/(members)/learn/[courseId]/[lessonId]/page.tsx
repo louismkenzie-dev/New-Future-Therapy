@@ -170,6 +170,7 @@ export default async function LessonPage({
                 next={next}
                 completed={completed}
                 interactive={interactive}
+                text={lesson.finish}
               />
             }
           />
