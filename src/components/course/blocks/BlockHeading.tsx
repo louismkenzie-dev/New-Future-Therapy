@@ -24,7 +24,7 @@ export default function BlockHeading({
       )}
       {intro && (
         <p
-          className={`font-body text-base text-muted leading-relaxed mt-3 max-w-2xl ${
+          className={`font-body text-base text-muted leading-relaxed mt-3 max-w-2xl whitespace-pre-line ${
             align === "center" ? "mx-auto" : ""
           }`}
         >

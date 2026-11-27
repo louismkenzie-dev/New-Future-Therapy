@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
+import { TERMS_UPDATED } from "@/lib/legal";
 
 const description =
   "The terms and conditions governing NewFuture Therapy's online programmes, courses and digital resources.";
@@ -20,7 +21,7 @@ export const metadata: Metadata = {
 /* The terms text is the practice's own legal wording (supplied July 2026) —
    do not reword without the founders' sign-off. */
 
-const LAST_UPDATED = "2 July 2026";
+const LAST_UPDATED = TERMS_UPDATED;
 
 function Section({
   num,
@@ -239,7 +240,14 @@ export default function TermsPage() {
 
           <Section num={11} title="Refunds">
             <p>
-              Refunds are governed by our Refund Policy. Where digital content
+              Refunds are governed by our{" "}
+              <Link
+                href="/refund-policy"
+                className="text-sage-dark underline underline-offset-2 hover:text-charcoal transition-colors duration-200"
+              >
+                Refund Policy
+              </Link>
+              . Where digital content
               has been accessed, downloaded or consumed, statutory rights may
               be limited once access has been granted.
             </p>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useRef, useState, type FormEvent } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowRight, Check } from "lucide-react";
 import { startCheckout } from "@/app/actions/billing";
@@ -36,6 +37,21 @@ interface PricingCardsProps {
 
 export default function PricingCards({ plans, courseId }: PricingCardsProps) {
   const [interval, setInterval] = useState<"month" | "year">("month");
+  // The 14-day cancellation waiver for digital content: one tick covers
+  // whichever plan the buyer picks. The server checks it again.
+  const [consented, setConsented] = useState(false);
+  const [consentError, setConsentError] = useState(false);
+  const consentRef = useRef<HTMLInputElement>(null);
+  const consentId = useId();
+  const consentErrorId = `${consentId}-error`;
+
+  const requireConsent = (event: FormEvent<HTMLFormElement>) => {
+    if (consented) return;
+    event.preventDefault();
+    setConsentError(true);
+    consentRef.current?.focus();
+    consentRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+  };
 
   const individual =
     interval === "month" ? plans.individual_monthly : plans.individual_annual;
@@ -73,6 +89,59 @@ export default function PricingCards({ plans, courseId }: PricingCardsProps) {
         </div>
       </div>
 
+      {SIGNUPS_OPEN && (
+        <div className="max-w-4xl mx-auto mb-10 rounded-xl border border-grey-light bg-white p-6 shadow-sm">
+          <label
+            htmlFor={consentId}
+            className="flex items-start gap-4 cursor-pointer min-h-11"
+          >
+            <input
+              ref={consentRef}
+              id={consentId}
+              type="checkbox"
+              checked={consented}
+              onChange={(e) => {
+                setConsented(e.target.checked);
+                if (e.target.checked) setConsentError(false);
+              }}
+              aria-describedby={consentError ? consentErrorId : undefined}
+              aria-invalid={consentError || undefined}
+              className="mt-1 h-6 w-6 shrink-0 rounded-lg accent-sage-dark cursor-pointer"
+            />
+            <span className="font-body text-base text-muted leading-relaxed">
+              I would like my access to begin straight away. I understand
+              that once it begins I lose my 14-day right to cancel, and I
+              agree to the{" "}
+              <Link
+                href="/terms"
+                target="_blank"
+                className="text-sage-dark underline underline-offset-2 hover:text-charcoal transition-colors duration-200"
+              >
+                Terms &amp; Conditions
+              </Link>{" "}
+              and{" "}
+              <Link
+                href="/refund-policy"
+                target="_blank"
+                className="text-sage-dark underline underline-offset-2 hover:text-charcoal transition-colors duration-200"
+              >
+                Refund Policy
+              </Link>
+              .
+            </span>
+          </label>
+          {consentError && (
+            <p
+              id={consentErrorId}
+              role="alert"
+              className="font-body text-sm text-red-700 mt-3 pl-10"
+            >
+              Please tick the box above to continue to payment.
+            </p>
+          )}
+        </div>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto items-stretch">
         <PlanCard
           name="Individual"
@@ -83,6 +152,8 @@ export default function PricingCards({ plans, courseId }: PricingCardsProps) {
           features={individualFeatures}
           courseId={courseId}
           tinted={false}
+          consented={consented}
+          onSubmit={requireConsent}
         />
         <PlanCard
           name="Joint Couples"
@@ -93,6 +164,8 @@ export default function PricingCards({ plans, courseId }: PricingCardsProps) {
           features={couplesFeatures}
           courseId={courseId}
           tinted
+          consented={consented}
+          onSubmit={requireConsent}
         />
       </div>
 
@@ -113,6 +186,8 @@ function PlanCard({
   features,
   courseId,
   tinted,
+  consented,
+  onSubmit,
 }: {
   name: string;
   tagline: string;
@@ -122,6 +197,8 @@ function PlanCard({
   features: string[];
   courseId: string;
   tinted: boolean;
+  consented: boolean;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }) {
   return (
     <motion.div
@@ -165,8 +242,13 @@ function PlanCard({
       </ul>
 
       {SIGNUPS_OPEN ? (
-        <form action={startCheckout} className="mt-10">
+        <form action={startCheckout} onSubmit={onSubmit} className="mt-10">
           <input type="hidden" name="planKey" value={plan.key} />
+          <input
+            type="hidden"
+            name="digitalContentConsent"
+            value={consented ? "yes" : ""}
+          />
           <input type="hidden" name="courseId" value={courseId} />
           <button
             type="submit"
