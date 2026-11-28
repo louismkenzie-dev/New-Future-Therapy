@@ -22,6 +22,8 @@ export const LIMITS = {
   signup: { name: "signup", windowSeconds: 60 * 60, max: 5 },
   passwordReset: { name: "password-reset", windowSeconds: 60 * 60, max: 5 },
   contact: { name: "contact", windowSeconds: 60 * 60, max: 5 },
+  testerClaim: { name: "tester-claim", windowSeconds: 60 * 60, max: 5 },
+  feedback: { name: "programme-feedback", windowSeconds: 60 * 60, max: 10 },
   chat: { name: "reflections-chat", windowSeconds: 10 * 60, max: 30 },
   chatDaily: { name: "reflections-chat-day", windowSeconds: 24 * 60 * 60, max: 200 },
   invite: { name: "partner-invite", windowSeconds: 60 * 60, max: 10 },

@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { SIGNUPS_OPEN } from "@/lib/launch";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase";
@@ -8,6 +9,7 @@ import { requireUser } from "@/lib/auth/session";
 import { getEntitlement } from "@/lib/dal/entitlement";
 import { isPlanKey, stripePriceIdFor } from "@/lib/billing/plans";
 import { siteUrl } from "@/lib/siteUrl";
+import { REFERRAL_COOKIE, activePartnerByCode } from "@/lib/referrals";
 
 async function customerIdFor(
   userId: string,
@@ -56,15 +58,28 @@ export async function startCheckout(formData: FormData): Promise<void> {
     user.profile.stripeCustomerId
   );
 
+  // Arrived through a referral partner's link? Apply their code for them.
+  // (Stripe allows either a preset discount or the promo-code box, not both.)
+  const referralCode = (await cookies()).get(REFERRAL_COOKIE)?.value ?? "";
+  const partner = referralCode ? await activePartnerByCode(referralCode) : null;
+  const referral =
+    partner && partner.email.toLowerCase() !== user.email.toLowerCase() ? partner : null;
+
   const session = await stripe().checkout.sessions.create({
     mode: "subscription",
     customer: customerId,
     client_reference_id: user.id,
     line_items: [{ price: stripePriceIdFor(planKey), quantity: 1 }],
     subscription_data: {
-      metadata: { user_id: user.id, plan_key: planKey },
+      metadata: {
+        user_id: user.id,
+        plan_key: planKey,
+        ...(referral ? { referral_code: referralCode } : {}),
+      },
     },
-    allow_promotion_codes: true,
+    ...(referral
+      ? { discounts: [{ promotion_code: referral.promotionCodeId }] }
+      : { allow_promotion_codes: true }),
     success_url: `${siteUrl()}/learn?session_id={CHECKOUT_SESSION_ID}`,
     cancel_url: `${siteUrl()}${returnPath}#pricing`,
   });

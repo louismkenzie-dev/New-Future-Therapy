@@ -2,6 +2,7 @@ import type Stripe from "stripe";
 import { stripe } from "@/lib/stripe";
 import { supabaseAdmin } from "@/lib/supabase";
 import { syncSubscriptionFromStripe } from "@/lib/dal/subscriptions";
+import { recordReferralFromInvoice } from "@/lib/referrals";
 
 /* Stripe webhook — the billing source of truth. Signature-verified, and
    idempotent via the stripe_events table (event id is the primary key). */
@@ -56,6 +57,11 @@ export async function POST(request: Request): Promise<Response> {
       case "customer.subscription.updated":
       case "customer.subscription.deleted": {
         await syncSubscriptionFromStripe(event.data.object);
+        break;
+      }
+      case "invoice.paid": {
+        // Referral commission: 10% of any paid invoice carrying a partner's code.
+        await recordReferralFromInvoice(event.data.object);
         break;
       }
       default:
