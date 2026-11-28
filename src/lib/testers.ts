@@ -12,8 +12,14 @@ export const DEFAULT_TESTER_CAP = 50;
 const KEY_PATTERN = /^[A-Za-z0-9_-]{12,64}$/;
 
 async function getSetting(key: string): Promise<string | null> {
-  const { data } = await supabaseAdmin().from("site_settings").select("value").eq("key", key).maybeSingle();
-  return data?.value ?? null;
+  try {
+    const { data } = await supabaseAdmin().from("site_settings").select("value").eq("key", key).maybeSingle();
+    return data?.value ?? null;
+  } catch (error) {
+    // Unconfigured environments (e.g. preview deployments) fall back to defaults.
+    console.error("Tester setting unavailable:", error);
+    return null;
+  }
 }
 
 async function setSetting(key: string, value: string): Promise<void> {
@@ -66,8 +72,13 @@ export async function setTesterCap(cap: number): Promise<void> {
 
 /* People given access through the page so far (a couple counts as two). */
 export async function testerPlacesUsed(): Promise<number> {
-  const { data } = await supabaseAdmin().from("tester_signups").select("partner_email");
-  return (data ?? []).reduce((n, row) => n + (row.partner_email ? 2 : 1), 0);
+  try {
+    const { data } = await supabaseAdmin().from("tester_signups").select("partner_email");
+    return (data ?? []).reduce((n, row) => n + (row.partner_email ? 2 : 1), 0);
+  } catch (error) {
+    console.error("Tester sign-ups unavailable:", error);
+    return 0;
+  }
 }
 
 export interface TesterSignup {
