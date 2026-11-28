@@ -40,8 +40,8 @@ export default async function AdminReferralsPage() {
         </div>
 
         <p className="font-body text-sm text-muted leading-relaxed mb-8 max-w-3xl">
-          Clients save {REFERRAL_PERCENT}% {REFERRAL_TERMS.summary} of their membership, and partners earn{" "}
-          {COMMISSION_PERCENT}% of what those clients pay over the same period. Commission is worked out on
+          Clients save {REFERRAL_PERCENT}% on every payment {REFERRAL_TERMS.summary}, and partners earn{" "}
+          {COMMISSION_PERCENT}% of each of those payments. Commission is worked out on
           the amount actually paid, after the discount. Pay partners by bank transfer, then press
           &ldquo;Mark as Paid&rdquo;.
         </p>

@@ -20,12 +20,18 @@ import { siteUrl } from "@/lib/siteUrl";
 export const REFERRAL_PERCENT = 10;
 export const COMMISSION_PERCENT = 10;
 
-export const REFERRAL_TERMS = {
-  duration: "repeating",
-  months: 12,
-  couponId: "nft-referral-10pc-12m",
-  summary: "for the first 12 months",
-} as const;
+// Founders' decision (28 Nov 2026): discount and commission continue on
+// every payment for as long as the referred client stays subscribed.
+export const REFERRAL_TERMS: {
+  duration: "forever" | "once" | "repeating";
+  months?: number;
+  couponId: string;
+  summary: string;
+} = {
+  duration: "forever",
+  couponId: "nft-referral-10pc-forever",
+  summary: "for as long as they stay subscribed",
+};
 
 export const REFERRAL_COOKIE = "nf_ref";
 export const CODE_PATTERN = /^[A-Z0-9-]{3,30}$/;
@@ -47,7 +53,7 @@ async function ensureCoupon(): Promise<string> {
       name: `Referral partner ${REFERRAL_PERCENT}% off`,
       percent_off: REFERRAL_PERCENT,
       duration: REFERRAL_TERMS.duration,
-      ...(REFERRAL_TERMS.duration === "repeating" ? { duration_in_months: REFERRAL_TERMS.months } : {}),
+      ...(REFERRAL_TERMS.duration === "repeating" ? { duration_in_months: REFERRAL_TERMS.months ?? 12 } : {}),
     });
   }
   return REFERRAL_TERMS.couponId;
