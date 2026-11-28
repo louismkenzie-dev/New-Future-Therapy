@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, BookOpen, HeartHandshake, Route } from "lucide-react";
+import { ArrowRight, BookOpen, HeartHandshake, MessageSquareHeart, Route } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
 import Reveal from "@/components/motion/Reveal";
 import { requireUser } from "@/lib/auth/session";
@@ -37,7 +37,7 @@ export default async function LearnDashboard({
     redirect("/learn");
   }
 
-  const { user } = await requireEntitlement("/learn");
+  const { user, entitlement } = await requireEntitlement("/learn");
   const course = (await loadCourse(courses[0].id)) ?? courses[0];
   const progress = await getProgressMap(course.id);
   const flat = flattenLessons(course);
@@ -170,6 +170,25 @@ export default async function LearnDashboard({
               </p>
             </Link>
           </Reveal>
+          {/* Testers and invited guests: a way back to the feedback form. */}
+          {entitlement.source === "complimentary" && (
+            <Reveal delay={0.2} className="md:col-span-2">
+              <Link
+                href="/learn/feedback"
+                className="flex flex-col sm:flex-row sm:items-center gap-4 bg-white rounded-2xl border border-grey-light shadow-sm p-8 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:border-sage-light"
+              >
+                <MessageSquareHeart size={28} className="text-sage-dark shrink-0" />
+                <div className="flex-1">
+                  <h3 className="font-body text-xl font-medium text-charcoal mb-1">Share Your Feedback</h3>
+                  <p className="font-body text-sm text-muted leading-relaxed">
+                    You are one of our first guests. Tell Laura and Esther what is working and what
+                    could be better. It goes straight to them.
+                  </p>
+                </div>
+                <ArrowRight size={18} className="text-sage-dark shrink-0" />
+              </Link>
+            </Reveal>
+          )}
         </div>
       </section>
     </>

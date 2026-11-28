@@ -1,11 +1,10 @@
 "use server";
 
-import { randomBytes } from "node:crypto";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { isAdmin } from "@/lib/adminAuth";
-import { supabaseAdmin } from "@/lib/supabase";
 import { issueWelcomeToken } from "@/lib/memberInvites";
+import { EMAIL_PATTERN as EMAIL, ensureMember, linkCouple } from "@/lib/memberAccounts";
 import { siteUrl } from "@/lib/siteUrl";
 import { MAX, clean } from "@/lib/limits";
 
@@ -19,47 +18,6 @@ export interface InviteResult {
   status: "idle" | "success" | "error";
   message?: string;
   links?: { name: string; email: string; url: string; existing: boolean }[];
-}
-
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-async function findUserId(email: string): Promise<string | null> {
-  const admin = supabaseAdmin();
-  for (let page = 1; ; page++) {
-    const { data, error } = await admin.auth.admin.listUsers({ page, perPage: 1000 });
-    if (error || !data?.users?.length) return null;
-    const match = data.users.find((u) => u.email?.toLowerCase() === email);
-    if (match) return match.id;
-    if (data.users.length < 1000) return null;
-  }
-}
-
-async function ensureMember(name: string, email: string): Promise<{ id: string; existing: boolean }> {
-  const admin = supabaseAdmin();
-  const existingId = await findUserId(email);
-  let id = existingId;
-  if (!id) {
-    const { data, error } = await admin.auth.admin.createUser({
-      email,
-      email_confirm: true,
-      // Never shared: the member sets their own password from the welcome link.
-      password: randomBytes(24).toString("base64url"),
-      user_metadata: { display_name: name },
-    });
-    if (error || !data.user) throw new Error(error?.message ?? "Could not create the account.");
-    id = data.user.id;
-  }
-  await admin.from("profiles").update({ complimentary_access: true }).eq("id", id);
-  return { id, existing: Boolean(existingId) };
-}
-
-async function currentCouple(userId: string) {
-  const { data } = await supabaseAdmin()
-    .from("couples")
-    .select("id, owner_id, partner_id, status")
-    .or(`owner_id.eq.${userId},partner_id.eq.${userId}`)
-    .in("status", ["pending", "active", "suspended"]);
-  return data ?? [];
 }
 
 export async function inviteMembers(_prev: InviteResult, formData: FormData): Promise<InviteResult> {
@@ -90,25 +48,13 @@ export async function inviteMembers(_prev: InviteResult, formData: FormData): Pr
 
     if (members.length === 2) {
       const [a, b] = members;
-      const [aCouples, bCouples] = await Promise.all([currentCouple(a.id), currentCouple(b.id)]);
-      const together = aCouples.find(
-        (c) => c.status === "active" && (c.partner_id === b.id || c.owner_id === b.id)
-      );
-      if (!together) {
-        if (aCouples.length || bCouples.length) {
-          return {
-            status: "error",
-            message:
-              "One of these people is already linked to someone else (or has a partner invitation pending). Unlink them from their member page first.",
-          };
-        }
-        const { error } = await supabaseAdmin().from("couples").insert({
-          owner_id: a.id,
-          partner_id: b.id,
-          status: "active",
-          linked_at: new Date().toISOString(),
-        });
-        if (error) throw new Error(error.message);
+      const result = await linkCouple(a.id, b.id);
+      if (result === "conflict") {
+        return {
+          status: "error",
+          message:
+            "One of these people is already linked to someone else (or has a partner invitation pending). Unlink them from their member page first.",
+        };
       }
     }
 
